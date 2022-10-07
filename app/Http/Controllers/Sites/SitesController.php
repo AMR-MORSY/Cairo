@@ -42,6 +42,9 @@ class SitesController extends Controller
 
                 try {
                     $import->import($validated['sites']);
+                    return response()->json([
+                        "message" => "inserted Succesfully",
+                    ]);
                 } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
                     $failures = $e->failures();
                     $errors=[];

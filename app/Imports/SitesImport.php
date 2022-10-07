@@ -29,9 +29,42 @@ class SitesImport implements ToModel, WithHeadingRow, WithValidation ,WithBatchI
     public function rules(): array
     {
         return[
-            "*.Site Code"=>["required","unique:sites,site_code","regex:/^([0-9a-zA-Z_]{4,6}(up|UP))|([0-9a-zA-Z]{4,6}(ca|CA))$/"],
+            "*.Site Code"=>["required","unique:sites,site_code","regex:/^([0-9a-zA-Z_]{4,6}(up|UP))|([0-9a-zA-Z]{4,6}(ca|CA))|([0-9a-zA-Z]{4,6}(de|DE))$/"],
+            "*.Site Name"=>["required","regex:/^[0-9a-zA-Z_]{3,50}$/"],
+            "*.RNC"=>["nullable","regex:/^[0-9a-zA-Z_-]{3,50}$/"],
+            "*.BSC"=>["nullable","regex:/^[0-9a-zA-Z_-]{3,50}$/"],
+            "*.office"=>["nullable","regex:/^[0-9a-zA-Z_-]{3,50}$/"],
+            "*.type"=>["nullable","regex:/^Outdoor|Shelter|Micro$/"],
+            "*.severity"=>["nullable","regex:/^Gold|Silver|Bronze$/"],
+            "*.category"=>["nullable","regex:/^VIp|NDL|VIp + NDL|BSC|Normal$/"],
+            "*.sharing"=>["nullable","regex:/^Yes|No$/"],
+            "*.category"=>["nullable","regex:/^OR|VF|WE|ET$/"],
+            "*.gest"=>["nullable","regex:/^OR|VF|WE|ET$/"],
+            "*.2G"=>["nullable","regex:/^(100)|[1-9]\d?$/"],
+            "*.3G"=>["nullable","regex:/^(100)|[1-9]\d?$/"],
+            "*.4G"=>["nullable","regex:/^(100)|[1-9]\d?$/"],
+            "*.oz"=>["nullable","regex:/^Cairo South|Cairo East|Cairo North|GZ$/"],
+            "*.zone"=>["nullable","regex:/^(Cairo)$/"],
+            
         ];
     }
+    public function customValidationMessages()
+{
+    return [
+        'type.regex' => 'The site type must be (Outdoor|Micro|Shelter)',
+        'severity.regex' => 'The site severity must be (Gold|Selver|Bronze)',
+        'category.regex' => 'The site category must be (VIP|VIP + NDL|NDL|Normal|BSC)',
+        'sharing.regex' => 'The sharing status Either (Yes|No)',
+        'gest.regex' => 'The site type must be (OR|VF|WE|ET)',
+        'host.regex' => 'The site type must be (OR|VF|WE|ET)',
+        "2G.regex"=>"Cells number from 1-100",
+        "3G.regex"=>"Cells number from 1-100",
+        "4G.regex"=>"Cells number from 1-100",
+        "*oz.regex"=>"Operation Zone:(Cairo South|Cairo East|Cairo North|GZ)",
+        "zone.regex"=>"Zone must be Cairo",
+
+    ];
+}
     public function model(array $row)
     {
         return new Site([

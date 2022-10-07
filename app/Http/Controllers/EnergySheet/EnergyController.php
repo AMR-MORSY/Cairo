@@ -37,16 +37,34 @@ class EnergyController extends Controller
 
     public function store_alarms(Request $request)
     {
-       
+
         $validator = Validator::make($request->all(), ["week" => ['required', 'regex:/^(?:[1-9]|[1-3][0-9]|4[0-8])$/'], "year" => ['required', 'regex:/^2[0-9]{3}$/'], "energy_sheet" => 'required|mimes:csv,xlsx']);
         $validated = $validator->validated();
         if ($validated) {
+
             $import = new EnergySheetImport($validated['week'], $validated['year']);
-            $import->onlySheets("Power", "Down", "HT without power", "Power with gen");
-            Excel::import($import, $request->file("energy_sheet"));
-            return response()->json([
-                "message" => "inserted Succesfully",
-            ]);
+            try {
+                $import->onlySheets("Power", "Down", "HT without power", "Power with gen");
+                Excel::import($import, $request->file("energy_sheet"));
+                return response()->json([
+                    "message" => "inserted Succesfully",
+                ]);
+            } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
+                $failures = $e->failures();
+                $errors = [];
+                $error = [];
+
+                foreach ($failures as $failure) {
+                    $error['row'] = $failure->row(); // row that went wrong
+                    $error['attribute'] = $failure->attribute(); // either heading key (if using heading row concern) or column index
+                    $error['errors'] = $failure->errors(); // Actual error messages from Laravel validator
+                    $error['values'] = $failure->values(); // The values of the row that has failed.
+                    array_push($errors, $error);
+                }
+                return response()->json([
+                    "errors" => $errors,
+                ], 422);
+            }
         } else {
 
             return response()->json(array(
