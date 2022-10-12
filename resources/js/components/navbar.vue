@@ -74,7 +74,7 @@
                             <a class="dropdown-item ">Energy Sheet</a>
                             <div class="test2">
                                 <!-- <a class="dropdown-item " >Insert Sheet</a> -->
-                                  <router-link to="/energyindex" class="dropdown-item ">Insert Sheet</router-link>
+                                  <router-link to="/energysheet/index" class="dropdown-item ">Insert Sheet</router-link>
                               
                             </div>
 
@@ -90,13 +90,15 @@
                 <a class="nav-link" >Profile</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" >Login</a>
+              <router-link class="nav-link" to="/user/login">Login</router-link>
+                <!-- <a class="nav-link" >Login</a> -->
             </li>
             <li class="nav-item">
                 <a class="nav-link">Logout</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" >Register</a>
+               <router-link class="nav-link" to="/user/register">Register</router-link>
+                <!-- <a class="nav-link" >Register</a> -->
             </li>
         </ul>
 
