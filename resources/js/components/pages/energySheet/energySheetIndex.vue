@@ -133,6 +133,7 @@
 <script>
 import axios from "axios";
 import spinnerButton from '../../helpers/spinnerButton.vue';
+import Energy from "../../../apis/Energy";
 
 export default {
   components: { spinnerButton },
@@ -166,9 +167,14 @@ export default {
   methods: {
    
     getEnergySheetIndex() {
-      axios.get("/api/energysheet/index").then((response) => {
+      // axios.get("/api/energysheet/index").then((response) => {
+      //   this.weeks = response.data.weeks;
+      //   this.years = response.data.years;
+      // });
+       Energy.getEnergySheetIndex().then((response)=>{
         this.weeks = response.data.weeks;
-        this.years = response.data.years;
+         this.years = response.data.years;
+
       });
     },
     clearYearsErrors() {

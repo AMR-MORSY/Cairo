@@ -2,7 +2,7 @@ import Api from "./Api";
 import Csrf from "./Csrf";
 export default {
     async register(form) {
-        // await Csrf.getCookie();
+     await Csrf.getCookie();
         Api.post("/user/register", form).catch((error) => {
             if (error.response) {
                 console.log(error.response);

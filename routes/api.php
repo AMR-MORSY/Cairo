@@ -23,7 +23,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::prefix("energysheet")->group(function(){
+Route::prefix("energysheet")->middleware('auth:sanctum')->group(function(){
     Route::get('/index',[EnergyController::class,"index"] )->name("energysheet_index");
     Route::post('/index',[EnergyController::class,"store_alarms"] )->name("energysheet_store_alarms");
 
