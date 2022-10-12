@@ -3,7 +3,7 @@
     <form @submit.prevent="submitLoginForm">
       <img
         class="mb-4"
-        src="../assets/brand/bootstrap-logo.svg"
+     
         alt=""
         width="72"
         height="57"
