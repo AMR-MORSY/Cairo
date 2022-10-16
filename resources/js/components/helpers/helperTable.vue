@@ -1,7 +1,7 @@
 <template>
   <table class="table table-hover table-bordered">
     <thead>
-      <tr class="text-center align-middle">
+      <tr class="text-center align-middle" style="background-color: #79589F; color: white">
        <slot name="header"></slot>
       </tr>
     </thead>

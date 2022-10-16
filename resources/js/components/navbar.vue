@@ -170,7 +170,7 @@ export default {
 .navbar {
   position: fixed;
   display: flex;
-  background-color: #152733;
+  background-color: #79589F;
   justify-content: space-around;
   z-index: 1;
   width: 100%;

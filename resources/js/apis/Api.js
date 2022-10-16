@@ -4,6 +4,9 @@ import store from "../vuex/store";
 
 let Api = axios.create({
     baseURL: "/api",
+    headers: {
+        "Content-Type": "multipart/form-data",
+      },
 });
 
 Api.defaults.withCredentials = true;

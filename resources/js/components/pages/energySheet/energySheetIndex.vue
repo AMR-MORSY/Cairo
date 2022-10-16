@@ -7,26 +7,20 @@
     >
       <div class="errors mt-5"></div>
       <div class="row index">
-        <p v-if="serverError">{{ serverError }}</p>
         <div class="col-12">
-          <div v-if="isServerError">
+          <div v-if="serverError">
             {{ serverError }}
           </div>
         </div>
 
         <div class="col-6">
           <div class="form-group">
-            <select
-              v-model="week"
-              @change="clearWeeksErrors"
-              id="weeks"
-              class="form-control"
-            >
+            <select v-model="week" id="weeks" class="form-control">
               <option value="">select week</option>
 
               <option v-for="week in weeks" :key="week">{{ week }}</option>
             </select>
-            <div v-if="isWeekError">
+            <div v-if="weekErrors">
               <ul>
                 <li v-for="error in weekErrors" style="color: red" :key="error">
                   {{ error }}
@@ -37,16 +31,12 @@
         </div>
         <div class="col-6">
           <div class="form-group">
-            <select
-              v-model="year"
-              @change="clearYearsErrors"
-              class="form-control"
-            >
+            <select v-model="year" class="form-control">
               <option value="">select year</option>
 
               <option v-for="year in years" :key="year">{{ year }}</option>
             </select>
-            <div v-if="isYearError">
+            <div v-if="yearErrors">
               <ul>
                 <li v-for="error in yearErrors" style="color: red" :key="error">
                   {{ error }}
@@ -63,10 +53,10 @@
               type="file"
               name="energy_sheet"
               class="form-control"
-              @change="energySheetFile"
               id="energy_sheet"
+              @change="energySheetFile"
             />
-            <div v-if="isEnergySheetError">
+            <div v-if="energySheetErrors">
               <ul>
                 <li
                   v-for="error in energySheetErrors"
@@ -91,9 +81,46 @@
         </div>
       </div>
     </form>
+    <div class="helper-table-container">
+      <helper-table v-if="sheetValidationErrors">
+        <template #header>
+          <th scope="col">Row</th>
+          <th scope="col">Attribute</th>
+          <th scope="col">Errors</th>
+          <th scope="col">Values</th>
+        </template>
+        <template #body>
+          <tr
+            style="background-color: white; color: red"
+            v-for="error in sheetValidationErrors"
+            :key="error"
+          >
+            <td class="text-left align-middle">{{ error.row }}</td>
+            <td class="text-left align-middle">{{ error.attribute }}</td>
+            <td class="text-left align-middle">
+              <ul v-for="rowError in error.errors" :key="rowError">
+                <li>{{ rowError }}</li>
+              </ul>
+            </td>
+            <td class="text-left align-middle">
+              <ul>
+                <li>Site Code:{{ error.values["Site Code"] }}</li>
+                <li>Site Name:{{ error.values["Site Name"] }}</li>
+                 <li>Site Name:{{ error.values["Alarm Name"] }}</li>
+              </ul>
+            </td>
+          </tr>
+        </template>
+      </helper-table>
+    </div>
   </div>
-  <modal variant="danger" :visible="showModal">
-    <p class="text-center">{{ successMessage }}</p>
+  <modal :visible="showModal">
+    <template #body>
+      <p class="text-center">{{ successMessage }}</p>
+    </template>
+    <template #footer>
+      <button class="btn btn-danger" @click="closeModal">close</button>
+    </template>
   </modal>
 </template>
 
@@ -111,16 +138,18 @@ export default {
       year: "",
       week: "",
       energySheet: null,
-      isYearError: false,
-      yearErrors: [],
-      isWeekError: false,
-      weekErrors: [],
-      isEnergySheetError: false,
-      energySheetErrors: [],
+
+      sheetValidationErrors: null,
+
+      yearErrors: null,
+
+      weekErrors: null,
+
+      energySheetErrors: null,
       serverError: null,
-      isServerError: false,
+
       successMessage: "hello from index",
-      isSuccessMessage: false,
+
       showModal: false,
       showSpinner: false,
     };
@@ -163,95 +192,66 @@ export default {
       this.serverError = null;
       this.yearErrors = null;
       this.weekErrors = null;
-      // axios.get("/api/energysheet/index").then((response) => {
-      //   this.weeks = response.data.weeks;
-      //   this.years = response.data.years;
-      // });
+
       Energy.getEnergySheetIndex()
         .then((response) => {
           this.weeks = response.data.weeks;
           this.years = response.data.years;
         })
         .catch((error) => {
-          // if (error.response.status == 403 || error.response.status == 401) {
-          //   this.$router.push({ path: "/user/login" });
-          //  }
           if (error.response.status == 500) {
             this.serverError = "internal Server Error";
           }
         });
     },
-    clearYearsErrors() {
-      this.yearErrors = [];
-      this.serverError = null;
-      this.isYearError = false;
-      this.isServerError = false;
-    },
-    clearWeeksErrors() {
-      this.weekErrors = [];
-      this.serverError = null;
-      this.isWeekError = false;
-      this.isServerError = false;
-    },
+
     energySheetFile(e) {
-      this.energySheetErrors = [];
-      this.serverError = null;
-      this.isServerError = false;
-      this.isEnergySheetError = false;
+      console.log(e.target.files[0]);
       return (this.energySheet = e.target.files[0]);
     },
 
+    closeModal() {
+      return (this.showModal = false);
+    },
+
     submitEnergySheet() {
+      this.weekErrors = null;
+      this.serverError = null;
+      this.yearErrors = null;
+      this.sheetValidationErrors = null;
       var data = {
         energy_sheet: this.energySheet,
-        // down: this.down,
-        // high_temp: this.high_temp,
-        // gen: this.gen,
         week: this.week,
         year: this.year,
       };
       this.showSpinner = true;
 
-      axios
-        .post("/api/energysheet/index", data, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            responseType: "json",
-          },
-        })
+      Energy.submitEnergySheet(data)
         .then((response) => {
           console.log(response.data.message);
           this.successMessage = response.data.message;
           this.showModal = true;
-          // this.weeks = response.data.weeks;
-          // this.years = response.data.years;
-          //   console.log(isResponseGot);
         })
         .catch((error) => {
           if (error.response) {
-            if (error.response.status == "500") {
+            console.log(error.response);
+            if (error.response.status == 500) {
               this.serverError = "internal server error";
-              this.isServerError = true;
             }
-            if (error.response.status == 403 || response.status == 401) {
-              this.$router.push({ path: "/user/login" });
-            }
-            // The request was made and the server responded with a status code
-            // that falls out of the range of 2xx
-            // console.log(error.response.data);
-            if (error.response.data) {
-              var errors = error.response.data.errors;
-              if (errors.week) {
-                this.weekErrors = errors.week;
-                this.isWeekError = true;
-              }
-              if (errors.year) {
-                this.yearErrors = errors.year;
-                this.isYearError = true;
-              }
-              if (errors.energy_sheet) {
-                this.energySheetErrors = errors.energy_sheet;
-                this.isEnergySheetError = true;
+            if (error.response.status == 422) {
+              if (error.response.data.errors) {
+                var errors = error.response.data.errors;
+                if (errors.week) {
+                  this.weekErrors = errors.week;
+                }
+                if (errors.year) {
+                  this.yearErrors = errors.year;
+                }
+                if (errors.energy_sheet) {
+                  this.energySheetErrors = errors.energy_sheet;
+                }
+              } else if (error.response.data.sheet_errors) {
+                this.sheetValidationErrors = error.response.data.sheet_errors;
               }
             }
           } else if (error.request) {
@@ -278,10 +278,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.index {
-  margin-top: 6em;
+.index,
+.helper-table-container {
   width: 70%;
   margin-left: auto;
   margin-right: auto;
+}
+.index {
+  margin-top: 6em;
 }
 </style>

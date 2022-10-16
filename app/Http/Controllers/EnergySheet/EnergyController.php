@@ -67,7 +67,7 @@ class EnergyController extends Controller
                     array_push($errors, $error);
                 }
                 return response()->json([
-                    "errors" => $errors,
+                    "sheet_errors" => $errors,
                 ], 422);
             }
         } else {
