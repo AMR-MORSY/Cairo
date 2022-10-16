@@ -1,14 +1,7 @@
 <template>
-
- <main class="form-signin w-25 m-auto">
+  <main class="form-signin w-25 m-auto">
     <form @submit.prevent="submitRegisterForm">
-      <img
-        class="mb-4"
-       
-        alt=""
-        width="72"
-        height="57"
-      />
+      <img class="mb-4" alt="" width="72" height="57" />
       <h1 class="h3 mb-3 fw-normal">Please Register</h1>
       <div class="form-floating">
         <input
@@ -42,7 +35,7 @@
         />
         <label for="Password">Password</label>
       </div>
-       <div class="form-floating mt-1">
+      <div class="form-floating mt-1">
         <input
           type="password"
           class="form-control"
@@ -54,48 +47,55 @@
         <label for="floatingConfirmPassword">Confirm Password</label>
       </div>
 
-      
       <button class="w-100 btn btn-lg btn-primary mt-1" type="submit">
         Sign in
       </button>
-   
     </form>
   </main>
-  
 </template>
 
 <script>
 import User from "../../../apis/User";
 export default {
-  
-   data(){
-    return{
-        form:{
-            name:"",
-            email:"",
-            password:'',
-           password_confirmation:"",
-        }
-    }
-   },
-   methods:{
-    submitRegisterForm(){
-       User.register(this.form).then(()=>{
-        this.$router.push({path:"/user/login"})
-       }).catch(error=>{
-        if(error.response)
-        {
-
-
-        }
-        if(error.request)
-        {
-
-        }
-       });
-    }
-   }
-}
+  data() {
+    return {
+      form: {
+        name: "",
+        email: "",
+        password: "",
+        password_confirmation: "",
+      },
+      // isLogin:this.$store.state.isLogin,
+    };
+  },
+  computed: {
+    isLogin() {
+      return this.$store.state.isLogin;
+    },
+  },
+  beforeRouteEnter(to, from, next) {
+    next((vm) => {
+      if (vm.isLogin) {
+     
+      return vm.$router.push(from.path) ;
+      } 
+    });
+  },
+  methods: {
+    submitRegisterForm() {
+      User.register(this.form)
+        .then(() => {
+          this.$router.push({ path: "/user/login" });
+        })
+        .catch((error) => {
+          if (error.response) {
+          }
+          if (error.request) {
+          }
+        });
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
@@ -150,5 +150,4 @@ export default {
   white-space: nowrap;
   -webkit-overflow-scrolling: touch;
 }
-
 </style>

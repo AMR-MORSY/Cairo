@@ -7,20 +7,7 @@
     >
       <div class="errors mt-5"></div>
       <div class="row index">
-        <div class="progress mb-5">
-          <div
-            class="progress-bar"
-            role="progressbar"
-            id="progressbar"
-            aria-label="Example with label"
-            style="width: 0%"
-            aria-valuenow="25"
-            aria-valuemin="0"
-            aria-valuemax="100"
-          >
-            0%
-          </div>
-        </div>
+        <p v-if="serverError">{{ serverError }}</p>
         <div class="col-12">
           <div v-if="isServerError">
             {{ serverError }}
@@ -94,45 +81,25 @@
         </div>
 
         <div class="col-12 mt-2">
-         
-          <!-- <button class="btn btn-primary" type="submit" >
-            <span
-              class="spinner-border spinner-border-sm"
-              role="status"
-              aria-hidden="true" v-if="showSpinner"
-            ></span>
-            <span > Submit</span>
-          </button> -->
-          <spinner-button type="submit" :show-spinner="showSpinner" class="btn btn-primary">
-             <span> Submit</span>
+          <spinner-button
+            type="submit"
+            :show-spinner="showSpinner"
+            class="btn btn-primary"
+          >
+            <span> Submit</span>
           </spinner-button>
         </div>
       </div>
     </form>
   </div>
   <modal variant="danger" :visible="showModal">
-    <!-- <p class="text-center">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="64"
-        height="64"
-        fill="#dc3545"
-        class="bi bi-exclamation-triangle-fill"
-        viewBox="0 0 16 16"
-      >
-        <path
-          d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"
-        />
-      </svg>
-    </p> -->
-
     <p class="text-center">{{ successMessage }}</p>
   </modal>
 </template>
 
 <script>
 import axios from "axios";
-import spinnerButton from '../../helpers/spinnerButton.vue';
+import spinnerButton from "../../helpers/spinnerButton.vue";
 import Energy from "../../../apis/Energy";
 
 export default {
@@ -155,27 +122,64 @@ export default {
       successMessage: "hello from index",
       isSuccessMessage: false,
       showModal: false,
-      showSpinner:false,
+      showSpinner: false,
     };
   },
   name: "energySheetIndex",
 
-  mounted() {
-    this.getEnergySheetIndex();
-    
+  computed: {
+    isLogin() {
+      return this.$store.state.isLogin;
+    },
+    isSuperAdmin() {
+      let userRoles = this.$store.state.userRoles;
+      let userRole = null;
+      userRoles.forEach((role) => {
+        if (role.name == "super-admin") {
+          userRole = role.name;
+        }
+      });
+      if (userRole) {
+        return true;
+      } else {
+        return false;
+      }
+    },
   },
+
+  beforeRouteEnter(to, from, next) {
+    next((vm) => {
+      if (!vm.isLogin || vm.isSuperAdmin == false) {
+        return vm.$router.push(from.path);
+      } else {
+        vm.getEnergySheetIndex();
+      }
+    });
+  },
+
+  mounted() {},
   methods: {
-   
     getEnergySheetIndex() {
+      this.serverError = null;
+      this.yearErrors = null;
+      this.weekErrors = null;
       // axios.get("/api/energysheet/index").then((response) => {
       //   this.weeks = response.data.weeks;
       //   this.years = response.data.years;
       // });
-       Energy.getEnergySheetIndex().then((response)=>{
-        this.weeks = response.data.weeks;
-         this.years = response.data.years;
-
-      });
+      Energy.getEnergySheetIndex()
+        .then((response) => {
+          this.weeks = response.data.weeks;
+          this.years = response.data.years;
+        })
+        .catch((error) => {
+          // if (error.response.status == 403 || error.response.status == 401) {
+          //   this.$router.push({ path: "/user/login" });
+          //  }
+          if (error.response.status == 500) {
+            this.serverError = "internal Server Error";
+          }
+        });
     },
     clearYearsErrors() {
       this.yearErrors = [];
@@ -206,7 +210,7 @@ export default {
         week: this.week,
         year: this.year,
       };
-     this.showSpinner=true;
+      this.showSpinner = true;
 
       axios
         .post("/api/energysheet/index", data, {
@@ -228,6 +232,9 @@ export default {
             if (error.response.status == "500") {
               this.serverError = "internal server error";
               this.isServerError = true;
+            }
+            if (error.response.status == 403 || response.status == 401) {
+              this.$router.push({ path: "/user/login" });
             }
             // The request was made and the server responded with a status code
             // that falls out of the range of 2xx
@@ -258,13 +265,23 @@ export default {
           }
           //   console.log(error.config);
         })
-        .finally(() => {this.showSpinner=false;
-        this.week='';
-        this.year='';
-        var energy_sheet=document.getElementById('energy_sheet');
-        energy_sheet.value="";
+        .finally(() => {
+          this.showSpinner = false;
+          this.week = "";
+          this.year = "";
+          var energy_sheet = document.getElementById("energy_sheet");
+          energy_sheet.value = "";
         });
     },
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.index {
+  margin-top: 6em;
+  width: 70%;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>

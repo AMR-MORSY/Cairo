@@ -3,7 +3,7 @@
     <!-- Modal -->
     <div
       v-if="OpenClose"
-      class=" modal fade show"
+      class="modal fade show"
       tabindex="-1"
       aria-labelledby="exampleModalLabel"
       aria-modal="true"
@@ -21,16 +21,17 @@
             ></button>
           </div>
           <div class="modal-body">
-            <slot></slot>
+            <slot name="body"></slot>
           </div>
           <div class="modal-footer">
-            <button
+            <slot name="footer"></slot>
+            <!-- <button
               type="button"
               @click="OpenCloseFun()"
               :class="'btn btn-' + variant"
             >
-            Close
-            </button>
+              Close
+            </button> -->
           </div>
         </div>
       </div>
@@ -41,26 +42,35 @@
 <script>
 export default {
   name: "modal",
-   props: {
+  props: {
     visible: Boolean,
-    variant:String,
-    
+    variant: String,
   },
-  data(){
-    return{
-       OpenClose:this.visible
-    }
+  data() {
+    return {
+      OpenClose:this.visible,
+    };
   },
-  methods:{
-        OpenCloseFun(){
-           this.OpenClose =false;
-        },
+  methods: {
+    OpenCloseFun() {
+      this.OpenClose = false;
+    },
   },
-  watch: { 
-      visible: function(newVal, oldVal) { // watch it
-        this.OpenClose =newVal;
-        console.log('new' +newVal+ '==' +oldVal)
-      }
-    }
+  watch: {
+    visible: function (newVal, oldVal) {
+      // watch it
+      this.OpenClose = newVal;
+      console.log("new" + newVal + "==" + oldVal);
+    },
+  },
 };
 </script>
+
+<style lang="scss" scoped>
+
+.modal-body{
+  color: red;
+  font-weight: 900;
+}
+
+</style>

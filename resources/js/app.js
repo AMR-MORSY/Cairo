@@ -6,8 +6,10 @@ import router from "./router";
 import modal from "./components/helpers/modal.vue";////declared globally
 import spinnerButton from "./components/helpers/spinnerButton.vue";
 import helperTable from "./components/helpers/helperTable.vue";
+import store from "./vuex/store";
+import navbar from "./components/navbar.vue"
 
 
 
-createApp(app).component("modal",modal).component("spinnerButton",spinnerButton).component("helperTable",helperTable).use(router).mount("#app");
+createApp(app).component("modal",modal).component("navbar",navbar).component("spinnerButton",spinnerButton).component("helperTable",helperTable).use(store).use(router).mount("#app");
 

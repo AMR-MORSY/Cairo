@@ -89,6 +89,13 @@ export default {
       successMessage: "",
     };
   },
+   beforeRouteEnter(to, from, next) {
+    next((vm) => {
+      if (!vm.isLogin || vm.isSuperAdmin == false) {
+        return vm.$router.push(from.path);
+      } 
+    });
+  },
   methods: {
     sitesFile(e) {
       return (this.sites = e.target.files[0]);

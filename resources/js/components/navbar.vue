@@ -1,120 +1,168 @@
 <template>
- <nav class="navbar  mb-5 navbar-expand-lg ">
-    <a class="navbar-brand font-weight-bolder" >CairoSouth</a>
-    <div class=" form-group">
-        <form  class="form-inline   ml-5" >
-            <input class=" mr-sm-2 search form-control"  type="text" 
-                aria-label="Search">
-            <button type="submit" class="form-control searchBtn " >Search </button>
-        </form>
+  <nav class="navbar mb-5 navbar-expand-lg">
+    <a class="navbar-brand font-weight-bolder">CairoSouth</a>
+    <div class="form-group">
+      <form class="form-inline ml-5">
+        <input
+          class="mr-sm-2 search form-control"
+          type="text"
+          aria-label="Search"
+        />
+        <button type="submit" class="form-control searchBtn">Search</button>
+      </form>
     </div>
 
-    <a class="ofcan-btn"  data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample"
-        aria-controls="offcanvasExample">
-
-        <div class="menue-btn">
-            <div class="menue-btn-burger"></div>
-        </div>
+    <a
+      class="ofcan-btn"
+      data-bs-toggle="offcanvas"
+      data-bs-target="#offcanvasExample"
+      aria-controls="offcanvasExample"
+    >
+      <div class="menue-btn">
+        <div class="menue-btn-burger"></div>
+      </div>
     </a>
-    <div class="collapse flex-grow-0   navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav">
-            <li class="nav-item active">
-                <!-- <a class="nav-link"  Active >Home </a> -->
-                <router-link class="nav-link" to="/"  Active>Home</router-link>
-            </li>
+    <div
+      class="collapse flex-grow-0 navbar-collapse"
+      id="navbarSupportedContent"
+    >
+      <ul class="navbar-nav">
+        <li class="nav-item active">
+          <!-- <a class="nav-link"  Active >Home </a> -->
+          <router-link class="nav-link" to="/home" Active>Home</router-link>
+        </li>
+        <li class="nav-link" v-if="userName">
+          {{ userName.name }}
+        </li>
 
+        <li class="nav-item">
+          <div class="image_container">
+            <img class="w-100 h-100" />
+          </div>
+        </li>
+
+        <li class="nav-item">
+          <p class="nav-link"></p>
+        </li>
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            id="dropdownMenuLink"
+            aria-haspopup="true"
+            aria-expanded="false"
+            v-if="isLogin"
+          >
+            Admin
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
             <li class="nav-item">
-                <div class="image_container">
-                    <img class="w-100 h-100" >
+              <div class="test">
+                <a class="dropdown-item">Sites</a>
+                <div class="test2">
+                  <!-- <a class="dropdown-item ">All Sites</a> -->
+
+                  <!-- <a class="dropdown-item " >Create New</a> -->
+                  <router-link class="dropdown-item" to="/sites/store"
+                    >Create New</router-link
+                  >
                 </div>
-
+              </div>
             </li>
-
-
+            <li><a class="dropdown-item">Modifications</a></li>
             <li class="nav-item">
-                <p class="nav-link" ></p>
-            </li>
-            <li class="nav-item dropdown">
-
-                <a class="nav-link dropdown-toggle"  id="dropdownMenuLink" aria-haspopup="true"
-                    aria-expanded="false">
-                    Admin
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                    <li class="nav-item">
-                        <div class="test">
-                            <a class="dropdown-item">Sites</a>
-                            <div class="test2">
-                                <!-- <a class="dropdown-item ">All Sites</a> -->
-                              
-                                <!-- <a class="dropdown-item " >Create New</a> -->
-                                <router-link class="dropdown-item" to="/sites/store">Create New</router-link>
-                            </div>
-                        </div>
-
-                    </li>
-                    <li><a class="dropdown-item" >Modifications</a>
-                    </li>
-                    <li class="nav-item">
-                        <div class="test">
-                            <a class="dropdown-item ">NUR</a>
-                            <div class="test2">
-                                <a class="dropdown-item " >Show NUR</a>
-                                <a class="dropdown-item " >Add NUR</a>
-
-                            </div>
-
-                        </div>
-
-
-
-                    </li>
-                    <li class="nav-item">
-                      <div class="test">
-                            <a class="dropdown-item ">Energy Sheet</a>
-                            <div class="test2">
-                                <!-- <a class="dropdown-item " >Insert Sheet</a> -->
-                                  <router-link to="/energysheet/index" class="dropdown-item ">Insert Sheet</router-link>
-                              
-                            </div>
-
-                        </div>
-
-
-                    </li>
-                    <li> <a class="dropdown-item" >Users</a></li>
-                </ul>
-
+              <div class="test">
+                <a class="dropdown-item">NUR</a>
+                <div class="test2">
+                  <a class="dropdown-item">Show NUR</a>
+                  <a class="dropdown-item">Add NUR</a>
+                </div>
+              </div>
             </li>
             <li class="nav-item">
-                <a class="nav-link" >Profile</a>
+              <div class="test">
+                <a class="dropdown-item">Energy Sheet</a>
+                <div class="test2">
+                  <!-- <a class="dropdown-item " >Insert Sheet</a> -->
+                  <router-link to="/energysheet/index" class="dropdown-item"
+                    >Insert Sheet</router-link
+                  >
+                </div>
+              </div>
             </li>
-            <li class="nav-item">
-              <router-link class="nav-link" to="/user/login">Login</router-link>
-                <!-- <a class="nav-link" >Login</a> -->
-            </li>
-            <li class="nav-item">
-                <a class="nav-link">Logout</a>
-            </li>
-            <li class="nav-item">
-               <router-link class="nav-link" to="/user/register">Register</router-link>
-                <!-- <a class="nav-link" >Register</a> -->
-            </li>
-        </ul>
-
-
-
+            <li><a class="dropdown-item">Users</a></li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" v-if="isLogin">Profile</a>
+        </li>
+        <li class="nav-item">
+          <router-link v-if="!isLogin" class="nav-link" to="/user/login"
+            >Login</router-link
+          >
+          <!-- <a class="nav-link" >Login</a> -->
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" v-if="isLogin" @click="logout">Logout</a>
+        </li>
+        <li class="nav-item">
+          <router-link v-if="!isLogin" class="nav-link" to="/user/register"
+            >Register</router-link
+          >
+          <!-- <a class="nav-link" >Register</a> -->
+        </li>
+      </ul>
     </div>
-</nav>
-
+  </nav>
 </template>
 
 <script>
+import User from "../apis/User";
+
 export default {
   data() {
-    return {};
+    return {
+      // isLogin:this.$store.state.isLogin,
+    };
   },
-  name:"navbar"
+  name: "navbar",
+  computed: {
+    isLogin() {
+      return this.$store.state.isLogin;
+    },
+    userName() {
+      return this.$store.state.user;
+    },
+  },
+  mounted() {
+    // this.checkingLogin();
+  },
+  methods: {
+    logout() {
+      User.logout()
+        .then((data) => {
+          console.log(data);
+
+          sessionStorage.removeItem("Auth");
+          sessionStorage.removeItem("userData");
+          this.$store.dispatch("changeLoginState", false);
+          this.$store.dispatch("userData", null);
+          this.$store.dispatch("userPermissions", null);
+          this.$store.dispatch("userRoles", null);
+          // this.isLogin=false;
+          this.$router.push({ path: "/user/login" });
+        })
+        .catch((error) => {
+        //   console.log(error);
+        //   if (error.response.status == 401 || error.response.status == 403) {
+        //     this.$router.push({ path: "/user/login" });
+        //   }
+         });
+    },
+
+    // checkingLogin() {
+    //   this.isLogin = this.$store.getters.checkingLogin;
+    // },
+  },
 };
 </script>
 

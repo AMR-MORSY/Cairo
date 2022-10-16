@@ -6,6 +6,8 @@ import login from "../components/pages/User/login.vue";
 import register from "../components/pages/User/register.vue";
 import home from "../components/home.vue";
 import resetPassword from "../components/pages/User/resetPassword.vue";
+import unauthorized from "../components/unauthorized.vue";
+
 
 
 const routes = [
@@ -14,9 +16,10 @@ const routes = [
     { path: '/home', component:home },
     {path:"/:pathMatch(.*)*",component: notFount},
     {path:"/sites/store", component:newSitesInsert},
-    {path:"/user/login", component:login},
+    {path:"/user/login", component:login,name:"login"},
     {path:"/user/register", component:register},
     {path:"/user/resetpassword", component:resetPassword},
+    {path:"/unauthorized", component:unauthorized},
     
     
   ];

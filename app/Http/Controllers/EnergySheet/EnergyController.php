@@ -34,6 +34,11 @@ class EnergyController extends Controller
         ], 200);
     }
 
+    public function __construct()
+    {
+        $this->middleware(["role:super-admin|admin"]);
+    }
+
 
     public function store_alarms(Request $request)
     {

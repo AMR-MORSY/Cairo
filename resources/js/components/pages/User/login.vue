@@ -1,17 +1,11 @@
 <template>
   <main class="form-signin w-25 m-auto">
     <form @submit.prevent="submitLoginForm">
-      <img
-        class="mb-4"
-     
-        alt=""
-        width="72"
-        height="57"
-      />
+      <img class="mb-4" alt="" width="72" height="57" />
       <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
 
-      <div v-if="isError">
-        <p style="color:red">{{error}}</p>
+      <div v-if="credentialsError">
+        {{ credentialsError }}
       </div>
 
       <div class="form-floating">
@@ -21,11 +15,14 @@
           class="form-control"
           id="floatingInput"
           placeholder="name@example.com"
+          :class="{ 'is-invalid': isEmailInvalid, 'is-valid': form.email }"
         />
         <label for="floatingInput">Email address</label>
       </div>
-      <div v-if="isEmailError">
-        <p v-for="error in emailError" :key="error" style="color:red">{{error}}</p>
+      <div v-if="emailError">
+        <p  style="color: red">
+          {{ emailError }}
+        </p>
       </div>
       <div class="form-floating mt-1">
         <input
@@ -35,15 +32,18 @@
           autocomplete="on"
           placeholder="Password"
           v-model="form.password"
+          :class="{ 'is-invalid': isPassInvalid, 'is-valid': form.password }"
         />
         <label for="password">Password</label>
       </div>
-      <div v-if="isPasswordError">
-        <p v-for="error in passwordError" :key="error" style="color:red">{{error}}</p>
+      <div v-if="passwordError">
+        <p style="color: red">
+          {{passwordError}}
+        </p>
       </div>
 
       <div class="checkbox mb-3">
-      <router-link to="/user/resetPassword" >Forgot Password?</router-link>
+        <router-link to="/user/resetPassword">Forgot Password?</router-link>
       </div>
       <button class="w-100 btn btn-lg btn-primary" type="submit">
         Sign in
@@ -56,69 +56,103 @@
 import User from "../../../apis/User";
 
 export default {
-    data(){
-        return{
-            form:{
-            email:"",
-            password:"",
-            },
-            error:"",
-            isError:false,
-            passwordError:[],
-            isPasswordError:false,
-            emailError:[],
-            isEmailError:false,
+  data() {
+    return {
+      form: {
+        email: null,
+        password: null,
+      },
 
-           
-        }
-    },
+      passwordError: null,
+      credentialsError: null,
+
+      emailError: null,
+    };
+  },
   name: "login",
-  methods:{
-    submitLoginForm()
+  computed: {
+    isPassInvalid()
     {
+      if(this.passwordError||this.credentialsError)
+      {
+        return true
+      }
+      else{
+        return false;
+      }
+    },
+    isEmailInvalid()
+    {
+      if(this.emailError||this.credentialsError)
+      {
+        return true
+      }
+      else{
+        return false;
+      }
+    },
+    isLogin() {
+      return this.$store.state.isLogin;
+    },
+  },
+ 
+  beforeRouteEnter(to, from, next) {
+    next((vm) => {
+      if (vm.isLogin) {
      
-        User.login(this.form).then(data=>{
-          localStorage.setItem("Auth",true);
-        this.$router.push({
-          path:"/home"
-        });
-        }).catch((error)=>{
-          if(error.response){
+      return vm.$router.push(from.path) ;
+      } 
+    });
+  },
+  methods: {
+    submitLoginForm() {
+      this.passwordError = null;
+      this.emailError = null;
+      this.credentialsError = null;
+      // this.isPassInvalid=false;
+      // this.isEmailInvalid=false;
+      if (!this.form.email) {
+        this.emailError = "Email is required";
+      }
+      if (!this.form.password) {
+        this.passwordError = "Password is required";
+      }
+      if (!this.passwordError && !this.emailError) {
+        User.login(this.form)
+          .then((response) => {
+            console.log(response);
+            sessionStorage.setItem("Auth", true);
+            sessionStorage.setItem("userData", JSON.stringify(response.data));
+            this.$router.push({
+              path: "/home",
+            });
+
+            this.$store.dispatch("changeLoginState", true);
+            this.$store.dispatch("userData",response.data.user);
+            this.$store.dispatch('userPermissions',response.data.permissions)
+            this.$store.dispatch('userRoles',response.data.roles)
+          })
+          .catch((error) => {
+            if (error.response) {
               console.log(error.response);
-            if(error.response.status==401)
-            {
-              this.error=error.response.data.message;
-              this.isError=true;
-        
-
-            }
-            else if(error.response.status==422)
-            {
-              let err=error.response.data.errors;
-              if(err.email)
-              {
-                this.emailError=err.email;
-                this.isEmailError=true;
-
+              if (error.response.status == 401) {
+                this.credentialsError = error.response.data.message;
               }
-              if(err.password)
-              {
-                this.passwordError=err.password;
-                this.isPasswordError=true;
 
-
+              if (error.response.status == 422) {
+                let err = error.response.data.errors;
+                if (err.email) {
+                  this.emailError = err.email;
+                }
+                if (err.password) {
+                  this.passwordError = err.password;
+                }
               }
-              
-        
-
             }
-
-          }
-          
-        })
-    }
-
-  }
+          });
+      }
+    },
+  },
 };
 </script>
 
