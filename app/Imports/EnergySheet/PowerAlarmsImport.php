@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Imports;
+namespace App\Imports\EnergySheet;
 
-use App\Models\HighTempAlarm;
+use App\Models\EnergySheet\PowerAlarm;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Events\AfterImport;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
@@ -15,33 +15,38 @@ use Maatwebsite\Excel\Concerns\RegistersEventListeners;
 use Maatwebsite\Excel\Concerns\WithValidation;
 
 HeadingRowFormatter::default('none');
-
-class HightempAlarmsImport implements ToModel ,WithHeadingRow ,WithBatchInserts ,WithChunkReading,WithValidation
+class PowerAlarmsImport implements ToModel, WithHeadingRow, WithBatchInserts, WithChunkReading, WithValidation
 {
-  
+
     /**
      * @param array $row
      *
      * @return \Illuminate\Database\Eloquent\Model|null
      */
-    public $week, $year;
 
-    
+
+    public $week, $year;
 
     public function __construct($week, $year)
     {
         $this->week = $week;
         $this->year = $year;
     }
-  
-    public function transformDate($value, $format = 'Y-m-d')
-    {
-        try {
-            return \Carbon\Carbon::instance(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($value));
-        } catch (\ErrorException $e) {
-            return \Carbon\Carbon::createFromFormat($format, $value);
-        }
-    }
+
+    // public function transformDate($value, $format = 'Y-m-d')
+    // {
+    //     try {
+    //         // return response()->json([
+    //         //     "error"=>$value,
+    //         // ]);
+    //         return \Carbon\Carbon::instance(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($value));
+    //     } catch (\ErrorException $e) {
+    //         return \Carbon\Carbon::createFromFormat($format, $value);
+    //         // return response()->json([
+    //         //     "error"=>$e,
+    //         // ]);
+    //     }
+    // }
     public function calculate_duration($value)
     {
         if (intval($value) > 0) {
@@ -58,20 +63,20 @@ class HightempAlarmsImport implements ToModel ,WithHeadingRow ,WithBatchInserts 
         }
         return $min;
     }
-    public function transformTime($value)
-    {
-        $time = Date::excelToTimestamp($value);
-        return $time = date("H:i:s", $time);
-      
-    }
+    // public function transformTime($value)
+    // {
+    //     $time = Date::excelToTimestamp($value);
+    //     return $time = date("H:i:s", $time);
+    // }
+
     public function rules(): array
     {
         return [
-            "*.Site Code" => ["required", "unique:sites,site_code", "regex:/^([0-9a-zA-Z]{4,6}(up|UP))|([0-9a-zA-Z]{4,6}(ca|CA))|([0-9a-zA-Z]{4,6}(de|DE))$/"],
+            "*.Site Code" => ["required", "regex:/^([0-9a-zA-Z]{4,6}(up|UP))|([0-9a-zA-Z]{4,6}(ca|CA))|([0-9a-zA-Z]{4,6}(de|DE))$/"],
             "*.Site Name" => ["required", "regex:/^([0-9a-zA-Z_-]|\s){3,60}$/"],
             "*.BSC Name" => ["required", "regex:/^([0-9a-zA-Z_-]|\s){3,50}$/"],
             "*.Area" => ["required", "regex:/^[0-9a-zA-Z_-]{3,50}$/"],
-            "*.Alarm Name" => ["required", "regex:/^(Shelter High Temperature)$/"],
+            "*.Alarm Name" => ["required", "regex:/^(Main Power Cut Off)|(Mains Input Out of Range)|(AC Input Power Failure)|(3900E Main Power Cut Off)|(BSC Main Power Cut Off)$/"],
             "*.Occurred On(Date)" => ["required", 'date'],
             // "*.Cleared On(Date)" => ["required", "regex:/^([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))$/"],
             // "*.Occurred On(Time)" => ["required", "regex:/^[012][0-3]:[0-5]\d:[0-5]\d$/"],
@@ -140,10 +145,14 @@ class HightempAlarmsImport implements ToModel ,WithHeadingRow ,WithBatchInserts 
        
     }
    
+
+
+
+
     public function model(array $row)
     {
-        return new HightempAlarm([
 
+        return new PowerAlarm([
             "zone" => $row['Zone'],
             'operational_zone' => $row['OZ'],
             "area" => $row['Area'],

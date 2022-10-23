@@ -71,10 +71,18 @@
             <li><a class="dropdown-item">Modifications</a></li>
             <li class="nav-item">
               <div class="test">
-                <a class="dropdown-item">NUR</a>
+                <router-link class="dropdown-item" to="/nur">NUR</router-link>
                 <div class="test2">
-                  <a class="dropdown-item">Show NUR</a>
-                  <a class="dropdown-item">Add NUR</a>
+                  <!-- <a class="dropdown-item">Show NUR</a> -->
+                  <router-link class="dropdown-item" to="/nur/2G"
+                    >2G</router-link
+                  >
+                  <router-link class="dropdown-item" to="/nur/3G"
+                    >3G</router-link
+                  >
+                  <router-link class="dropdown-item" to="/nur/4G"
+                    >4G</router-link
+                  >
                 </div>
               </div>
             </li>
@@ -152,11 +160,11 @@ export default {
           this.$router.push({ path: "/user/login" });
         })
         .catch((error) => {
-        //   console.log(error);
-        //   if (error.response.status == 401 || error.response.status == 403) {
-        //     this.$router.push({ path: "/user/login" });
-        //   }
-         });
+          //   console.log(error);
+          //   if (error.response.status == 401 || error.response.status == 403) {
+          //     this.$router.push({ path: "/user/login" });
+          //   }
+        });
     },
 
     // checkingLogin() {
@@ -170,7 +178,7 @@ export default {
 .navbar {
   position: fixed;
   display: flex;
-  background-color: #79589F;
+  background-color: #79589f;
   justify-content: space-around;
   z-index: 1;
   width: 100%;

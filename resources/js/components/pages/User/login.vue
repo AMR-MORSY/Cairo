@@ -120,17 +120,17 @@ export default {
       if (!this.passwordError && !this.emailError) {
         User.login(this.form)
           .then((response) => {
-            console.log(response);
+             this.$store.dispatch("changeLoginState", true);
+            this.$store.dispatch("userData",response.data.user);
+            this.$store.dispatch('userPermissions',response.data.permissions);
+            this.$store.dispatch('userRoles',response.data.roles);
             sessionStorage.setItem("Auth", true);
             sessionStorage.setItem("userData", JSON.stringify(response.data));
             this.$router.push({
               path: "/home",
             });
 
-            this.$store.dispatch("changeLoginState", true);
-            this.$store.dispatch("userData",response.data.user);
-            this.$store.dispatch('userPermissions',response.data.permissions)
-            this.$store.dispatch('userRoles',response.data.roles)
+          
           })
           .catch((error) => {
             if (error.response) {

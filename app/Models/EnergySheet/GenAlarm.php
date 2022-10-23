@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\EnergySheet;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class HighTempAlarm extends Model
+class GenAlarm extends Model
 {
     use HasFactory;
-    protected $table = "high_temp_alarms";
+    protected $table = "gen_down_alarms";
     protected $guarded = [];
 
     // public function setStartDateAttribute($value)

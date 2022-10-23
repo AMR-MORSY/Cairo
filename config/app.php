@@ -196,6 +196,12 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        //  App\Providers\GetMonthServiceProvider::class,
+        // App\Providers\MonthDaysServiceProvider::class,
+        // App\Providers\DurationMinServiceProvider::class,
+        // App\Providers\DurationHrServiceProvider::class,
+        // App\Providers\MonthlyNurServiceProvider::class,
+        // App\Providers\WeeklyNurServiceProvider::class,
 
     ],
 

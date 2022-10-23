@@ -7,11 +7,19 @@ import register from "../components/pages/User/register.vue";
 import home from "../components/home.vue";
 import resetPassword from "../components/pages/User/resetPassword.vue";
 import unauthorized from "../components/unauthorized.vue";
+import nurIndex from "../components/pages/NUR/nurIndex.vue";
+import NUR2G from"../components/pages/NUR/NUR2G.vue";
+import NUR3G from"../components/pages/NUR/NUR3G.vue";
+import NUR4G from"../components/pages/NUR/NUR4G.vue";
 
 
 
 const routes = [
     { path: '/energysheet/index', component: energySheetIndex },
+    { path: '/nur', component:nurIndex },
+    { path: '/nur/2G', component: NUR2G },
+    { path: '/nur/3G', component: NUR3G },
+    { path: '/nur/4G', component: NUR4G },
     { path: '/', redirect:"/home" },
     { path: '/home', component:home },
     {path:"/:pathMatch(.*)*",component: notFount},

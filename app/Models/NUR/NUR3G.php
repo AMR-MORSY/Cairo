@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\NUR;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class PasswordReset extends Model
+class NUR3G extends Model
 {
     use HasFactory;
-    protected $table='password_resets';
+    protected $table="3g_nurs";
     protected $guarded=[];
 }

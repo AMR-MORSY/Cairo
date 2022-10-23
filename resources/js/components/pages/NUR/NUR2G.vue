@@ -2,12 +2,12 @@
   <div class="container mt-5">
     <form
       id="energysheet"
-      @submit.prevent="submitEnergySheet"
+      @submit.prevent="submit2GNurSheet"
       enctype="multipart/form-data"
     >
       <div class="errors mt-5"></div>
       <div class="row index">
-        <div class="col-12">
+        <div class="col-12" style="color: red; text-align: center">
           <div v-if="serverError">
             {{ serverError }}
           </div>
@@ -46,20 +46,38 @@
           </div>
         </div>
 
-        <div class="col-12">
+        <div class="col-6">
           <div class="form-group">
-            <label for="power">Energy Sheet:</label>
+            <label for="power">2G Sheet:</label>
             <input
               type="file"
               name="energy_sheet"
               class="form-control"
               id="energy_sheet"
-              @change="energySheetFile"
+              @change="Nur2GSheetFile"
             />
-            <div v-if="energySheetErrors">
+            <div v-if="Nur2GSheetErrors">
               <ul>
                 <li
-                  v-for="error in energySheetErrors"
+                  v-for="error in Nur2GSheetErrors"
+                  style="color: red"
+                  :key="error"
+                >
+                  {{ error }}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-6">
+          <div class="form-group">
+            <label for="power">2G Cells:</label>
+            <input type="number" class="form-control" v-model="cells" />
+            <div v-if="cellsErrors">
+              <ul>
+                <li
+                  v-for="error in cellsErrors"
                   style="color: red"
                   :key="error"
                 >
@@ -125,19 +143,17 @@
 </template>
 
 <script>
-import axios from "axios";
-import spinnerButton from "../../helpers/spinnerButton.vue";
-import Energy from "../../../apis/Energy";
-
+import NUR from "../../../apis/NUR";
 export default {
-  components: { spinnerButton },
   data() {
     return {
       weeks: [],
       years: [],
       year: "",
       week: "",
-      energySheet: null,
+      cells: "",
+      Nur2GSheet: null,
+      cellsErrors: null,
 
       sheetValidationErrors: null,
 
@@ -145,7 +161,7 @@ export default {
 
       weekErrors: null,
 
-      energySheetErrors: null,
+      Nur2GSheetErrors: null,
       serverError: null,
 
       successMessage: null,
@@ -154,78 +170,22 @@ export default {
       showSpinner: false,
     };
   },
-  name: "energySheetIndex",
-
-  computed: {
-    isLogin() {
-      return this.$store.state.isLogin;
-    },
-    isSuperAdmin() {
-      let userRoles = this.$store.state.userRoles;
-      let userRole = null;
-      userRoles.forEach((role) => {
-        if (role.name == "super-admin") {
-          userRole = role.name;
-        }
-      });
-      if (userRole) {
-        return true;
-      } else {
-        return false;
-      }
-    },
-  },
-
-  beforeRouteEnter(to, from, next) {
-    next((vm) => {
-      if (!vm.isLogin || vm.isSuperAdmin == false) {
-        return vm.$router.push(from.path);
-      } else {
-        vm.getEnergySheetIndex();
-      }
-    });
-  },
-
-  mounted() {},
+  name: "NUR2G",
   methods: {
-    getEnergySheetIndex() {
-      this.serverError = null;
-      this.yearErrors = null;
-      this.weekErrors = null;
-
-      Energy.getEnergySheetIndex()
-        .then((response) => {
-          this.weeks = response.data.weeks;
-          this.years = response.data.years;
-        })
-        .catch((error) => {
-          if (error.response.status == 500) {
-            this.serverError = "internal Server Error";
-          }
-        });
-    },
-
-    energySheetFile(e) {
-      return (this.energySheet = e.target.files[0]);
-    },
-
-    closeModal() {
-      return (this.showModal = false);
-    },
-
-    submitEnergySheet() {
+    submit2GNurSheet() {
       this.weekErrors = null;
       this.serverError = null;
       this.yearErrors = null;
       this.sheetValidationErrors = null;
+      this.cellsErrors = null;
       var data = {
-        energy_sheet: this.energySheet,
+        Nur2G_sheet: this.Nur2GSheet,
         week: this.week,
         year: this.year,
+        cells: this.cells,
       };
       this.showSpinner = true;
-
-      Energy.submitEnergySheet(data)
+      NUR.submit2GNurSheet(data)
         .then((response) => {
           console.log(response.data.message);
           this.successMessage = response.data.message;
@@ -246,11 +206,16 @@ export default {
                 if (errors.year) {
                   this.yearErrors = errors.year;
                 }
-                if (errors.energy_sheet) {
-                  this.energySheetErrors = errors.energy_sheet;
+                if (errors.Nur2G_sheet) {
+                  this.Nur2GSheetErrors = errors.Nur2G_sheet;
+                }
+                if (errors.cells) {
+                  this.cellsErrors = errors.cells;
                 }
               } else if (error.response.data.sheet_errors) {
                 this.sheetValidationErrors = error.response.data.sheet_errors;
+              } else if (error.response.data.week_year) {
+                this.serverError = error.response.data.week_year;
               }
             }
           } else if (error.request) {
@@ -272,6 +237,32 @@ export default {
           energy_sheet.value = "";
         });
     },
+    Nur2GSheetFile(e) {
+      return (this.Nur2GSheet = e.target.files[0]);
+    },
+
+    closeModal() {
+      return (this.showModal = false);
+    },
+    getNur2GSIndex() {
+      this.serverError = null;
+      this.yearErrors = null;
+      this.weekErrors = null;
+
+      NUR.get2GNurIndex()
+        .then((response) => {
+          this.weeks = response.data.weeks;
+          this.years = response.data.years;
+        })
+        .catch((error) => {
+          if (error.response.status == 500) {
+            this.serverError = "internal Server Error";
+          }
+        });
+    },
+  },
+  mounted() {
+    this.getNur2GSIndex();
   },
 };
 </script>

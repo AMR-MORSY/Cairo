@@ -1,9 +1,9 @@
-import Api from "./Api";
+import allInstances from "./Api";
 
 export default {
 
     getCookie(){
-       return Api.get('/csrf-cookie')
+       return allInstances.Api.get('/csrf-cookie')
             
         
     }

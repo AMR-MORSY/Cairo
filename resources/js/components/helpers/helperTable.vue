@@ -6,17 +6,6 @@
       </tr>
     </thead>
     <tbody>
-      <!-- <tr style="background-color: black; color: white">
-        <td class="text-center align-middle"></td>
-        <td class="text-center align-middle"></td>
-        <td class="text-center align-middle"></td>
-      </tr>
-
-      <tr>
-        <td class="text-center align-middle"></td>
-        <td class="text-center align-middle"></td>
-        <td></td>
-      </tr> -->
       <slot name="body"></slot>
     </tbody>
   </table>

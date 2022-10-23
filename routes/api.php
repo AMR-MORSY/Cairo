@@ -1,14 +1,19 @@
 <?php
 
+use Maatwebsite\Excel\Row;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\NUR\NUR2GController;
+use App\Http\Controllers\NUR\NUR3GController;
+use App\Http\Controllers\NUR\NUR4GController;
 use App\Http\Controllers\User\LoginController;
+use App\Http\Controllers\NUR\ShowNURController;
 use App\Http\Controllers\Sites\SitesController;
 use App\Http\Controllers\User\LogoutController;
+use App\Http\Controllers\NUR\NurIndexController;
 use App\Http\Controllers\User\RegisterController;
 use App\Http\Controllers\EnergySheet\EnergyController;
 use App\Http\Controllers\User\ResetPasswordController;
-use Maatwebsite\Excel\Row;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,9 +40,19 @@ Route::prefix("energysheet")->middleware(['auth:sanctum',"role:admin|super-admin
 });
 
 
-Route::prefix('sites')->group(function(){
+Route::prefix('sites')->middleware(['auth:sanctum',"role:super-admin"])->group(function(){
     // Route::get('/newsitesinsert',[SitesController::class,"index"])->name("sites");
     Route::post('/store',[SitesController::class,"store"])->name("store_sites");
+    Route::get('/downloadAll',[SitesController::class,"export_all"])->name("export_all");
+
+});
+Route::prefix('Nur')->middleware(['auth:sanctum',"role:super-admin"])->group(function(){
+    // Route::get('/newsitesinsert',[SitesController::class,"index"])->name("sites");
+    Route::get('/index',[NurIndexController::class,"index"])->name("Nur_index");
+    Route::post('/2G',[NUR2GController::class,"store"])->name("store_2G");
+    Route::post('/3G',[NUR3GController::class,"store"])->name("store_3G");
+    Route::post('/4G',[NUR4GController::class,"store"])->name("store_4G");
+    Route::post('/show',[ShowNURController::class,"show_nur"])->name("show_nur");
 
 });
 

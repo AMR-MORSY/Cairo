@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Imports;
+namespace App\Imports\EnergySheet;
 
-use App\Models\DownAlarm;
+use App\Models\EnergySheet\DownAlarm;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Events\AfterImport;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
@@ -64,7 +64,7 @@ class DownAlarmsImport implements ToModel ,WithHeadingRow ,WithBatchInserts ,Wit
     public function rules(): array
     {
         return [
-            "*.Site Code" => ["required", "unique:sites,site_code", "regex:/^([0-9a-zA-Z]{4,6}(up|UP))|([0-9a-zA-Z]{4,6}(ca|CA))|([0-9a-zA-Z]{4,6}(de|DE))$/"],
+            "*.Site Code" => ["required",  "regex:/^([0-9a-zA-Z]{4,6}(up|UP))|([0-9a-zA-Z]{4,6}(ca|CA))|([0-9a-zA-Z]{4,6}(de|DE))$/"],
             "*.Site Name" => ["required", "regex:/^([0-9a-zA-Z_-]|\s){3,60}$/"],
             "*.BSC Name" => ["required", "regex:/^([0-9a-zA-Z_-]|\s){3,50}$/"],
             "*.Area" => ["required", "regex:/^[0-9a-zA-Z_-]{3,50}$/"],

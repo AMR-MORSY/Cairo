@@ -1,4 +1,5 @@
 import axios from "axios";
+import { defaults } from "lodash";
 import router from "../router/index";
 import store from "../vuex/store";
 
@@ -6,7 +7,7 @@ let Api = axios.create({
     baseURL: "/api",
     headers: {
         "Content-Type": "multipart/form-data",
-      },
+    },
 });
 
 Api.defaults.withCredentials = true;
@@ -16,16 +17,16 @@ Api.interceptors.response.use(
     },
     function (error) {
         if (
-           
             error.response.status == 403 ||
-            error.response.status == 419|| error.response.status == 401
+            error.response.status == 419 ||
+            error.response.status == 401
         ) {
             sessionStorage.removeItem("Auth");
             sessionStorage.removeItem("userData");
             store.dispatch("changeLoginState", false);
-            store.dispatch("userData",null);
-            store.dispatch('userPermissions',null)
-            store.dispatch('userRoles',null)
+            store.dispatch("userData", null);
+            store.dispatch("userPermissions", null);
+            store.dispatch("userRoles", null);
             router.push({ path: "/user/login" });
         }
 
@@ -33,4 +34,40 @@ Api.interceptors.response.use(
     }
 );
 
-export default Api;
+let downloadApi = axios.create({
+    baseURL: "/api",
+
+    responseType: "blob",
+});
+downloadApi.defaults.withCredentials = true;
+downloadApi.interceptors.response.use(
+    function (response) {
+        return response;
+    },
+    function (error) {
+        if (
+            error.response.status == 403 ||
+            error.response.status == 419 ||
+            error.response.status == 401
+        ) {
+            sessionStorage.removeItem("Auth");
+            sessionStorage.removeItem("userData");
+            store.dispatch("changeLoginState", false);
+            store.dispatch("userData", null);
+            store.dispatch("userPermissions", null);
+            store.dispatch("userRoles", null);
+            router.push({ path: "/user/login" });
+        }
+
+        return Promise.reject(error);
+    }
+);
+
+function allInstances() {
+    return {
+        Api: Api,
+        downloadApi: downloadApi,
+    };
+}
+
+export default allInstances();

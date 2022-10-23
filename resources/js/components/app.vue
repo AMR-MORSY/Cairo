@@ -24,14 +24,9 @@ export default {
   },
   computed: {
     showSessionNotification() {
-      let timeOut = this.$store.state.sessionTimeOut;
+      return this.$store.state.sessionTimeOut;
 
-      if (timeOut == true) {
-        return true;
-      }
-      if (timeOut == false) {
-        return false;
-      }
+     
     },
     sessionEnd() {
       if (this.$store.state.sessionEnd) {

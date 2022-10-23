@@ -5,9 +5,9 @@
       @submit.prevent="submitSitesSheet"
       enctype="multipart/form-data"
     >
-      <div class="row index mt-5">
+      <div class="row index">
         <div class="col-12">
-          <div v-if="isServerError">
+          <div v-if="serverError">
             {{ serverError }}
           </div>
         </div>
@@ -23,13 +23,9 @@
               id="sites"
               @focus="clearErrors"
             />
-            <div v-if="isSitesError">
+            <div v-if="siteErrors">
               <ul>
-                <li
-                  v-for="error in sitesErrors"
-                  style="color: red"
-                  :key="error"
-                >
+                <li v-for="error in siteErrors" style="color: red" :key="error">
                   {{ error }}
                 </li>
               </ul>
@@ -47,107 +43,140 @@
           </spinner-button>
         </div>
       </div>
+      <div class="helper-table-container">
+        <helper-table v-if="sitesErrors">
+          <template #header>
+            <th scope="col">Row</th>
+            <th scope="col">Attribute</th>
+            <th scope="col">Errors</th>
+            <th scope="col">Values</th>
+          </template>
+          <template #body>
+            <tr
+              style="background-color: white; color: red"
+              v-for="error in sitesErrors"
+              :key="error"
+            >
+              <td class="text-left align-middle">{{ error.row }}</td>
+              <td class="text-left align-middle">{{ error.attribute }}</td>
+              <td class="text-left align-middle">
+                <ul v-for="rowError in error.errors" :key="rowError">
+                  <li>{{ rowError }}</li>
+                </ul>
+              </td>
+              <td class="text-left align-middle">
+                <ul>
+                  <li>Site Code:{{ error.values["Site Code"] }}</li>
+                  <li>Site Name:{{ error.values["Site Name"] }}</li>
+                </ul>
+              </td>
+            </tr>
+          </template>
+        </helper-table>
+      </div>
     </form>
   </div>
-  <modal variant="danger" :visible="showModal">
-    <p class="text-center">{{ successMessage }}</p>
-  </modal>
-  <helper-table>
-    <template #header>
-      <th scope="col">Row</th>
-      <th scope="col">Attribute</th>
-      <th scope="col">Errors</th>
-      <th scope="col">Values</th>
-    </template>
+
+  <modal :visible="showModal">
     <template #body>
-      <tr
-        style="background-color: black; color: white"
-        v-for="error in sitesErrors"
-        :key="error"
-      >
-        <td class="text-left align-middle">{{ error.row }}</td>
-        <td class="text-left align-middle">{{ error.attribute}}</td>
-        <td class="text-left align-middle"><ul v-for="rowError in error.errors" :key="rowError"><li>{{rowError}}</li></ul></td>
-        <td class="text-left align-middle"><ul><li>Site Code:{{error.values["Site Code"]}}</li><li>Site Name:{{error.values["Site Name"]}}</li></ul></td>
-      </tr>
+      <p class="text-center">{{ successMessage }}</p>
     </template>
-  </helper-table>
+    <template #footer>
+      <button class="btn btn-danger" @click="closeModal">close</button>
+    </template>
+  </modal>
+
+  <button class="btn btn-info" @click="downloadAll">Download All</button>
 </template>
 
 <script>
+import Sites from "../../../apis/Sites";
 export default {
   name: "newSitesInsert",
   data() {
     return {
       sites: "",
-      isSitesError: false,
-      sitesErrors: [],
-      serverError: "",
-      isServerError: false,
+      siteErrors: null,
+
+      sitesErrors: null,
+      serverError: null,
+
       showModal: false,
       showSpinner: false,
       successMessage: "",
     };
   },
-   beforeRouteEnter(to, from, next) {
+  computed: {
+    isLogin() {
+      return this.$store.state.isLogin;
+    },
+    isSuperAdmin() {
+      let userRoles = this.$store.state.userRoles;
+      let userRole = null;
+      userRoles.forEach((role) => {
+        if (role.name == "super-admin") {
+          userRole = role.name;
+        }
+      });
+      if (userRole) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+  },
+  beforeRouteEnter(to, from, next) {
     next((vm) => {
       if (!vm.isLogin || vm.isSuperAdmin == false) {
         return vm.$router.push(from.path);
-      } 
+      }
     });
   },
   methods: {
+    closeModal() {
+      return (this.showModal = false);
+    },
+
     sitesFile(e) {
       return (this.sites = e.target.files[0]);
     },
     clearErrors() {
-      this.serverError = "";
-      this.isServerError = false;
-      this.sitesErrors = [];
-      this.isSitesError = false;
+      this.serverError = null;
+
+      this.sitesErrors = null;
+
       return;
     },
     submitSitesSheet() {
+      this.serverError = null;
+      this.siteErrors = null;
+
+      this.sitesErrors = null;
       var data = {
         sites: this.sites,
       };
       this.showSpinner = true;
 
-      axios
-        .post("/api/sites/store", data, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            responseType: "json",
-          },
-        })
+      Sites.submitSitesSheet(data)
         .then((response) => {
           console.log(response.data.message);
           this.successMessage = response.data.message;
           this.showModal = true;
-          // this.weeks = response.data.weeks;
-          // this.years = response.data.years;
-          //   console.log(isResponseGot);
         })
         .catch((error) => {
           if (error.response) {
-            if (error.response.status == "500") {
-              this.serverError = "internal server error";
-              this.isServerError = true;
+            if (error.response.status == 500) {
+            this.serverError =error.response.data.message;
+            } else if (error.response.status == 422) {
+              if (error.response.data.errors) {
+                this.siteErrors = error.response.data.errors.sites;
+              } else if (error.response.data.sheet_errors) {
+                this.sitesErrors = error.response.data.sheet_errors;
+              }
             }
             // The request was made and the server responded with a status code
             // that falls out of the range of 2xx
             // console.log(error.response.data);
-            if (error.response.data) {
-              var errors = error.response.data.errors;
-              console.log(errors);
-              if (errors.sites) {
-                this.sitesErrors = errors.sites;
-                this.isSitesError = true;
-              } else {
-                this.sitesErrors = errors;
-                this.isSitesError = true;
-              }
-            }
           } else if (error.request) {
             // The request was made but no response was received
             // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
@@ -167,9 +196,31 @@ export default {
           sites_sheet.value = "";
         });
     },
+    downloadAll() {
+      Sites.downloadAll()
+        .then((response) => {
+      
+          var fileUrl = window.URL.createObjectURL(new Blob([response.data]));
+          var fileLink = document.createElement("a");
+          fileLink.href = fileUrl;
+          fileLink.setAttribute("download", "AllSites.xlsx");
+          document.body.appendChild(fileLink);
+          fileLink.click();
+        })
+        .catch();
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
+.index,
+.helper-table-container {
+  width: 70%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.index {
+  margin-top: 8em;
+}
 </style>

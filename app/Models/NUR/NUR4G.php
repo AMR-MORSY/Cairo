@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\NUR;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Site extends Model
+class NUR4G extends Model
 {
     use HasFactory;
-    protected $table="sites";
+    protected $table="4g_nurs";
     protected $guarded=[];
 }

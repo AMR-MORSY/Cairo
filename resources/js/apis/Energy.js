@@ -1,14 +1,14 @@
 import Csrf from "./Csrf";
-import Api from "./Api";
+import allInstances from "./Api";
 
 export default {
     submitEnergySheet(sheet) {
      
 
-        return Api.post("/energysheet/index", sheet);
+        return allInstances.Api.post("/energysheet/index", sheet);
     },
     getEnergySheetIndex() {
        
-        return Api.get("/energysheet/index");
+        return allInstances.Api.get("/energysheet/index");
     },
 };

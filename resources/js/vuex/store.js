@@ -21,20 +21,18 @@ const store = createStore({
             {
                 state.sessionTimeOut=false;
                 let sessionEnd = user.session.session_end;
-                var sessionEndDateMS = Date.parse(`${sessionEnd}`);
+                let sessionEndDateMS = Date.parse(sessionEnd);
+
                 let nowLocalDateMS = Date.now();
-    
                 let d = new Date(nowLocalDateMS);
                 let nowUTCString = d.toUTCString();
-    
-                var nowUTCMS = Date.parse(nowUTCString);
+                let nowUTCMS = Date.parse(nowUTCString);
     
     
                 if (sessionEndDateMS > nowUTCMS) {
                     let sessionRemainDurMS = sessionEndDateMS - nowUTCMS;
-                    let x = new Date(sessionRemainDurMS);
-                    let sessionRemainDurMin = x.getMinutes();
-                    let timeOut = (sessionRemainDurMin - 2) * 60 * 1000;
+                    let timeOut = sessionRemainDurMS-120000;
+                    console.log(timeOut);
                     
     
                     setTimeout(() => {

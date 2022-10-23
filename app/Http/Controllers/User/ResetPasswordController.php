@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Models\User;
+use App\Models\Users\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use App\Models\PasswordReset;
+use App\Models\Users\PasswordReset;
 use App\Mail\ResetPasswordMailable;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
