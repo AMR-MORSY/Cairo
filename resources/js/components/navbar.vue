@@ -35,11 +35,11 @@
           {{ userName.name }}
         </li>
 
-        <li class="nav-item">
+        <!-- <li class="nav-item">
           <div class="image_container">
             <img class="w-100 h-100" />
           </div>
-        </li>
+        </li> -->
 
         <li class="nav-item">
           <p class="nav-link"></p>
@@ -65,10 +65,17 @@
                   <router-link class="dropdown-item" to="/sites/store"
                     >Create New</router-link
                   >
+                    <router-link class="dropdown-item" to="/sites/cascades"
+                    >Cascades</router-link
+                  >
+                    <router-link class="dropdown-item" to="/sites/nodals"
+                    >Nodals</router-link
+                  >
                 </div>
               </div>
             </li>
-            <li><a class="dropdown-item">Modifications</a></li>
+            <!-- <li><a class="dropdown-item">Modifications</a></li> -->
+               <router-link class="dropdown-item" to="/modifications">Modifications</router-link>
             <li class="nav-item">
               <div class="test">
                 <router-link class="dropdown-item" to="/nur">NUR</router-link>

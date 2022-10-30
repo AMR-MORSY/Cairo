@@ -16,7 +16,12 @@
         "@popperjs/core": "^2.11.6",
         "@vitejs/plugin-vue": "^3.1.0",
         "bootstrap": "^5.2.1",
+        "chart.js": "^3.9.1",
+        "chartjs-plugin-datalabels": "^2.1.0",
+        "primeicons": "^6.0.1",
+        "primevue": "^3.18.0",
         "vue": "^3.2.36",
+        "vue-chartkick": "^1.1.0",
         "vue-loader": "^17.0.0",
         "vue-router": "^4.0.13",
         "vuex": "^4.0.2"

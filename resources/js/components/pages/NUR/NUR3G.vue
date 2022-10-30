@@ -132,9 +132,9 @@
             </td>
             <td class="text-left align-middle">
               <ul>
-                <li>Site Code:{{ error.values["Site Code"] }}</li>
-                <li>Site Name:{{ error.values["Site Name"] }}</li>
-                <li>Site Name:{{ error.values["Alarm Name"] }}</li>
+                <li>Site Code:{{ error.values["Problem source site code"] }}</li>
+                <li>Site Name:{{ error.values["Problem source site name"] }}</li>
+             
               </ul>
             </td>
           </tr>

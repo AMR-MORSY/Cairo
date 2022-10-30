@@ -2,7 +2,7 @@
   <div class="container mt-5">
     <form
       id="energysheet"
-      @submit.prevent="submitSitesSheet"
+      @submit.prevent="submitCascadesSheet"
       enctype="multipart/form-data"
     >
       <div class="row index">
@@ -14,18 +14,22 @@
 
         <div class="col-12">
           <div class="form-group">
-            <label for="sites">Sites:</label>
+            <label for="sites">Cascades:</label>
             <input
               type="file"
               name="energy_sheet"
               class="form-control"
-              @change="sitesFile"
+              @change="cascadesFile"
               id="sites"
               @focus="clearErrors"
             />
-            <div v-if="siteErrors">
+            <div v-if="cascadeErrors">
               <ul>
-                <li v-for="error in siteErrors" style="color: red" :key="error">
+                <li
+                  v-for="error in cascadeErrors"
+                  style="color: red"
+                  :key="error"
+                >
                   {{ error }}
                 </li>
               </ul>
@@ -43,40 +47,39 @@
           </spinner-button>
         </div>
       </div>
-      <div class="helper-table-container">
-        <helper-table v-if="sitesErrors">
-          <template #header>
-            <th scope="col">Row</th>
-            <th scope="col">Attribute</th>
-            <th scope="col">Errors</th>
-            <th scope="col">Values</th>
-          </template>
-          <template #body>
-            <tr
-              style="background-color: white; color: red"
-              v-for="error in sitesErrors"
-              :key="error"
-            >
-              <td class="text-left align-middle">{{ error.row }}</td>
-              <td class="text-left align-middle">{{ error.attribute }}</td>
-              <td class="text-left align-middle">
-                <ul v-for="rowError in error.errors" :key="rowError">
-                  <li>{{ rowError }}</li>
-                </ul>
-              </td>
-              <td class="text-left align-middle">
-                <ul>
-                  <li>Site Code:{{ error.values["Site Code"] }}</li>
-                  <li>Site Name:{{ error.values["Site Name"] }}</li>
-                </ul>
-              </td>
-            </tr>
-          </template>
-        </helper-table>
-      </div>
     </form>
 
-    <button class="btn btn-danger" @click="getAllCascades">All cascades</button>
+    <div class="helper-table-container">
+      <helper-table v-if="cascadesErrors">
+        <template #header>
+          <th scope="col">Row</th>
+          <th scope="col">Attribute</th>
+          <th scope="col">Errors</th>
+          <th scope="col">Values</th>
+        </template>
+        <template #body>
+          <tr
+            style="background-color: white; color: red"
+            v-for="error in cascadesErrors"
+            :key="error"
+          >
+            <td class="text-left align-middle">{{ error.row }}</td>
+            <td class="text-left align-middle">{{ error.attribute }}</td>
+            <td class="text-left align-middle">
+              <ul v-for="rowError in error.errors" :key="rowError">
+                <li>{{ rowError }}</li>
+              </ul>
+            </td>
+            <td class="text-left align-middle">
+              <ul>
+                <li>Site Code:{{ error.values["Site Code"] }}</li>
+                <li>Site Name:{{ error.values["Site Name"] }}</li>
+              </ul>
+            </td>
+          </tr>
+        </template>
+      </helper-table>
+    </div>
   </div>
 
   <modal :visible="showModal">
@@ -88,21 +91,19 @@
     </template>
   </modal>
 
-  <button class="btn btn-info" @click="downloadAll">Download All</button>
+  <!-- <button class="btn btn-info" @click="downloadAll">Download All</button> -->
 </template>
 
 <script>
 import Sites from "../../../apis/Sites";
 export default {
-  name: "newSitesInsert",
+  name: "cascades",
   data() {
     return {
-      sites: "",
-      siteErrors: null,
-
-      sitesErrors: null,
+      cascades: null,
+      cascadesErrors: null,
+      cascadeErrors:null,
       serverError: null,
-
       showModal: false,
       showSpinner: false,
       successMessage: "",
@@ -138,44 +139,42 @@ export default {
     closeModal() {
       return (this.showModal = false);
     },
-    getAllCascades()
-    {
-      Sites.getAllCascades().then(response=>{
-        console.log(response)
-        
+    getAllCascades() {
+      Sites.getAllCascades()
+        .then((response) => {
+          console.log(response);
+
           var fileUrl = window.URL.createObjectURL(new Blob([response.data]));
           var fileLink = document.createElement("a");
           fileLink.href = fileUrl;
           fileLink.setAttribute("download", "AllCascades.xlsx");
           document.body.appendChild(fileLink);
           fileLink.click();
-      }).catch(error=>{
-        console.log(error);
-      })
-
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
 
-    sitesFile(e) {
-      return (this.sites = e.target.files[0]);
+    cascadesFile(e) {
+      return (this.cascades = e.target.files[0]);
     },
     clearErrors() {
       this.serverError = null;
-
-      this.sitesErrors = null;
+      this.cascadesErrors = null;
 
       return;
     },
-    submitSitesSheet() {
+    submitCascadesSheet() {
       this.serverError = null;
-      this.siteErrors = null;
-
-      this.sitesErrors = null;
+      this.cascadesErrors = null;
+       this.cascadeErrors = null;
       var data = {
-        sites: this.sites,
+        cascades: this.cascades,
       };
       this.showSpinner = true;
 
-      Sites.submitSitesSheet(data)
+      Sites.importCascades(data)
         .then((response) => {
           console.log(response.data.message);
           this.successMessage = response.data.message;
@@ -184,12 +183,12 @@ export default {
         .catch((error) => {
           if (error.response) {
             if (error.response.status == 500) {
-            this.serverError =error.response.data.message;
+              this.serverError = error.response.data.message;
             } else if (error.response.status == 422) {
               if (error.response.data.errors) {
-                this.siteErrors = error.response.data.errors.sites;
+                this.cascadeErrors = error.response.data.errors.cascades;
               } else if (error.response.data.sheet_errors) {
-                this.sitesErrors = error.response.data.sheet_errors;
+                this.cascadesErrors = error.response.data.sheet_errors;
               }
             }
             // The request was made and the server responded with a status code
@@ -208,25 +207,25 @@ export default {
         })
         .finally(() => {
           this.showSpinner = false;
-          this.sites = "";
+          this.cascades = "";
 
           var sites_sheet = document.getElementById("sites");
           sites_sheet.value = "";
         });
     },
-    downloadAll() {
-      Sites.downloadAll()
-        .then((response) => {
-      
-          var fileUrl = window.URL.createObjectURL(new Blob([response.data]));
-          var fileLink = document.createElement("a");
-          fileLink.href = fileUrl;
-          fileLink.setAttribute("download", "AllSites.xlsx");
-          document.body.appendChild(fileLink);
-          fileLink.click();
-        })
-        .catch();
-    },
+    // downloadAll() {
+    //   Sites.downloadAll()
+    //     .then((response) => {
+
+    //       var fileUrl = window.URL.createObjectURL(new Blob([response.data]));
+    //       var fileLink = document.createElement("a");
+    //       fileLink.href = fileUrl;
+    //       fileLink.setAttribute("download", "AllSites.xlsx");
+    //       document.body.appendChild(fileLink);
+    //       fileLink.click();
+    //     })
+    //     .catch();
+    // },
   },
 };
 </script>

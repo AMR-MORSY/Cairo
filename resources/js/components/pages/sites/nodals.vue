@@ -2,7 +2,7 @@
   <div class="container mt-5">
     <form
       id="energysheet"
-      @submit.prevent="submitSitesSheet"
+      @submit.prevent="submitNodalsSheet"
       enctype="multipart/form-data"
     >
       <div class="row index">
@@ -14,18 +14,18 @@
 
         <div class="col-12">
           <div class="form-group">
-            <label for="sites">Sites:</label>
+            <label for="sites">Nodals:</label>
             <input
               type="file"
               name="energy_sheet"
               class="form-control"
-              @change="sitesFile"
+              @change="nodalsFile"
               id="sites"
               @focus="clearErrors"
             />
-            <div v-if="siteErrors">
+            <div v-if="nodalErrors">
               <ul>
-                <li v-for="error in siteErrors" style="color: red" :key="error">
+                <li v-for="error in nodalErrors" style="color: red" :key="error">
                   {{ error }}
                 </li>
               </ul>
@@ -44,7 +44,7 @@
         </div>
       </div>
       <div class="helper-table-container">
-        <helper-table v-if="sitesErrors">
+        <helper-table v-if="nodalsErrors">
           <template #header>
             <th scope="col">Row</th>
             <th scope="col">Attribute</th>
@@ -54,7 +54,7 @@
           <template #body>
             <tr
               style="background-color: white; color: red"
-              v-for="error in sitesErrors"
+              v-for="error in nodalsErrors"
               :key="error"
             >
               <td class="text-left align-middle">{{ error.row }}</td>
@@ -66,8 +66,8 @@
               </td>
               <td class="text-left align-middle">
                 <ul>
-                  <li>Site Code:{{ error.values["Site Code"] }}</li>
-                  <li>Site Name:{{ error.values["Site Name"] }}</li>
+                  <li>Nodal Code:{{ error.values["nodal_code"] }}</li>
+                  <li>Nodal Name:{{ error.values["nodal_name"] }}</li>
                 </ul>
               </td>
             </tr>
@@ -76,7 +76,7 @@
       </div>
     </form>
 
-    <button class="btn btn-danger" @click="getAllCascades">All cascades</button>
+   
   </div>
 
   <modal :visible="showModal">
@@ -97,10 +97,11 @@ export default {
   name: "newSitesInsert",
   data() {
     return {
-      sites: "",
-      siteErrors: null,
+        nodals:null,
+     
+      nodalsErrors: null,
 
-      sitesErrors: null,
+      nodalErrors: null,
       serverError: null,
 
       showModal: false,
@@ -138,44 +139,44 @@ export default {
     closeModal() {
       return (this.showModal = false);
     },
-    getAllCascades()
-    {
-      Sites.getAllCascades().then(response=>{
-        console.log(response)
+    // getAllCascades()
+    // {
+    //   Sites.getAllCascades().then(response=>{
+    //     console.log(response)
         
-          var fileUrl = window.URL.createObjectURL(new Blob([response.data]));
-          var fileLink = document.createElement("a");
-          fileLink.href = fileUrl;
-          fileLink.setAttribute("download", "AllCascades.xlsx");
-          document.body.appendChild(fileLink);
-          fileLink.click();
-      }).catch(error=>{
-        console.log(error);
-      })
+    //       var fileUrl = window.URL.createObjectURL(new Blob([response.data]));
+    //       var fileLink = document.createElement("a");
+    //       fileLink.href = fileUrl;
+    //       fileLink.setAttribute("download", "AllCascades.xlsx");
+    //       document.body.appendChild(fileLink);
+    //       fileLink.click();
+    //   }).catch(error=>{
+    //     console.log(error);
+    //   })
 
-    },
+    // },
 
-    sitesFile(e) {
-      return (this.sites = e.target.files[0]);
+    nodalsFile(e) {
+      return (this.nodals = e.target.files[0]);
     },
     clearErrors() {
       this.serverError = null;
 
-      this.sitesErrors = null;
+      this.nodalsErrors = null;
+      this.nodalErrors = null;
 
       return;
     },
-    submitSitesSheet() {
+    submitNodalsSheet() {
       this.serverError = null;
-      this.siteErrors = null;
-
-      this.sitesErrors = null;
+      this.nodalsErrors = null;
+       this.nodalErrors = null;
       var data = {
-        sites: this.sites,
+        nodals: this.nodals,
       };
       this.showSpinner = true;
 
-      Sites.submitSitesSheet(data)
+      Sites.importNodals(data)
         .then((response) => {
           console.log(response.data.message);
           this.successMessage = response.data.message;
@@ -187,9 +188,9 @@ export default {
             this.serverError =error.response.data.message;
             } else if (error.response.status == 422) {
               if (error.response.data.errors) {
-                this.siteErrors = error.response.data.errors.sites;
+                this.nodalErrors = error.response.data.errors.nodals;
               } else if (error.response.data.sheet_errors) {
-                this.sitesErrors = error.response.data.sheet_errors;
+                this.nodalsErrors = error.response.data.sheet_errors;
               }
             }
             // The request was made and the server responded with a status code
@@ -208,25 +209,25 @@ export default {
         })
         .finally(() => {
           this.showSpinner = false;
-          this.sites = "";
+          this.cascades = "";
 
           var sites_sheet = document.getElementById("sites");
           sites_sheet.value = "";
         });
     },
-    downloadAll() {
-      Sites.downloadAll()
-        .then((response) => {
+    // downloadAll() {
+    //   Sites.downloadAll()
+    //     .then((response) => {
       
-          var fileUrl = window.URL.createObjectURL(new Blob([response.data]));
-          var fileLink = document.createElement("a");
-          fileLink.href = fileUrl;
-          fileLink.setAttribute("download", "AllSites.xlsx");
-          document.body.appendChild(fileLink);
-          fileLink.click();
-        })
-        .catch();
-    },
+    //       var fileUrl = window.URL.createObjectURL(new Blob([response.data]));
+    //       var fileLink = document.createElement("a");
+    //       fileLink.href = fileUrl;
+    //       fileLink.setAttribute("download", "AllSites.xlsx");
+    //       document.body.appendChild(fileLink);
+    //       fileLink.click();
+    //     })
+    //     .catch();
+    // },
   },
 };
 </script>

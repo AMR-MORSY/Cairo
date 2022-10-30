@@ -144,8 +144,9 @@ export default {
         NUR.getNur(data)
           .then((response) => {
             console.log(response);
-            this.NUR2G = response.data.NUR;
-            console.log(this.NUR2G);
+            this.$store.dispatch("setNUR",response.data.NUR)  ;
+            this.$router.push('/nur/statestics');
+          
           })
           .catch((error) => {
             console.log(error);

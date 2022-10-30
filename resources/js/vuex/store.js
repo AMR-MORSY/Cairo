@@ -8,6 +8,8 @@ const store = createStore({
         userRoles: null,
         sessionTimeOut:false,
         sessionEnd:false,
+        NUR:null,
+        modificationIndex:null,
 
     },
     getters: {},
@@ -67,6 +69,14 @@ const store = createStore({
         CHANGE_TIME_OUT(state,status)
         {
             state.sessionTimeOut=status;
+        },
+        SET_NUR(state,nur)
+        {
+            state.NUR=nur;
+        },
+        STORE_MODIFICATIONS_INDEX(state,modificationIndex)
+        {
+            state.modificationIndex=modificationIndex;
         }
     },
     actions: {
@@ -82,9 +92,14 @@ const store = createStore({
         userRoles({ commit }, roles) {
             commit("USER_Roles", roles);
         },
-        // changeTimeOut({commit},status){
-        //     commit("CHANGE_TIME_OUT",status);
-        // }
+        setNUR({commit},NUR){
+            commit("SET_NUR",NUR);
+        },
+        modificationIndex({commit},modificationIndex)
+        {
+            commit("STORE_MODIFICATIONS_INDEX",modificationIndex)
+
+        }
     },
 });
 export default store;

@@ -11,9 +11,13 @@ use App\Http\Controllers\NUR\ShowNURController;
 use App\Http\Controllers\Sites\SitesController;
 use App\Http\Controllers\User\LogoutController;
 use App\Http\Controllers\NUR\NurIndexController;
+use App\Http\Controllers\Sites\NodalsController;
 use App\Http\Controllers\User\RegisterController;
+use App\Http\Controllers\Sites\CascadesController;
 use App\Http\Controllers\EnergySheet\EnergyController;
+
 use App\Http\Controllers\User\ResetPasswordController;
+use App\Http\Controllers\Modifications\ModificationsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,11 +43,19 @@ Route::prefix("energysheet")->middleware(['auth:sanctum',"role:admin|super-admin
 
 });
 
+Route::prefix('modifications')->middleware(['auth:sanctum',"role:admin|super-admin"])->group(function(){
+    Route::get("/analysis",[ModificationsController::class,"analysis"])->name("analysis");
+    Route::post("/index",[ModificationsController::class,"index"])->name("index");
+});
+
 
 Route::prefix('sites')->middleware(['auth:sanctum',"role:super-admin"])->group(function(){
     // Route::get('/newsitesinsert',[SitesController::class,"index"])->name("sites");
     Route::post('/store',[SitesController::class,"store"])->name("store_sites");
     Route::get('/downloadAll',[SitesController::class,"export_all"])->name("export_all");
+    Route::get('/cascades',[CascadesController::class,"exportAllCascades"])->name("all_cascades");
+    Route::post('/cascades',[CascadesController::class,"importCascades"])->name("import_cascades");
+    Route::post('/nodals',[NodalsController::class,"importNodals"])->name("import_nodals");
 
 });
 Route::prefix('Nur')->middleware(['auth:sanctum',"role:super-admin"])->group(function(){

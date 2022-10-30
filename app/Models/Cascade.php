@@ -1,19 +1,18 @@
 <?php
 
-namespace App\Models\Sites;
+namespace App\Models;
 
-use App\Models\Nodal;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Site extends Model
+class Cascade extends Model
 {
     use HasFactory;
-    protected $table="sites";
+    protected $table="cascades";
     protected $guarded=[];
 
     public function nodal()
     {
-        return $this->hasOne(Nodal::class,"site_code");
+        return $this->belongsTo(Nodal::class,"site_code");
     }
 }

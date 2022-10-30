@@ -15,17 +15,21 @@ use Maatwebsite\Excel\Concerns\ToModel;
 
 
 use App\Services\NUR\WeeklyNUR;
+use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
 
 use Maatwebsite\Excel\Concerns\WithBatchInserts;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
+
 use Maatwebsite\Excel\Imports\HeadingRowFormatter;
 
 HeadingRowFormatter::default('none');
 
-class NUR2GImport implements ToModel, WithHeadingRow, WithBatchInserts, WithChunkReading, WithValidation
+class NUR2GImport implements ToModel, WithBatchInserts, WithChunkReading, WithValidation,WithHeadingRow
 {
+
+    use Importable;
     /**
      * @param array $row
      *
@@ -70,9 +74,17 @@ class NUR2GImport implements ToModel, WithHeadingRow, WithBatchInserts, WithChun
     }
     public function model(array $row)
     {
-        if ($row['TT OGS Responsible'] == "ALGAM" || $row['TT OGS Responsible'] == "NLGAM") {
+        if (strtolower($row["Operation Zone"])=="delta north"||
+        strtolower($row["Operation Zone"])=="delta south"||
+        strtolower($row["Operation Zone"])=="north upper"||
+        strtolower($row["Operation Zone"])=="south upper"||
+        strtolower($row["Operation Zone"])=="alex"||
+        strtolower($row["Operation Zone"])=="red sea"||
+        strtolower($row["Operation Zone"])=="sinai"||
+        strtolower($row["Operation Zone"])=="north coast") {
             return null;
         }
+       
         $duration_min = Durations::DurationMin($row['Begin'], $row['End']);
         $duration_hr = Durations::DurationHr($duration_min);
         $weekly_nur = new WeeklyNUR($duration_min, $row['Cells'], $this->network_cells);

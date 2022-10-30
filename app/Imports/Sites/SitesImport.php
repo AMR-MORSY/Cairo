@@ -17,9 +17,9 @@ use Maatwebsite\Excel\Concerns\WithChunkReading;
 HeadingRowFormatter::default('none');
 
 
-class SitesImport implements ToModel, WithHeadingRow, WithValidation ,WithBatchInserts ,WithChunkReading
+class SitesImport implements ToModel, WithHeadingRow, WithValidation ,WithBatchInserts ,WithChunkReading,SkipsOnFailure
 {
-    use Importable ;
+    use Importable,SkipsFailures ;
     /**
     * @param array $row
     *
@@ -33,13 +33,13 @@ class SitesImport implements ToModel, WithHeadingRow, WithValidation ,WithBatchI
             "*.Site Name"=>["required", "regex:/^([0-9a-zA-Z_-]|\s){2,60}$/"],
             "*.RNC"=>["nullable", "regex:/^([0-9a-zA-Z_-]|\s){3,50}$/"],
             "*.BSC"=>["nullable", "regex:/^([0-9a-zA-Z_-]|\s){3,50}$/"],
-            "*.office"=>["nullable","regex:/^[0-9a-zA-Z_-]{3,50}$/"],
-            "*.type"=>["nullable","regex:/^Outdoor|Shelter|Micro$/"],
-            "*.severity"=>["nullable","regex:/^Gold|Silver|Bronze$/"],
-            "*.category"=>["nullable","regex:/^VIP|NDL|(VIP \+ NDL)|BSC|Normal$/"],
-            "*.sharing"=>["nullable","regex:/^Yes|No$/"],
-            "*.host"=>["nullable","regex:/^OG|VF|WE|ET$/"],
-            "*.gest"=>["nullable","regex:/^OG|VF|WE|ET$/"],
+            "*.Office"=>["nullable","regex:/^[0-9a-zA-Z_-]{3,50}$/"],
+            "*.Type"=>["nullable","regex:/^Outdoor|Shelter|Micro$/"],
+            "*.Severity"=>["nullable","regex:/^Gold|Silver|Bronze$/"],
+            "*.Category"=>["nullable","regex:/^VIP|LDN|NDL|(VIP \+ NDL)|BSC|Normal$/"],
+            "*.Sharing"=>["nullable","regex:/^Yes|No$/"],
+            "*.Host"=>["nullable","regex:/^OG|VF|WE|ET$/"],
+            "*.Gest"=>["nullable","regex:/^OG|VF|WE|ET$/"],
             "*.2G"=>["nullable","regex:/^(100)|[1-9]\d?$/"],
             "*.3G"=>["nullable","regex:/^(100)|[1-9]\d?$/"],
             "*.4G"=>["nullable","regex:/^(100)|[1-9]\d?$/"],
@@ -51,12 +51,12 @@ class SitesImport implements ToModel, WithHeadingRow, WithValidation ,WithBatchI
     public function customValidationMessages()
 {
     return [
-        'type.regex' => 'The site type must be (Outdoor|Micro|Shelter)',
-        'severity.regex' => 'The site severity must be (Gold|Selver|Bronze)',
-        'category.regex' => 'The site category must be (VIP|VIP + NDL|NDL|Normal|BSC)',
-        'sharing.regex' => 'The sharing status Either (Yes|No)',
-        'gest.regex' => 'should be one of (OG|VF|WE|ET)',
-        'host.regex' => 'should be one of (OG|VF|WE|ET)',
+        'Type.regex' => 'The site type must be (Outdoor|Micro|Shelter)',
+        'Severity.regex' => 'The site severity must be (Gold|Selver|Bronze)',
+        'Category.regex' => 'The site category must be (VIP|VIP + NDL|NDL|Normal|BSC|LDN)',
+        'Sharing.regex' => 'The sharing status Either (Yes|No)',
+        'Gest.regex' => 'should be one of (OG|VF|WE|ET)',
+        'Host.regex' => 'should be one of (OG|VF|WE|ET)',
         "2G.regex"=>"Cells number from 1-100",
         "3G.regex"=>"Cells number from 1-100",
         "4G.regex"=>"Cells number from 1-100",
@@ -72,13 +72,13 @@ class SitesImport implements ToModel, WithHeadingRow, WithValidation ,WithBatchI
             "site_name"=>$row['Site Name'],
             "BSC"=>$row['BSC'],
             "RNC"=>$row['RNC'],
-            'office'=>$row['office'],
-            'type'=>$row['type'],
-            'category'=>$row['category'],
-            'severity'=>$row["severity"],
-            'sharing'=>$row['sharing'],
-            'host'=>$row['host'],
-            'gest'=>$row["gest"],
+            'office'=>$row['Office'],
+            'type'=>$row['Type'],
+            'category'=>$row['Category'],
+            'severity'=>$row["Severity"],
+            'sharing'=>$row['Sharing'],
+            'host'=>$row['Host'],
+            'gest'=>$row["Gest"],
             'oz'=>$row['oz'],
             'zone'=>$row['zone'],
             "2G_cells"=>$row["2G"],

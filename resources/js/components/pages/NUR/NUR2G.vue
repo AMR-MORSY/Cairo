@@ -1,5 +1,6 @@
 <template>
   <div class="container mt-5">
+    <Toast/>
     <form
       id="energysheet"
       @submit.prevent="submit2GNurSheet"
@@ -122,9 +123,9 @@
             </td>
             <td class="text-left align-middle">
               <ul>
-                <li>Site Code:{{ error.values["Site Code"] }}</li>
-                <li>Site Name:{{ error.values["Site Name"] }}</li>
-                <li>Site Name:{{ error.values["Alarm Name"] }}</li>
+                <li>Site Code:{{ error.values["Problem source site code"] }}</li>
+                <li>Site Name:{{ error.values["Problem source site name"] }}</li>
+              
               </ul>
             </td>
           </tr>
@@ -189,7 +190,8 @@ export default {
         .then((response) => {
           console.log(response.data.message);
           this.successMessage = response.data.message;
-          this.showModal = true;
+          // this.showModal = true;
+            this.$toast.add({severity:'success', summary: 'Success Message', detail:'inserted Successfully', life: 6000});
         })
         .catch((error) => {
           if (error.response) {
@@ -263,6 +265,7 @@ export default {
   },
   mounted() {
     this.getNur2GSIndex();
+  
   },
 };
 </script>

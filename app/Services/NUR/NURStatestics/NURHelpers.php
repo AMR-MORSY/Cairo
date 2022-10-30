@@ -210,7 +210,7 @@ class NURHelpers{
             $ET = [];
             $ORG = [];
             $rented = [];
-            $allTickets = $this->NUR->where("oz", $zone)->where("sub_system", "generator");
+            $allTickets = $this->NUR->where("oz", $zone)->where("sub_system","GENERATOR");   
             $ORG = $this->NUR->where("oz", $zone)->where("gen_owner", "orange");
             $rented = $this->NUR->where("oz", $zone)->where("gen_owner", "rented");
             $allTickets = $allTickets->toArray();

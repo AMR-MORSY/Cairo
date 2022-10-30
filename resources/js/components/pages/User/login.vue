@@ -20,7 +20,7 @@
         <label for="floatingInput">Email address</label>
       </div>
       <div v-if="emailError">
-        <p  style="color: red">
+        <p style="color: red">
           {{ emailError }}
         </p>
       </div>
@@ -38,7 +38,7 @@
       </div>
       <div v-if="passwordError">
         <p style="color: red">
-          {{passwordError}}
+          {{ passwordError }}
         </p>
       </div>
 
@@ -50,6 +50,81 @@
       </button>
     </form>
   </main>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-12 col-lg-4"></div>
+      <div class="col-12 col-lg-4">
+        <Card>
+          <template #header> </template>
+          <template #title class="p-card-title">
+            <p class="text-center">Login</p>
+          </template>
+          <template #content>
+            <div
+              class="
+                d-flex
+                flex-column
+                align-items-center
+                justify-content-center
+                w-100
+              "
+            >
+              <div class="field w-75">
+                <span class="p-float-label">
+                  <InputText
+                    id="inputtext"
+                    class="w-100"
+                    type="text"
+                    v-model="value1"
+                  />
+                  <label for="inputtext">Email</label>
+                </span>
+              </div>
+
+              <div class="field w-75 mt-4">
+                <span class="p-float-label">
+                  <Password
+                    toggleMask
+                    id="password"
+                    class="w-100"
+                    :feedback="false"
+                  ></Password>
+                  <label for="password">Password</label>
+                </span>
+              </div>
+               <div class="
+                d-flex
+                w-75
+                align-items-center
+                justify-content-flex-start mt-3
+              ">
+                <router-link to="/user/resetPassword"
+                  >Forgot Password?</router-link
+                >
+              </div>
+              
+            </div>
+           
+          </template>
+          <template #footer>
+            <div class="d-flex align-item-center justify-content-center">
+              <Button
+                label="Sign in"
+                class="w-75"
+                style="
+                  margin-left: 0.5em;
+                  background-color: red;
+                  border-color: unset;
+                "
+              />
+            </div>
+          </template>
+        </Card>
+      </div>
+      <div class="col-12 col-lg-4"></div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -71,23 +146,17 @@ export default {
   },
   name: "login",
   computed: {
-    isPassInvalid()
-    {
-      if(this.passwordError||this.credentialsError)
-      {
-        return true
-      }
-      else{
+    isPassInvalid() {
+      if (this.passwordError || this.credentialsError) {
+        return true;
+      } else {
         return false;
       }
     },
-    isEmailInvalid()
-    {
-      if(this.emailError||this.credentialsError)
-      {
-        return true
-      }
-      else{
+    isEmailInvalid() {
+      if (this.emailError || this.credentialsError) {
+        return true;
+      } else {
         return false;
       }
     },
@@ -95,13 +164,12 @@ export default {
       return this.$store.state.isLogin;
     },
   },
- 
+
   beforeRouteEnter(to, from, next) {
     next((vm) => {
       if (vm.isLogin) {
-     
-      return vm.$router.push(from.path) ;
-      } 
+        return vm.$router.push(from.path);
+      }
     });
   },
   methods: {
@@ -120,17 +188,15 @@ export default {
       if (!this.passwordError && !this.emailError) {
         User.login(this.form)
           .then((response) => {
-             this.$store.dispatch("changeLoginState", true);
-            this.$store.dispatch("userData",response.data.user);
-            this.$store.dispatch('userPermissions',response.data.permissions);
-            this.$store.dispatch('userRoles',response.data.roles);
+            this.$store.dispatch("changeLoginState", true);
+            this.$store.dispatch("userData", response.data.user);
+            this.$store.dispatch("userPermissions", response.data.permissions);
+            this.$store.dispatch("userRoles", response.data.roles);
             sessionStorage.setItem("Auth", true);
             sessionStorage.setItem("userData", JSON.stringify(response.data));
             this.$router.push({
               path: "/home",
             });
-
-          
           })
           .catch((error) => {
             if (error.response) {
@@ -157,6 +223,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+::v-deep(.p-password input) {
+  width: 300%;
+}
 .bd-placeholder-img {
   font-size: 1.125rem;
   text-anchor: middle;

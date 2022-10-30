@@ -58,8 +58,14 @@ class NUR4GImport implements ToModel,WithHeadingRow, WithBatchInserts, WithChunk
     }
     public function model(array $row)
     {
-        if($row['To workgroup']=="ALGAM"||$row['To workgroup']=="NLGAM")
-        {
+        if (strtolower($row["Operation Zone"])=="delta north"||
+        strtolower($row["Operation Zone"])=="delta south"||
+        strtolower($row["Operation Zone"])=="north upper"||
+        strtolower($row["Operation Zone"])=="south upper"||
+        strtolower($row["Operation Zone"])=="alex"||
+        strtolower($row["Operation Zone"])=="red sea"||
+        strtolower($row["Operation Zone"])=="sinai"||
+        strtolower($row["Operation Zone"])=="north coast") {
             return null;
         }
         $duration_min = Durations::DurationMin($row['Incident Start Time'], $row['Incident End Time']);
