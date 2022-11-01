@@ -74,28 +74,73 @@ class NURHelpers{
         }
         return $oz;
     }
+    public function zonesRepeatedSites($zones)
+    {
+        $oz = [];
+      
+        $siteCodes = $this->NUR->groupBy("problem_site_code")->keys();
+        foreach ($zones as $zone) {
+            $subs = [];
+          
+            foreach ($siteCodes as $code) {
+                $nur=$this->NUR->where("oz",$zone )->where("problem_site_code", $code);
+
+                if(count($nur)>0)
+                {
+                    $siteName = $this->NUR->firstWhere("problem_site_code", $code)->problem_site_name;
+                    $site["siteName"]=$siteName;
+                    $site["siteCode"]=$code;
+                    $site["count"] =$this->NUR->where("oz",$zone)->where("problem_site_code", $code)->count();
+                    array_push($subs,$site);
+
+                }
+
+              
+            }
+
+            $sub = collect($subs);
+        
+            $sub=$sub->sortByDesc("count");
+            $sub = $sub->take(5);
+            $oz[$zone] = $sub;
+        }
+        return $oz;
+    }
 
     public function zonesTopSitesNur($zones,$period)
     {
         $oz = [];
-        $subs = [];
+      
+        $siteCodes = $this->NUR->groupBy("problem_site_code")->keys();
         foreach ($zones as $zone) {
-            $siteCodes = $this->NUR->groupBy("problem_site_code")->keys();
+            $subs = [];
+          
             foreach ($siteCodes as $code) {
-                $siteName = $this->NUR->firstWhere("problem_site_code", $code)->problem_site_name;
 
-                $subs[$siteName] = number_format($this->NUR->where("oz", $zone)->where("problem_site_code", $code)->sum($period), 2, '.', ',');
+                $nur=$this->NUR->where("oz",$zone )->where("problem_site_code", $code);
+                if(count($nur)>0)
+                {
+                    $siteName = $this->NUR->firstWhere("problem_site_code", $code)->problem_site_name;
+                    $site["siteName"]=$siteName;
+                    $site["siteCode"]=$code;
+                    $site["NUR"] = number_format($this->NUR->where("oz",$zone)->where("problem_site_code", $code)->sum($period), 2, '.', ',');
+                    array_push($subs,$site);
+
+                }
+             
+               
+
+               
             }
 
-            $filtered = array_filter($subs, function ($value, $key) {
-                return $value != 0;
-            }, ARRAY_FILTER_USE_BOTH);
+            
 
 
 
 
-            $sub = collect($filtered);
-            $sub = $sub->sortDesc();
+            $sub = collect($subs);
+        
+            $sub=$sub->sortByDesc("NUR");
             $sub = $sub->take(5);
             $oz[$zone] = $sub;
         }
@@ -173,32 +218,7 @@ class NURHelpers{
 
     }
 
-    public function zonesRepeatedSites($zones)
-    {
-        $oz = [];
-        $subs = [];
-        foreach ($zones as $zone) {
-            $siteCodes = $this->NUR->groupBy("problem_site_code")->keys();
-            foreach ($siteCodes as $code) {
-                $siteName = $this->NUR->firstWhere("problem_site_code", $code)->problem_site_name;
-
-                $subs[$siteName] = $this->NUR->where("oz", $zone)->where("problem_site_code", $code)->count();
-            }
-
-            $filtered = array_filter($subs, function ($value, $key) {
-                return $value != 0;
-            }, ARRAY_FILTER_USE_BOTH);
-
-
-
-
-            $sub = collect($filtered);
-            $sub = $sub->sortDesc();
-            $sub = $sub->take(5);
-            $oz[$zone] = $sub;
-        }
-        return $oz;
-    }
+ 
 
     public function zonesGeneratorStatestics($zones,$period)
     {

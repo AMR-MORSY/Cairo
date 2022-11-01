@@ -109,247 +109,47 @@
         </Card>
       </div>
     </div>
-    <Card class="mt-5" style="background-color: #79589f">
-      <template #title>
-        <p style="font-size: 16px; color: white; pading: 0; text-align: center">
-          Cairo South
-        </p>
-      </template>
-      <template #content>
-        <div class="row">
-          <div class="col-12 col-md-6 col-lg-4 mt-2">
-            <Card>
-              <template #title>
-                <p style="font-size: 16px; pading: 0; text-align: center">
-                  Subsystem
-                </p>
-              </template>
-              <template #content>
-                <Chart
-                  type="doughnut"
-                  :data="cairoSouthSubsystem"
-                  :plugins="plugins"
-                />
-              </template>
-            </Card>
-          </div>
-          <div class="col-12 col-md-6 col-lg-4 mt-2">
-            <Card>
-              <template #title>
-                <p style="font-size: 16px; pading: 0; text-align: center">
-                  Generator Statestics
-                </p>
-              </template>
-              <template #content>
-                <Chart type="bar" :data="cairoSouthGen" :plugins="plugins" />
-              </template>
-            </Card>
-          </div>
-          <div class="col-12 col-md-6 col-lg-4 mt-2">
-            <Card>
-              <template #title>
-                <p style="font-size: 16px; pading: 0; text-align: center">
-                  Top Sites NUR
-                </p>
-              </template>
-              <template #content>
-                <DataTable
-                  :value="cairoSouthTopNUR"
-                  responsiveLayout="scroll"
-                  class="p-datatable-sm"
-                  stripedRows
-                >
-                  <Column field="siteName" header="Name"></Column>
-                  <Column field="NUR" header="NUR"></Column>
-                </DataTable>
-              </template>
-            </Card>
-          </div>
-        </div>
-      </template>
-    </Card>
-    <Card class="mt-5" style="background-color: #79589f">
-      <template #title>
-        <p style="font-size: 16px; color: white; pading: 0; text-align: center">
-          Cairo East
-        </p>
-      </template>
-      <template #content>
-        <div class="row">
-          <div class="col-12 col-md-6 col-lg-4 mt-2">
-            <Card>
-              <template #title>
-                <p style="font-size: 16px; pading: 0; text-align: center">
-                  Subsystem
-                </p>
-              </template>
-              <template #content>
-                <Chart
-                  type="doughnut"
-                  :data="cairoEastSubsystem"
-                  :plugins="plugins"
-                />
-              </template>
-            </Card>
-          </div>
-          <div class="col-12 col-md-6 col-lg-4 mt-2">
-            <Card>
-              <template #title>
-                <p style="font-size: 16px; pading: 0; text-align: center">
-                  Generator Statestics
-                </p>
-              </template>
-              <template #content>
-                <Chart type="bar" :data="cairoEastGen" :plugins="plugins" />
-              </template>
-            </Card>
-          </div>
-           <div class="col-12 col-md-6 col-lg-4 mt-2">
-            <Card>
-              <template #title>
-                <p style="font-size: 16px; pading: 0; text-align: center">
-                  Top Sites NUR
-                </p>
-              </template>
-              <template #content>
-                <DataTable
-                  :value="cairoEastTopNUR"
-                  responsiveLayout="scroll"
-                  class="p-datatable-sm"
-                  stripedRows
-                >
-                  <Column field="siteName" header="Name"></Column>
-                  <Column field="NUR" header="NUR"></Column>
-                </DataTable>
-              </template>
-            </Card>
-          </div>
-        </div>
-      </template>
-    </Card>
-    <Card class="mt-5" style="background-color: #79589f">
-      <template #title>
-        <p style="font-size: 16px; color: white; pading: 0; text-align: center">
-          Cairo North
-        </p>
-      </template>
-      <template #content>
-        <div class="row">
-          <div class="col-12 col-md-6 col-lg-4 mt-2">
-            <Card>
-              <template #title>
-                <p style="font-size: 16px; pading: 0; text-align: center">
-                  Subsystem
-                </p>
-              </template>
-              <template #content>
-                <Chart
-                  type="doughnut"
-                  :data="cairoNorthSubsystem"
-                  :plugins="plugins"
-                />
-              </template>
-            </Card>
-          </div>
-          <div class="col-12 col-md-6 col-lg-4 mt-2">
-            <Card>
-              <template #title>
-                <p style="font-size: 16px; pading: 0; text-align: center">
-                  Generator Statestics
-                </p>
-              </template>
-              <template #content>
-                <Chart type="bar" :data="cairoNorthGen" :plugins="plugins" />
-              </template>
-            </Card>
-          </div>
-           <div class="col-12 col-md-6 col-lg-4 mt-2">
-            <Card>
-              <template #title>
-                <p style="font-size: 16px; pading: 0; text-align: center">
-                  Top Sites NUR
-                </p>
-              </template>
-              <template #content>
-                <DataTable
-                  :value="cairoNorthTopNUR"
-                  responsiveLayout="scroll"
-                  class="p-datatable-sm"
-                  stripedRows
-                >
-                  <Column field="siteName" header="Name"></Column>
-                  <Column field="NUR" header="NUR"></Column>
-                </DataTable>
-              </template>
-            </Card>
-          </div>
-        </div>
-      </template>
-    </Card>
-    <Card class="mt-5" style="background-color: #79589f">
-      <template #title>
-        <p style="font-size: 16px; color: white; pading: 0; text-align: center">
-          Giza
-        </p>
-      </template>
-      <template #content>
-        <div class="row">
-          <div class="col-12 col-md-6 col-lg-4 mt-2">
-            <Card>
-              <template #title>
-                <p style="font-size: 16px; pading: 0; text-align: center">
-                  Subsystem
-                </p>
-              </template>
-              <template #content>
-                <Chart
-                  type="doughnut"
-                  :data="gizaSubsystem"
-                  :plugins="plugins"
-                />
-              </template>
-            </Card>
-          </div>
-          <div class="col-12 col-md-6 col-lg-4 mt-2">
-            <Card>
-              <template #title>
-                <p style="font-size: 16px; pading: 0; text-align: center">
-                  Generator Statestics
-                </p>
-              </template>
-              <template #content>
-                <Chart type="bar" :data="gizaGen" :plugins="plugins" />
-              </template>
-            </Card>
-          </div>
-           <div class="col-12 col-md-6 col-lg-4 mt-2">
-            <Card>
-              <template #title>
-                <p style="font-size: 16px; pading: 0; text-align: center">
-                  Top Sites NUR
-                </p>
-              </template>
-              <template #content>
-                <DataTable
-                  :value="gizaTopNUR"
-                  responsiveLayout="scroll"
-                  class="p-datatable-sm"
-                  stripedRows
-                >
-                  <Column field="siteName" header="Name"></Column>
-                  <Column field="NUR" header="NUR"></Column>
-                </DataTable>
-              </template>
-            </Card>
-          </div>
-        </div>
-      </template>
-    </Card>
+
+    <CairoSouth
+      :cairoSouthTopNUR="cairoSouthTopNUR"
+      :cairoSouthRepeatedSites="cairoSouthRepeatedSites"
+      :cairoSouthGen="cairoSouthGen"
+      :cairo-South-Subsystem="cairoSouthSubsystem"
+      :cairoSouthAccessStatesitcs="cairoSouthAccessStatesitcs"
+    />
+    <CairoEast
+      :cairoEastTopNUR="cairoEastTopNUR"
+      :cairoEastRepeatedSites="cairoEastRepeatedSites"
+      :cairoEastGen="cairoEastGen"
+      :cairo-East-Subsystem="cairoEastSubsystem"
+       :cairoEastAccessStatesitcs="cairoEastAccessStatesitcs"
+    />
+    <CairoNorth
+      :cairoNorthTopNUR="cairoNorthTopNUR"
+      :cairoNorthRepeatedSites="cairoNorthRepeatedSites"
+      :cairoNorthGen="cairoNorthGen"
+      :cairo-North-Subsystem="cairoNorthSubsystem"
+      :cairoNorthAccessStatesitcs="cairoNorthAccessStatesitcs"
+    />
+    <Giza
+      :gizaTopNUR="gizaTopNUR"
+      :gizaRepeatedSites="gizaRepeatedSites"
+      :gizaGen="gizaGen"
+      :gizaSubsystem="gizaSubsystem"
+      :gizaAccessStatesitcs="gizaAccessStatesitcs"
+    />
   </div>
 </template>
 
 <script>
 import ChartDataLabels from "chartjs-plugin-datalabels";
+import NUR from "../../../apis/NUR";
+import TopSites from "./TopSites.vue";
+import siteNURTable from "./siteNURTable.vue";
+import CairoSouth from "./CairoSouth.vue";
+import CairoEast from "./CairoEast.vue";
+import CairoNorth from "./CairoNorth.vue";
+import Giza from "./Giza.vue";
 export default {
   data() {
     return {
@@ -388,77 +188,45 @@ export default {
       cairoEastTopNUR: null,
       cairoNorthTopNUR: null,
       gizaTopNUR: null,
+      cairoSouthRepeatedSites: null,
+      gizaRepeatedSites: null,
+      cairoNorthRepeatedSites: null,
+      cairoEastRepeatedSites: null,
+      cairoSouthAccessStatesitcs:null,
+      cairoEastAccessStatesitcs:null,
+      cairoNorthAccessStatesitcs:null,
+      gizaAccessStatesitcs:null,
     };
   },
   name: "NURStatestics",
-  created() {},
-  mounted() {
+  created() {
     this.getNUR();
   },
- 
+  components: {
+    TopSites,
+    siteNURTable,
+    CairoSouth,
+    CairoEast,
+    CairoNorth,
+    Giza,
+  },
 
   methods: {
-    genStatestics(statestics, zone) {
-      let count = [];
-      let NUR = [];
-      count.push(statestics.ET.count);
-      count.push(statestics.ORG.count);
-      count.push(statestics.Rented.count);
-      count.push(statestics.VF.count);
-      NUR.push(statestics.ET.nur);
-      NUR.push(statestics.ORG.nur);
-      NUR.push(statestics.Rented.nur);
-      NUR.push(statestics.VF.nur);
+    Responses(zoneExceed, zoneWith) {
+      let exceed = [];
+      let withinSLA = [];
+      zoneExceed.forEach((element) => {
+        exceed.push(element);
+      });
 
-      let chart = {
-        labels: ["ET", "ORG", "Rented", "VF"],
-        datasets: [
-          {
-            data: count,
-            label: "Count",
-            backgroundColor: "red",
-          },
-          {
-            data: NUR,
-            label: "NUR",
-            backgroundColor: "blue",
-          },
-        ],
+      zoneWith.forEach((element) => {
+        withinSLA.push(element);
+      });
+      let response = {
+        exceed: exceed,
+        withinSLA: withinSLA,
       };
-      if (zone == "cairoSouth") {
-        this.cairoSouthGen = chart;
-      } else if (zone == "cairoEast") {
-        this.cairoEastGen = chart;
-      } else if (zone == "cairoNorth") {
-        this.cairoNorthGen = chart;
-      } else if (zone == "giza") {
-        this.gizaGen = chart;
-      }
-    },
-    topSitesNUR(sites, zone) {
-      let siteNames = Object.keys(sites);
-      let NUR = Object.values(sites);
-
-      let topSitesNUR = [];
-
-      for (var i = 0; i < siteNames.length; i++) {
-        let siteNUR = {
-          siteName: siteNames[i],
-          NUR: NUR[i],
-        };
-
-        topSitesNUR.push(siteNUR);
-      }
-      if (zone == "cairoEast") {
-        this.cairoEastTopNUR = topSitesNUR;
-      } else if (zone == "cairoSouth") {
-        this.cairoSouthTopNUR = topSitesNUR;
-        console.log(this.cairoSouthTopNUR);
-      } else if (zone == "cairoNorth") {
-        this.cairoNorthTopNUR = topSitesNUR;
-      } else if (zone == "giza") {
-        this.gizaTopNUR = topSitesNUR;
-      }
+      return response;
     },
     getNUR() {
       let NUR = this.$store.state.NUR;
@@ -502,14 +270,7 @@ export default {
           ],
         };
         this.cairo3GNUR = NUR.NUR3G.cairoNUR3G;
-        // this.cairo3GNUR=Object.values(NUR.NUR3G.zonesNUR3G );
-        // let nums=this.cairo3GNUR.map(function(str){
-        //   return parseInt(str);
 
-        // });
-        // this.cairo3GNUR=nums.reduce(function(sum,current){
-        //   return sum+current
-        // },0);
         this.zones4GNUR = {
           labels: Object.keys(NUR.NUR4G.zonesNUR4G),
           datasets: [
@@ -542,193 +303,133 @@ export default {
           ],
         };
         this.cairoCombinedNUR = NUR.combined.cairo;
-        let withAccessexceed = [];
-        let withAccesswithinSLA = [];
-        withAccessexceed.push(
-          NUR.NUR3G.zonesResponseWithAccess["CAIRO SOUTH"].exceedSLA
-        );
-        withAccessexceed.push(
-          NUR.NUR3G.zonesResponseWithAccess["CAIRO EAST"].exceedSLA
-        );
-        withAccessexceed.push(
-          NUR.NUR3G.zonesResponseWithAccess["CAIRO NORTH"].exceedSLA
-        );
-        withAccessexceed.push(
-          NUR.NUR3G.zonesResponseWithAccess["GIZA"].exceedSLA
-        );
-        withAccesswithinSLA.push(
-          NUR.NUR3G.zonesResponseWithAccess["CAIRO SOUTH"].withinSLA
-        );
-        withAccesswithinSLA.push(
-          NUR.NUR3G.zonesResponseWithAccess["CAIRO EAST"].withinSLA
-        );
-        withAccesswithinSLA.push(
-          NUR.NUR3G.zonesResponseWithAccess["CAIRO NORTH"].withinSLA
-        );
-        withAccesswithinSLA.push(
-          NUR.NUR3G.zonesResponseWithAccess["GIZA"].withinSLA
-        );
+
+        let zoneExceed = [
+          NUR.NUR3G.zonesResponseWithAccess["CAIRO SOUTH"].exceedSLA,
+          NUR.NUR3G.zonesResponseWithAccess["CAIRO EAST"].exceedSLA,
+          NUR.NUR3G.zonesResponseWithAccess["CAIRO NORTH"].exceedSLA,
+          NUR.NUR3G.zonesResponseWithAccess["GIZA"].exceedSLA,
+        ];
+        let zoneWith = [
+          NUR.NUR3G.zonesResponseWithAccess["CAIRO SOUTH"].withinSLA,
+
+          NUR.NUR3G.zonesResponseWithAccess["CAIRO EAST"].withinSLA,
+
+          NUR.NUR3G.zonesResponseWithAccess["CAIRO NORTH"].withinSLA,
+
+          NUR.NUR3G.zonesResponseWithAccess["GIZA"].withinSLA,
+        ];
+        let response=this.Responses(zoneExceed,zoneWith);
+
         this.zonesResponseWithAccess = {
           labels: Object.keys(NUR.NUR4G.zonesNUR4G),
           datasets: [
             {
-              data: withAccessexceed,
+              data: response.exceed,
               label: "exceed SLA",
               backgroundColor: "#42A5F5",
             },
             {
-              data: withAccesswithinSLA,
+              data: response.withinSLA,
               label: "within SLA",
               backgroundColor: "red",
             },
           ],
         };
 
-        let withoutAccessexceed = [];
-        let withoutAccesswithinSLA = [];
-        withoutAccessexceed.push(
-          NUR.NUR3G.zonesResponseWithoutAccess["CAIRO SOUTH"].exceedSLA
-        );
-        withoutAccessexceed.push(
-          NUR.NUR3G.zonesResponseWithoutAccess["CAIRO EAST"].exceedSLA
-        );
-        withoutAccessexceed.push(
-          NUR.NUR3G.zonesResponseWithoutAccess["CAIRO NORTH"].exceedSLA
-        );
-        withoutAccessexceed.push(
-          NUR.NUR3G.zonesResponseWithoutAccess["GIZA"].exceedSLA
-        );
-        withoutAccesswithinSLA.push(
-          NUR.NUR3G.zonesResponseWithoutAccess["CAIRO SOUTH"].withinSLA
-        );
-        withoutAccesswithinSLA.push(
-          NUR.NUR3G.zonesResponseWithoutAccess["CAIRO EAST"].withinSLA
-        );
-        withoutAccesswithinSLA.push(
-          NUR.NUR3G.zonesResponseWithoutAccess["CAIRO NORTH"].withinSLA
-        );
-        withoutAccesswithinSLA.push(
-          NUR.NUR3G.zonesResponseWithoutAccess["GIZA"].withinSLA
-        );
+          zoneExceed = [
+          NUR.NUR3G.zonesResponseWithoutAccess["CAIRO SOUTH"].exceedSLA,
+          NUR.NUR3G.zonesResponseWithoutAccess["CAIRO EAST"].exceedSLA,
+          NUR.NUR3G.zonesResponseWithoutAccess["CAIRO NORTH"].exceedSLA,
+          NUR.NUR3G.zonesResponseWithoutAccess["GIZA"].exceedSLA,
+        ];
+         zoneWith = [
+          NUR.NUR3G.zonesResponseWithoutAccess["CAIRO SOUTH"].withinSLA,
+
+          NUR.NUR3G.zonesResponseWithoutAccess["CAIRO EAST"].withinSLA,
+
+          NUR.NUR3G.zonesResponseWithoutAccess["CAIRO NORTH"].withinSLA,
+
+          NUR.NUR3G.zonesResponseWithoutAccess["GIZA"].withinSLA,
+        ];
+         response=this.Responses(zoneExceed,zoneWith);
+
+      
         this.zonesResponseWithoutAccess = {
           labels: Object.keys(NUR.NUR4G.zonesNUR4G),
           datasets: [
             {
-              data: withoutAccessexceed,
+              data: response.exceed,
               label: "exceed SLA",
               backgroundColor: "#42A5F5",
             },
             {
-              data: withoutAccesswithinSLA,
+              data: response.withinSLA,
               label: "within SLA",
               backgroundColor: "red",
             },
           ],
         };
-        this.cairoSouthSubsystem = {
-          labels: Object.keys(NUR.NUR3G.zonesNUR3GSubsystemNUR["CAIRO SOUTH"]),
-          datasets: [
-            {
-              data: Object.values(
-                NUR.NUR3G.zonesNUR3GSubsystemNUR["CAIRO SOUTH"]
-              ),
 
-              backgroundColor: [
-                "red",
-                "green",
-                "yellow",
-                "blue",
-                "purple",
-                "black",
-                "gray",
-              ],
-            },
-          ],
-        };
-        this.cairoEastSubsystem = {
-          labels: Object.keys(NUR.NUR3G.zonesNUR3GSubsystemNUR["CAIRO EAST"]),
-          datasets: [
-            {
-              data: Object.values(
-                NUR.NUR3G.zonesNUR3GSubsystemNUR["CAIRO EAST"]
-              ),
+        this.cairoSouthSubsystem =
+          NUR.NUR3G.zonesNUR3GSubsystemNUR["CAIRO SOUTH"];
+        this.cairoEastSubsystem =
+          NUR.NUR3G.zonesNUR3GSubsystemNUR["CAIRO EAST"];
+        this.cairoNorthSubsystem =
+          NUR.NUR3G.zonesNUR3GSubsystemNUR["CAIRO NORTH"];
+        this.gizaSubsystem = NUR.NUR3G.zonesNUR3GSubsystemNUR["GIZA"];
 
-              backgroundColor: [
-                "red",
-                "green",
-                "yellow",
-                "blue",
-                "purple",
-                "black",
-                "gray",
-              ],
-            },
-          ],
-        };
-        this.cairoNorthSubsystem = {
-          labels: Object.keys(NUR.NUR3G.zonesNUR3GSubsystemNUR["CAIRO NORTH"]),
-          datasets: [
-            {
-              data: Object.values(
-                NUR.NUR3G.zonesNUR3GSubsystemNUR["CAIRO NORTH"]
-              ),
+        this.cairoSouthGen = NUR.NUR3G.zonesNUR3GGenStatestics["CAIRO SOUTH"];
+        this.cairoEastGen = NUR.NUR3G.zonesNUR3GGenStatestics["CAIRO EAST"];
+        this.cairoNorthGen = NUR.NUR3G.zonesNUR3GGenStatestics["CAIRO NORTH"];
+        this.gizaGen = NUR.NUR3G.zonesNUR3GGenStatestics["GIZA"];
 
-              backgroundColor: [
-                "red",
-                "green",
-                "yellow",
-                "blue",
-                "purple",
-                "black",
-                "gray",
-              ],
-            },
-          ],
-        };
-        this.gizaSubsystem = {
-          labels: Object.keys(NUR.NUR3G.zonesNUR3GSubsystemNUR["GIZA"]),
-          datasets: [
-            {
-              data: Object.values(NUR.NUR3G.zonesNUR3GSubsystemNUR["GIZA"]),
+        this.cairoSouthTopNUR = Object.values(
+          NUR.NUR3G.zonesNUR3GTopSitesNUR["CAIRO SOUTH"]
+        );
+        this.cairoEastTopNUR = Object.values(
+          NUR.NUR3G.zonesNUR3GTopSitesNUR["CAIRO EAST"]
+        );
+        this.cairoNorthTopNUR = Object.values(
+          NUR.NUR3G.zonesNUR3GTopSitesNUR["CAIRO NORTH"]
+        );
+        this.gizaTopNUR = Object.values(
+          NUR.NUR3G.zonesNUR3GTopSitesNUR["GIZA"]
+        );
 
-              backgroundColor: [
-                "red",
-                "green",
-                "yellow",
-                "blue",
-                "purple",
-                "black",
-                "gray",
-              ],
-            },
-          ],
+        this.cairoSouthRepeatedSites = Object.values(
+          NUR.NUR3G.zonesNUR3GRepeatedSitesNUR["CAIRO SOUTH"]
+        );
+        this.cairoEastRepeatedSites = Object.values(
+          NUR.NUR3G.zonesNUR3GRepeatedSitesNUR["CAIRO EAST"]
+        );
+        this.cairoNorthRepeatedSites = Object.values(
+          NUR.NUR3G.zonesNUR3GRepeatedSitesNUR["CAIRO NORTH"]
+        );
+        this.gizaRepeatedSites = Object.values(
+          NUR.NUR3G.zonesNUR3GRepeatedSitesNUR["GIZA"]
+        );
+
+        this.cairoSouthAccessStatesitcs={
+          totalTickets:NUR.NUR3G.zonesTotalNumTickets['CAIRO SOUTH'],
+          accessTickets:NUR.NUR3G.zonesNUR3GAccessCountTickets["CAIRO SOUTH"].access,
+          NUR:NUR.NUR3G.zonesNUR3GAccessNUR["CAIRO SOUTH"].access
         };
-        this.genStatestics(
-          NUR.NUR3G.zonesNUR3GGenStatestics["CAIRO SOUTH"],
-          "cairoSouth"
-        );
-        this.genStatestics(
-          NUR.NUR3G.zonesNUR3GGenStatestics["CAIRO NORTH"],
-          "cairoNorth"
-        );
-        this.genStatestics(
-          NUR.NUR3G.zonesNUR3GGenStatestics["CAIRO EAST"],
-          "cairoEast"
-        );
-        this.genStatestics(NUR.NUR3G.zonesNUR3GGenStatestics["GIZA"], "giza");
-        this.topSitesNUR(
-          NUR.NUR3G.zonesNUR3GTopSitesNUR["CAIRO EAST"],
-          "cairoEast"
-        );
-        this.topSitesNUR(
-          NUR.NUR3G.zonesNUR3GTopSitesNUR["CAIRO SOUTH"],
-          "cairoSouth"
-        );
-        this.topSitesNUR(
-          NUR.NUR3G.zonesNUR3GTopSitesNUR["CAIRO NORTH"],
-          "cairoNorth"
-        );
-        this.topSitesNUR(NUR.NUR3G.zonesNUR3GTopSitesNUR["GIZA"], "giza");
+         this.cairoNorthAccessStatesitcs={
+          totalTickets:NUR.NUR3G.zonesTotalNumTickets['CAIRO NORTH'],
+          accessTickets:NUR.NUR3G.zonesNUR3GAccessCountTickets["CAIRO NORTH"].access,
+          NUR:NUR.NUR3G.zonesNUR3GAccessNUR["CAIRO NORTH"].access
+        };
+         this.cairoEastAccessStatesitcs={
+          totalTickets:NUR.NUR3G.zonesTotalNumTickets['CAIRO EAST'],
+          accessTickets:NUR.NUR3G.zonesNUR3GAccessCountTickets["CAIRO EAST"].access,
+          NUR:NUR.NUR3G.zonesNUR3GAccessNUR["CAIRO EAST"].access
+        };
+         this.gizaAccessStatesitcs={
+          totalTickets:NUR.NUR3G.zonesTotalNumTickets['GIZA'],
+          accessTickets:NUR.NUR3G.zonesNUR3GAccessCountTickets["GIZA"].access,
+          NUR:NUR.NUR3G.zonesNUR3GAccessNUR["GIZA"].access
+        };
       }
     },
   },
@@ -736,4 +437,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.table-container {
+  position: relative;
+  .spinner {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 1;
+    background-color: rgba($color: #ffff, $alpha: 0.7);
+  }
+}
 </style>

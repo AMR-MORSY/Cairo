@@ -187,7 +187,7 @@ export default {
   display: flex;
   background-color: #79589f;
   justify-content: space-around;
-  z-index: 1;
+  z-index: 100;
   width: 100%;
   top: 0;
   left: 0;

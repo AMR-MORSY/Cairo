@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('site_name');
             $table->enum('subcontractor',['','OT','Alandick','Tri-Tech','Siatnile','Merc','GP','Systel','MBV','TELE-TECH','SAG','LM']);
             $table->enum('requester',['','Acquisition','Civil Team','Maintenance','Radio','rollout','Transmission','GA','Soc','Sharing team']);
-            $table->string('action');
+            $table->text('action');
             $table->enum('status',['in progress','done','waiting D6'])->default("in progress");
             $table->enum('project',['Normal Modification','NTRA','Repair','LDN','LTE','Retrofitting','Sharing','Critical repair','Adding sec','L2600'])->default('Normal Modification');
             $table->date('request_date');

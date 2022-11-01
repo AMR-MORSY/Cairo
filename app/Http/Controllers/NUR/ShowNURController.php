@@ -13,6 +13,10 @@ use App\Services\NUR\NURStatestics\MonthlyStatestics;
 
 class ShowNURController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(["role:admin|super-admin"]);
+    }
     public function show_nur(Request $request)
     {
         if($request->input('week'))
@@ -176,5 +180,41 @@ class ShowNURController extends Controller
         }
 
       
+    }
+
+    public function siteNUR(Request $request)
+    {
+        $validator=validator::make($request->all(),["site_code"=>["required","regex:/^([0-9a-zA-Z]{4,6}(up|UP))|([0-9a-zA-Z]{4,6}(ca|CA))|([0-9a-zA-Z]{4,6}(de|DE))$/"]]);
+        if($validator->fails())
+        {
+            return response()->json([
+                'errors' => $validator->getMessageBag()->toArray()
+            ],422);
+
+        }
+        else
+        {
+            $validated=$validator->validated();
+            $site_2GNUR=NUR2G::where("problem_site_code",$validated["site_code"])->get();
+            $site_3GNUR=NUR3G::where("problem_site_code",$validated["site_code"])->get();
+            $site_4GNUR=NUR4G::where("problem_site_code",$validated["site_code"])->get();
+            // if(count($site_2GNUR)>0 && count($site_3GNUR)>0 && count($site_4GNUR)>0)
+            // {
+                return response()->json([
+                    "NUR2G"=>$site_2GNUR,
+                    "NUR3G"=>$site_3GNUR,
+                    "NUR4G"=>$site_4GNUR,
+                ],200);
+            // }
+            // else
+            // {
+            //     return response()->json([
+            //         'errors' => "No"
+            //     ],404);
+    
+
+            // }
+        }
+
     }
 }

@@ -25,6 +25,11 @@ import Chart from 'primevue/chart';
 
 import ToastService from 'primevue/toastservice';
 import Toast from 'primevue/toast';
+import Checkbox from 'primevue/checkbox';
+import Tooltip from 'primevue/tooltip';
+import ProgressSpinner from 'primevue/progressspinner';
+import DialogService from 'primevue/dialogservice';
+import DynamicDialog from 'primevue/dynamicdialog';
 
 
 
@@ -39,11 +44,16 @@ createApp(app)
 .use(VueChartkick)
 .use(PrimeVue)
 .use(ToastService)
+.use(DialogService)
+.directive('tooltip', Tooltip)
 
 .component("Toast",Toast)
+.component("DynamicDialog",DynamicDialog)
 .component("modal",modal)
 .component("Dialog",Dialog)
 .component("Card",Card)
+.component("ProgressSpinner",ProgressSpinner)
+.component("Checkbox",Checkbox)
 .component("Password",Password)
 .component("InputText",InputText)
 .component("DataTable",DataTable)

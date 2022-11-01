@@ -1,19 +1,7 @@
 <template>
   <section id="analysis">
     <div class="container">
-      <Dialog v-model:visible="display" :breakpoints="{'960px': '75vw', '640px': '90vw'}" :style="{width: '50vw'}">
-        <template #header>
-          <h3>Header</h3>
-        </template>
-
-        Content
-
-        <template #footer>
-          <Button label="No" icon="pi pi-times" class="p-button-text" />
-          <Button label="Yes" icon="pi pi-check"  />
-        </template>
-      </Dialog>
-
+      
       <div class="form-container">
         <div v-if="serverError">
           <p style="color: red">{{ serverError }}</p>

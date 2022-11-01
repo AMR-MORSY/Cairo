@@ -64,8 +64,13 @@ Route::prefix('Nur')->middleware(['auth:sanctum',"role:super-admin"])->group(fun
     Route::post('/2G',[NUR2GController::class,"store"])->name("store_2G");
     Route::post('/3G',[NUR3GController::class,"store"])->name("store_3G");
     Route::post('/4G',[NUR4GController::class,"store"])->name("store_4G");
-    Route::post('/show',[ShowNURController::class,"show_nur"])->name("show_nur");
+  
+   
 
+});
+Route::prefix('Nur')->middleware(['auth:sanctum',"role:admin|super-admin"])->group(function(){
+    Route::post('/siteNUR',[ShowNURController::class,"SiteNUR"])->name("siteNUR");
+    Route::post('/show',[ShowNURController::class,"show_nur"])->name("show_nur");
 });
 
 Route::prefix("user")->group(function(){

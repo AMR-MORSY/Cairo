@@ -23,5 +23,10 @@ export default {
     {
         return allInstances.Api.post("/Nur/show", data);
 
+    },
+    getSiteNUR(siteCode)
+    {
+        return allInstances.Api.post("/Nur/siteNUR", siteCode);
+
     }
 };
