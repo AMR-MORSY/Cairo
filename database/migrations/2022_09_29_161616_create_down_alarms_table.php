@@ -28,6 +28,7 @@ return new class extends Migration
              $table->time('end_time')->nullable();
             $table->unsignedBigInteger('duration');
             $table->integer('week');
+            $table->integer("month");
             $table->integer('year');
             $table->timestamps();
         });

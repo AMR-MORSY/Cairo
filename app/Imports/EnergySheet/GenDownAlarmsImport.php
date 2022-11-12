@@ -2,17 +2,18 @@
 
 namespace App\Imports\EnergySheet;
 
+use App\Services\NUR\Durations;
 use App\Models\EnergySheet\GenAlarm;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Events\AfterImport;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\Concerns\WithBatchInserts;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Imports\HeadingRowFormatter;
 use Maatwebsite\Excel\Concerns\RegistersEventListeners;
-use Maatwebsite\Excel\Concerns\WithValidation;
 
 HeadingRowFormatter::default('none');
 
@@ -116,6 +117,7 @@ class GenDownAlarmsImport implements ToModel ,WithHeadingRow ,WithBatchInserts ,
             "end_time" =>$row['Cleared On(Time)'],
 
             "week" => $this->week,
+            "month"=>Durations::getMonth($row['Occurred On(Date)']),
             'year' => $this->year,
             "configuration"=>$row["Config"],
         ]);

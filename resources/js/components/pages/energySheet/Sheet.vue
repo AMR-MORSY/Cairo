@@ -154,7 +154,7 @@ export default {
       showSpinner: false,
     };
   },
-  name: "energySheetIndex",
+  name: "Sheet",
 
   computed: {
     isLogin() {

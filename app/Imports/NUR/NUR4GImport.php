@@ -9,12 +9,10 @@ use App\Services\NUR\MonthlyNUR;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
-use Maatwebsite\Excel\Concerns\WithBatchInserts;
-use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Imports\HeadingRowFormatter;
 HeadingRowFormatter::default('none');
 
-class NUR4GImport implements ToModel,WithHeadingRow, WithBatchInserts, WithChunkReading, WithValidation
+class NUR4GImport implements ToModel,WithHeadingRow, WithValidation
 {
     /**
     * @param array $row
@@ -30,21 +28,19 @@ class NUR4GImport implements ToModel,WithHeadingRow, WithBatchInserts, WithChunk
         $this->network_cells=$network_cells;
     }
   
-
-  
  
     public function rules(): array
     {
         return [
          
-            "*.Problem source site code" => ["required",'string'],
-            "*.Site Name (Node B)" => ["required",'string'],
-            "*.Problem source site name"=>["required",'string'],
+            "*.Problem source site code" => ['string'],
+            "*.Site Name (Node B)" => ['string'],
+            "*.Problem source site name"=>['string'],
             "*.No of cells"=>["required","regex:/^(100)|[1-9]\d?$/"],
-            '*.System'=>['required','string'],
-            "*.Sub System"=>['required','string'],
+            '*.System'=>['string'],
+            "*.Sub System"=>['string'],
             "*.Type"=>['required',"regex:/^Involuntary|Voluntary$/"],
-            '*.Solution'=>['required','string'],
+            '*.Solution'=>['string'],
             "*.Access Problem"=>['required','boolean'],
             '*.Force Majeure'=>['nullable','boolean'],
             '*.Force Majeure Type'=>['nullable','string'],
@@ -106,10 +102,10 @@ class NUR4GImport implements ToModel,WithHeadingRow, WithBatchInserts, WithChunk
     {
         
     
-             $row["Incident Start Time"] = Durations::transformDate($row["Incident Start Time"]);
+         $row["Incident Start Time"] = Durations::transformDate($row["Incident Start Time"]);
           
        
-             $row["Incident End Time"] = Durations::transformDate($row["Incident End Time"]);
+         $row["Incident End Time"] = Durations::transformDate($row["Incident End Time"]);
           
 
             return $row;
@@ -118,13 +114,6 @@ class NUR4GImport implements ToModel,WithHeadingRow, WithBatchInserts, WithChunk
        
     }
    
-    public function batchSize(): int
-    {
-        return 200;
-    }
-    public function chunkSize(): int
-    {
-        return 200;
-    }
+   
   
 }

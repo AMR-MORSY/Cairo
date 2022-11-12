@@ -16,10 +16,20 @@ class CascadesController extends Controller
     {
       return  Cascade::all();
     }
+
+    public function __construct()
+    {
+        $this->middleware("role:super-admin|admin");
+    }
     public function exportAllCascades()
     {
        
         return new AllCascadesExport();
+    }
+
+    public function updateCascades(Request $request)
+    {
+        
     }
 
     public function importCascades(Request $request)

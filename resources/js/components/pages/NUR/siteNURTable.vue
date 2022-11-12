@@ -1,5 +1,14 @@
 <template>
   <div class="container">
+    <div
+      class="d-flex flex-column algin-items-center justify-content-center p-2"
+    >
+      <div class="d-flex  algin-items-center justify-content-start p-1">
+        <Button icon="pi pi-bell" class="p-button-rounded p-button-danger" @click="getSiteAlarms" />
+      </div>
+
+      <p style="color: red; font-weight:600;">Alarms</p>
+    </div>
     <div v-if="count2G">
       <DataTable
         :value="siteNUR2G"
@@ -60,12 +69,15 @@
 </template>
 
 <script>
+import SiteAlarmsTable from "./SiteAlarmsTable.vue";
 export default {
   data() {
     return {
       siteNUR3G: null,
       siteNUR2G: null,
       siteNUR4G: null,
+      siteName:null,
+      siteCode:null,
       count2G: false,
       count3G: false,
       count4G: false,
@@ -84,6 +96,11 @@ export default {
       { field: "impacted_sites", header: "impacted" },
     ];
   },
+  components:{
+    SiteAlarmsTable,
+
+
+  },
   inject: ["dialogRef"],
   name: "siteNURTable",
   mounted() {
@@ -100,6 +117,60 @@ export default {
       this.count4G = true;
     }
   },
+  methods:{
+    getSiteAlarms(){
+      console.log(this.siteNUR3G);
+      if(this.count2G==true)
+      {
+        this.siteCode=this.siteNUR2G[0].problem_site_code;
+         this.siteName=this.siteNUR2G[0].problem_site_name;
+      }
+      else if(this.count3G==true)
+      {
+       this.siteCode=this.siteNUR3G[0].problem_site_code;
+       this.siteName=this.siteNUR3G[0].problem_site_name;
+      }
+      else if(this.count4G==true)
+      {
+        this.siteCode=this.siteNUR4G[0].problem_site_code;
+       this.siteName=this.siteNUR4G[0].problem_site_name;
+      }
+      this.$dialog.open(SiteAlarmsTable, {
+        props: {
+          header: this.siteName,
+          style: {
+            width: "75vw",
+          },
+          breakpoints: {
+            "960px": "75vw",
+            "640px": "90vw",
+          },
+        //   modal: true,
+        },
+        // templates: {
+        //   footer: () => {
+        //     return [
+        //       h(Button, {
+        //         label: "No",
+        //         icon: "pi pi-times",
+        //         onClick: () => dialogRef.close({ buttonType: "No" }),
+        //         class: "p-button-text",
+        //       }),
+        //       h(Button, {
+        //         label: "Yes",
+        //         icon: "pi pi-check",
+        //         onClick: () => dialogRef.close({ buttonType: "Yes" }),
+        //         autofocus: true,
+        //       }),
+        //     ];
+        //   },
+        // },
+        data: this.siteCode,
+      });
+
+
+    },
+  }
 };
 </script>
 

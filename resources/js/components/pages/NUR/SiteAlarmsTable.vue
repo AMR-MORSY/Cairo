@@ -1,18 +1,11 @@
 <template>
-  <div>
-    <Card>
-      <template #title>
-        <p style="font-size: 16px; pading: 0; text-align: center">
-          <slot name="header"></slot>
-        </p>
-      </template>
-      <template #content>
-        <div class="table-container" v-tooltip.right="'Get Tickets'">
-          <div :class="{ display: displayNone, spinner: !displayNone }">
-            <ProgressSpinner />
-          </div>
-          <slot name="dataTable">
-            <DataTable
+  <div class="container">
+    <div class="table-container" v-tooltip.right="'Get Tickets'">
+      <div :class="{ display: displayNone, spinner: !displayNone }">
+        <ProgressSpinner />
+      </div>
+
+      <!-- <DataTable
               :value="zoneNUR"
               responsiveLayout="scroll"
               class="p-datatable-sm"
@@ -26,42 +19,39 @@
               <slot name="columns"> </slot>
 
            
-            </DataTable>
-          </slot>
-        </div>
-      </template>
-    </Card>
+            </DataTable> -->
+    </div>
   </div>
 </template>
 
 <script>
-import NUR from "../../../apis/NUR";
+import Alarms from "../../../apis/Alarms";
 export default {
   data() {
     return {
-      selectedSite: null,
-      displayNone: true,
+      displayNone: false,
     };
   },
-  name: "TopSites",
-  props: ["zoneNUR"],
+  name: "SiteAlarmsTable",
+  inject: ["dialogRef"],
+  mounted() {
+    this.getSiteAlarms();
+  },
   methods: {
-    onRowSelect() {
-      this.displayNone = false;
-
+    getSiteAlarms() {
       let data = {
-        site_code: this.selectedSite.siteCode,
+        siteCode: this.dialogRef.data,
       };
-     
-      NUR.getSiteNUR(data)
+
+      Alarms.getSiteAlarms(data)
         .then((response) => {
-          console.log(response);
-          this.$emit("siteNUR",response.data)
+          console.log("hello");
         })
         .catch((error) => {
           console.log(error);
-        }).finally(()=>{
-            this.displayNone=true;
+        })
+        .finally(() => {
+          this.displayNone = true;
         });
     },
   },

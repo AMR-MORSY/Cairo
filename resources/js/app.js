@@ -22,7 +22,6 @@ import InputText from 'primevue/inputtext';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import Chart from 'primevue/chart';
-
 import ToastService from 'primevue/toastservice';
 import Toast from 'primevue/toast';
 import Checkbox from 'primevue/checkbox';
@@ -30,6 +29,15 @@ import Tooltip from 'primevue/tooltip';
 import ProgressSpinner from 'primevue/progressspinner';
 import DialogService from 'primevue/dialogservice';
 import DynamicDialog from 'primevue/dynamicdialog';
+import FileUpload from 'primevue/fileupload';
+import ProgressBar from 'primevue/progressbar';
+import Badge from 'primevue/badge';
+import SpinnerPage from "./components/helpers/SpinnerPage.vue";
+import Details from "./components/pages/sites/Details.vue";
+import TabView from 'primevue/tabview';
+import TabPanel from 'primevue/tabpanel';
+import PickList from 'primevue/picklist';
+
 
 
 
@@ -48,10 +56,18 @@ createApp(app)
 .directive('tooltip', Tooltip)
 
 .component("Toast",Toast)
+.component("SpinnerPage",SpinnerPage)
 .component("DynamicDialog",DynamicDialog)
 .component("modal",modal)
+.component("Details",Details)
 .component("Dialog",Dialog)
+.component("Badge",Badge)
+.component("TabView",TabView)
+.component("TabPanel",TabPanel)
+.component("ProgressBar",ProgressBar)
+.component("FileUpload",FileUpload)
 .component("Card",Card)
+.component("PickList",PickList)
 .component("ProgressSpinner",ProgressSpinner)
 .component("Checkbox",Checkbox)
 .component("Password",Password)

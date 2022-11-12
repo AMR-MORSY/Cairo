@@ -11,7 +11,7 @@ use App\Http\Controllers\Controller;
 use App\Exports\sites\AllSitesExport;
 use Illuminate\Support\Facades\Validator;
 
-class SitesController extends Controller
+class SuperAdminSitesController extends Controller
 {
     public function index()
     {
@@ -21,6 +21,8 @@ class SitesController extends Controller
     {
         $this->middleware(["role:super-admin"]);
     }
+
+   
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), ['sites' => 'required|mimes:csv,xlsx'], ['sites.mimes' => "only csv,xlsx extensions"]);
@@ -31,7 +33,7 @@ class SitesController extends Controller
 
 
             $import->import($validated['sites']);
-            if (count($import->failures()) > 0) {
+            if ($import->failures() ) {
                 $errors = [];
                 $error = [];
 
@@ -67,5 +69,19 @@ class SitesController extends Controller
         // $export=new AllSitesExport();
         // $export->download('AllSites.xlsx');
         return new AllSitesExport();
+    }
+
+    public function siteUpdate(Site $site)
+    {
+
+    }
+    public function siteDelete(Site $site)
+    {
+        
+    }
+    public function siteCreate(Request $request)
+    {
+        
+        
     }
 }

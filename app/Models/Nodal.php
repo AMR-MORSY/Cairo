@@ -19,6 +19,6 @@ class Nodal extends Model
 
     public function cascades()
     {
-        return $this->hasMany(Cascade::class,"site_code");
+        return $this->hasMany(Cascade::class,"nodal_code","nodal_code");
     }
 }

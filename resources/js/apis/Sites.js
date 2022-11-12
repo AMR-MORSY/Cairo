@@ -21,5 +21,13 @@ export default {
 
 
 
+    },
+    searchSites(data)
+    {
+      return allInstances.Api.get(`/sites/search/${data}`)
+    },
+    getSiteDetails(id)
+    {
+      return allInstances.Api.get(`/sites/details/${id}`)
     }
 };

@@ -1,0 +1,229 @@
+<?php
+
+namespace App\Http\Controllers\EnergySheet;
+
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Models\EnergySheet\GenAlarm;
+use App\Models\EnergySheet\DownAlarm;
+use App\Models\EnergySheet\PowerAlarm;
+use App\Models\EnergySheet\HighTempAlarm;
+use Illuminate\Support\Facades\Validator;
+use App\Services\EnergyAlarms\WeeklyStatestics;
+use App\Services\EnergyAlarms\MonthlyStatestics;
+
+class EnergyStatesticsController extends Controller
+{
+    public function statestics(Request $request)
+    {
+       
+        if($request->input('week'))
+        {
+            
+            $validator=Validator::make($request->all(),["month"=>"nullable","week"=>["required",'regex:/^(week)$/'],"year" => ['required', 'regex:/^2[0-9]{3}$/'],"week_month"=>['required','regex:/^(?:[1-9]|[1-3][0-9]|4[0-8])$/']]);
+           
+        }
+         if($request->input('month'))
+        {
+            $validator=Validator::make($request->all(),["week"=>"nullable","month"=>["required",'regex:/^(month)$/'],"year" => ['required', 'regex:/^2[0-9]{3}$/'],"week_month"=>['required','regex:/^[1-9]|1[0-2]$/']]);
+            
+        }
+        else if(!$request->input('week') && !$request->input('month'))
+        {
+            return response()->json([
+                'period_error' => "Please select week or month",
+            ],422);
+
+        }
+        if($validator->fails())
+        {
+            return response()->json([
+                'errors' => $validator->getMessageBag()->toArray()
+            ],422);
+        }
+        else{
+            $validated=$validator->validated();
+
+            if(isset($validated['month']))
+            {
+                $monthlyAlarms=$this->getMonthlyAlarms($validated['week_month'],$validated['year']);
+                if($monthlyAlarms['error'])
+                {
+                    return response()->json([
+                        "error"=>$monthlyAlarms['errors']
+    
+                    ],404);
+    
+  
+                }
+                else
+                {
+                    return response()->json([
+
+                        "Alarms"=>$monthlyAlarms['statestics'],
+    
+                    ],200);
+    
+
+                  
+                }
+
+
+            }
+            else{
+
+                $weeklyAlarms=$this->getWeeklyAlarms($validated['week_month'],$validated['year']);
+                if($weeklyAlarms['error'])
+                {
+                    return response()->json([
+                        "error"=>$weeklyAlarms['errors']
+    
+                    ],404);
+    
+  
+                }
+                else
+                {
+                    return response()->json([
+
+                        "Alarms"=>$weeklyAlarms['statestics'],
+    
+                    ],200);
+    
+
+                  
+                }
+                 
+
+            }
+        }
+    }
+
+    private function getWeeklyAlarms($week,$year)
+    {
+        $powerAlarms=PowerAlarm::where('week',$week)->where('year',$year)->get();
+        $genAlrms=GenAlarm::where('week',$week)->where('year',$year)->get();
+        $HT=HighTempAlarm::where('week',$week)->where('year',$year)->get();
+        $downAlarms=DownAlarm::where('week',$week)->where('year',$year)->get();
+        $errors=[];
+        if(count($powerAlarms)<=0)
+        {
+             array_push($errors,"Power Alarms does not exist");
+        }
+        if(count($genAlrms)<=0)
+        {
+             array_push($errors,"Gen Alarms does not exist");
+        }
+        if(count($HT)<=0)
+        {
+             array_push($errors,"High Temp Alarms does not exist");
+        }
+        if(count( $downAlarms)<=0)
+        {
+            array_push($errors,"Down Alarms does not exist");
+
+        }
+        if(count($errors)>0)
+        {
+            $notFound["error"]=true;
+            $notFound["errors"]=$errors;
+            return $notFound;
+        }
+        else
+        {
+            $statestics=new WeeklyStatestics($powerAlarms,$genAlrms,$HT,$downAlarms);
+            $zonesPowerAlarmsCount=$statestics->zonesPowerAlarmsCount();
+            $zonesSitesReportedPowerAlarms=$statestics->zonesSitesReportedPowerAlarms();
+            $zonesHighiestPowerAlarmDuration=$statestics->zonesHighiestPowerAlarmDuration();
+            $zonesPowerDurationLessThanHour=$statestics->zonesPowerDurationLessThanHour();
+            $zonesSitesPowerAlarmsMoreThan=$statestics->zonesSitesPowerAlarmsMoreThan();
+            $zonesDownSitesAfterPowerAlarm=$statestics->zonesDownSitesAfterPowerAlarm();
+
+            $data=[];
+            $data['zonesPowerAlarmsCount']=$zonesPowerAlarmsCount;
+            $data['zonesSitesReportedPowerAlarms']=$zonesSitesReportedPowerAlarms;
+            $data['zonesSitesReportedPowerAlarms']=$zonesSitesReportedPowerAlarms;
+            $data['zonesHighiestPowerAlarmDuration']=$zonesHighiestPowerAlarmDuration;
+            $data['zonesPowerDurationLessThanHour']=$zonesPowerDurationLessThanHour;
+            $data['zonesSitesPowerAlarmsMoreThan2Times']=$zonesSitesPowerAlarmsMoreThan;
+            // $data['zonesDownSitesAfterPowerAlarm']=$zonesDownSitesAfterPowerAlarm;
+
+            $notFound['error']=false;
+            $notFound['statestics']=$data;
+
+            return $notFound;
+
+        }
+
+    }
+     
+    private function getMonthlyAlarms($month,$year)
+    {
+        $powerAlarms=PowerAlarm::where("month",$month)->where('year',$year)->get();
+        $genAlrms=GenAlarm::where("month",$month)->where('year',$year)->get();
+        $HT=HighTempAlarm::where("month",$month)->where('year',$year)->get();
+        $downAlarms=DownAlarm::where("month",$month)->where('year',$year)->get();
+        $errors=[];
+        if(count( $powerAlarms)<=0)
+        {
+             array_push($errors,"Power Alarms does not exist");
+        }
+        if(count($genAlrms)<=0)
+        {
+             array_push($errors,"Gen Alarms does not exist");
+        }
+        if(count($HT)<=0)
+        {
+             array_push($errors,"High Temp Alarms does not exist");
+        }
+        if(count( $downAlarms)<=0)
+        {
+            array_push($errors,"Down Alarms does not exist");
+
+        }
+        if(count($errors)>0)
+        {
+            $notFound["error"]=true;
+            $notFound["errors"]=$errors;
+            return $notFound;
+        }
+        else
+        {
+            $statestics=new MonthlyStatestics($powerAlarms,$genAlrms,$HT,$downAlarms);
+
+
+        }
+
+
+    }
+    public function siteAlarms(Request $request)
+    {
+        $validator = Validator::make($request->all(), ["siteCode" => ["required", "regex:/^([0-9a-zA-Z]{4,6}(up|UP))|([0-9a-zA-Z]{4,6}(ca|CA))|([0-9a-zA-Z]{4,6}(de|DE))$/"]]);
+        if ($validator->fails()) {
+            return response()->json(array(
+
+                'errors' => $validator->getMessageBag()->toArray()
+            ), 422);
+
+
+            $this->throwValidationException(
+
+                $request,
+                $validator
+
+            );
+        } else {
+            $validated = $validator->validated();
+            $powerAlarms = PowerAlarm::where("site_code", $validated['siteCode'])->get();
+            $genAlrms=GenAlarm::where("site_code", $validated['siteCode'])->get();
+            $HT=HighTempAlarm::where("site_code", $validated['siteCode'])->get();
+            $downAlarms=DownAlarm::where("site_code", $validated['siteCode'])->get();
+            return response()->json([
+                "powerAlarms" => $powerAlarms,
+                "downAlarms"=>$downAlarms,
+                "HT"=>$HT,
+                "genAlarms"=>$genAlrms,
+            ], 200);
+        }
+    }
+}

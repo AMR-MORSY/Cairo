@@ -16,7 +16,7 @@ use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Imports\HeadingRowFormatter;
 HeadingRowFormatter::default('none');
 
-class NUR3GImport implements ToModel, WithHeadingRow, WithBatchInserts, WithChunkReading, WithValidation
+class NUR3GImport implements ToModel, WithHeadingRow,WithValidation
 {
     /**
     * @param array $row
@@ -122,13 +122,5 @@ class NUR3GImport implements ToModel, WithHeadingRow, WithBatchInserts, WithChun
    
    
   
-    public function batchSize(): int
-    {
-        return 200;
-    }
-    public function chunkSize(): int
-    {
-        return 200;
-    }
-  
+   
 }

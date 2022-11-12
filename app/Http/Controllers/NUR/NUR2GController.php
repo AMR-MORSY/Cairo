@@ -40,7 +40,8 @@ class NUR2GController extends Controller
                     "message" => "inserted Succesfully",
                 ]);
             } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
-                $failures = $e->failures();
+                 $failures = $e->failures();
+              
                 $errors = [];
                 $error = [];
 

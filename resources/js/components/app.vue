@@ -1,5 +1,5 @@
 <template>
-  <navbar></navbar>
+  <navbar @displayNoneSpinner="displayTheSpinner" @displaySitesTable="displaySitesTable"></navbar>
   <modal :visible="showSessionNotification">
     <template style="font-weight:900; color:red;" #body>{{ data }}</template>
     <template #footer>
@@ -8,17 +8,23 @@
     </template>
   </modal>
 
-  <router-view></router-view>
+    <DynamicDialog />
+
+  <SpinnerPage :displayNone="displaySpinnerPage"></SpinnerPage>
+
+  <router-view ></router-view>
 </template>
 
 <script>
 import User from "../apis/User";
 import modal from "./helpers/modal.vue";
+import SitesTable from "../components/pages/sites/SitesTable.vue";
 export default {
-  components: { modal },
+  components: { modal,SitesTable },
   data() {
     return {
       showModal: false,
+      displaySpinnerPage:true,
       data: "session will end after 2 minutes, renew session",
     };
   },
@@ -37,6 +43,48 @@ export default {
   name: "app",
 
   methods: {
+    displaySitesTable(event)
+    {
+       this.$dialog.open(SitesTable, {
+              props: {
+                header: "Sites",
+                style: {
+                  width: "75vw",
+                },
+                breakpoints: {
+                  "960px": "75vw",
+                  "640px": "90vw",
+                },
+                //   modal: true,
+              },
+              // templates: {
+              //   footer: () => {
+              //     return [
+              //       h(Button, {
+              //         label: "No",
+              //         icon: "pi pi-times",
+              //         onClick: () => dialogRef.close({ buttonType: "No" }),
+              //         class: "p-button-text",
+              //       }),
+              //       h(Button, {
+              //         label: "Yes",
+              //         icon: "pi pi-check",
+              //         onClick: () => dialogRef.close({ buttonType: "Yes" }),
+              //         autofocus: true,
+              //       }),
+              //     ];
+              //   },
+              // },
+              data: {
+                sites: event,
+              },
+            });
+
+    },
+    displayTheSpinner(event)
+    {
+      this.displaySpinnerPage=event;
+    },
     refreshSession() {
       User.refreshSession()
         .then((response) => {

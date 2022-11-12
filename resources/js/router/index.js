@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-import energySheetIndex from "../components/pages/energySheet/energySheetIndex.vue";
+import Sheet from "../components/pages/energySheet/Sheet.vue";
 import notFount from "../components/notFound.vue";
 import newSitesInsert from "../components/pages/sites/newSitesInsert.vue";
 import login from "../components/pages/User/login.vue";
@@ -16,12 +16,18 @@ import cascades from "../components/pages/sites/cascades.vue";
 import nodals from "../components/pages/sites/nodals.vue";
 import modifications from "../components/pages/Modifications/modifications.vue";
 import modificationsIndex from "../components/pages/Modifications/modificationsIndex.vue";
+import energyIndex from "../components/pages/energySheet/energyIndex.vue";
+import Details from "../components/pages/sites/Details.vue";
+import CascadesUpdate from "../components/pages/sites/CascadesUpdate.vue";
 
 const routes = [
-    { path: "/energysheet/index", component: energySheetIndex },
+    { path: "/energysheet/sheet", component: Sheet },
+    { path: "/energysheet/energyIndex", component: energyIndex },
     { path: "/nur", component: nurIndex },
+    {path:"/sites/details/:site_code",component:Details,props:true},
     {path:"/modifications/index",component:modificationsIndex},
     { path: "/sites/cascades", component: cascades },
+    {path:"/sites/cascades/update/:site_code",component:CascadesUpdate,props:true},
     { path: "/modifications", component: modifications },
     { path: "/sites/nodals", component: nodals },
     { path: "/nur/statestics", component: NURStatestics },

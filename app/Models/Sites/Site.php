@@ -14,6 +14,6 @@ class Site extends Model
 
     public function nodal()
     {
-        return $this->hasOne(Nodal::class,"site_code");
+        return $this->hasOne(Nodal::class,"site_code","site_code");
     }
 }

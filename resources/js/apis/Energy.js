@@ -11,4 +11,7 @@ export default {
        
         return allInstances.Api.get("/energysheet/index");
     },
+    getEnergyStatestics(data){
+        return allInstances.Api.post("/energysheet/statestics",data)
+    }
 };

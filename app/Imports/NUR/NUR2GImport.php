@@ -9,24 +9,17 @@ use App\Models\NUR\NUR2G;
 use App\Services\NUR\MonthlyNUR;
 use App\Services\NUR\Durations;
 use Maatwebsite\Excel\Concerns\ToModel;
-
-
-
-
-
 use App\Services\NUR\WeeklyNUR;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
 
-use Maatwebsite\Excel\Concerns\WithBatchInserts;
-use Maatwebsite\Excel\Concerns\WithChunkReading;
 
 use Maatwebsite\Excel\Imports\HeadingRowFormatter;
 
 HeadingRowFormatter::default('none');
 
-class NUR2GImport implements ToModel, WithBatchInserts, WithChunkReading, WithValidation,WithHeadingRow
+class NUR2GImport implements ToModel, WithValidation,WithHeadingRow
 {
 
     use Importable;
@@ -52,13 +45,13 @@ class NUR2GImport implements ToModel, WithBatchInserts, WithChunkReading, WithVa
     {
         return [
 
-            "*.Problem source site code" => ["required", 'string'],
-            "*.Site name" => ["required", 'string'],
-            "*.Problem source site name" => ["required", "string"],
+            "*.Problem source site code" => ['string'],
+            "*.Site name" => ['string'],
+            "*.Problem source site name" => [ "string"],
             "*.BSC" => ["required", "regex:/^([0-9a-zA-Z_-]|\s){3,50}$/"],
             "*.Cells" => ["required", "regex:/^(100)|[1-9]\d?$/"],
-            '*.System' => ['required', 'string'],
-            "*.Sub system" => ['required', 'string'],
+            '*.System' => ['string'],
+            "*.Sub system" => ['string'],
             "*.Type" => ['required', "regex:/^Involuntary|Voluntary$/"],
             '*.Solution' => ['required', 'string'],
             "*.Access Problem" => ['required', 'boolean'],
@@ -66,7 +59,7 @@ class NUR2GImport implements ToModel, WithBatchInserts, WithChunkReading, WithVa
             '*.Force Majeure Type' => ['nullable', 'string'],
             "*.Begin" => ["required", 'date'],
             "*.End" => ["required", "date"],
-            "*.Operation Zone" => ["required", "string"],
+            "*.Operation Zone" => ["string"],
             "*.Generator Owner"=>["nullable","regex:/^Shared|Orange|Rented$/"]
 
 
@@ -135,12 +128,9 @@ class NUR2GImport implements ToModel, WithBatchInserts, WithChunkReading, WithVa
 
 
 
-    public function batchSize(): int
-    {
-        return 200;
-    }
-    public function chunkSize(): int
-    {
-        return 200;
-    }
+    // public function batchSize(): int
+    // {
+    //     return 200;
+    // }
+   
 }

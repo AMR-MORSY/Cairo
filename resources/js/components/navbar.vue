@@ -2,11 +2,12 @@
   <nav class="navbar mb-5 navbar-expand-lg">
     <a class="navbar-brand font-weight-bolder">CairoSouth</a>
     <div class="form-group">
-      <form class="form-inline ml-5">
+      <form class="form-inline ml-5" @submit.prevent="submitSearch">
         <input
           class="mr-sm-2 search form-control"
           type="text"
           aria-label="Search"
+          v-model="search"
         />
         <button type="submit" class="form-control searchBtn">Search</button>
       </form>
@@ -65,17 +66,19 @@
                   <router-link class="dropdown-item" to="/sites/store"
                     >Create New</router-link
                   >
-                    <router-link class="dropdown-item" to="/sites/cascades"
+                  <router-link class="dropdown-item" to="/sites/cascades"
                     >Cascades</router-link
                   >
-                    <router-link class="dropdown-item" to="/sites/nodals"
+                  <router-link class="dropdown-item" to="/sites/nodals"
                     >Nodals</router-link
                   >
                 </div>
               </div>
             </li>
             <!-- <li><a class="dropdown-item">Modifications</a></li> -->
-               <router-link class="dropdown-item" to="/modifications">Modifications</router-link>
+            <router-link class="dropdown-item" to="/modifications"
+              >Modifications</router-link
+            >
             <li class="nav-item">
               <div class="test">
                 <router-link class="dropdown-item" to="/nur">NUR</router-link>
@@ -95,10 +98,12 @@
             </li>
             <li class="nav-item">
               <div class="test">
-                <a class="dropdown-item">Energy Sheet</a>
+                <router-link class="dropdown-item" to="/energysheet/energyIndex"
+                  >Energy Sheet</router-link
+                >
                 <div class="test2">
                   <!-- <a class="dropdown-item " >Insert Sheet</a> -->
-                  <router-link to="/energysheet/index" class="dropdown-item"
+                  <router-link to="/energysheet/sheet" class="dropdown-item"
                     >Insert Sheet</router-link
                   >
                 </div>
@@ -128,18 +133,25 @@
       </ul>
     </div>
   </nav>
+
+  <Toast />
 </template>
 
 <script>
 import User from "../apis/User";
+import Sites from "../apis/Sites";
+
 
 export default {
   data() {
     return {
-      // isLogin:this.$store.state.isLogin,
+      search: null,
+    
     };
   },
+  emits: ["displayNoneSpinner","displaySitesTable"],
   name: "navbar",
+  
   computed: {
     isLogin() {
       return this.$store.state.isLogin;
@@ -152,6 +164,40 @@ export default {
     // this.checkingLogin();
   },
   methods: {
+    submitSearch() {
+      this.$emit("displayNoneSpinner", false);
+      Sites.searchSites(this.search)
+        .then((response) => {
+          console.log(response);
+          if (response.data.message == "No data Found") {
+            this.$toast.add({
+              severity: "info",
+              summary: "Sorry!!!",
+              detail: "No data Found",
+              life: 3000,
+            });
+          } else {
+            
+            this.$emit("displaySitesTable",response.data.sites);
+           
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          if (error.response.status == 422) {
+            this.$toast.add({
+              severity: "error",
+              summary: "Opes!!!",
+              detail: error.response.data.errors.search[0],
+              life: 3000,
+            });
+          }
+        })
+        .finally(() => {
+          this.$emit("displayNoneSpinner", true);
+        });
+    },
+
     logout() {
       User.logout()
         .then((data) => {

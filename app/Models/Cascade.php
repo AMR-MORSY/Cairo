@@ -13,6 +13,6 @@ class Cascade extends Model
 
     public function nodal()
     {
-        return $this->belongsTo(Nodal::class,"site_code");
+        return $this->belongsTo(Nodal::class,"nodal_code","nodal_code");
     }
 }

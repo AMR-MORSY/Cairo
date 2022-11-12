@@ -29,7 +29,7 @@ class NodalsImport implements ToModel,WithHeadingRow,WithValidation,WithChunkRea
 
             "*.nodal_code"=>["required","unique:nodals,nodal_code","regex:/^([0-9a-zA-Z]{4,6}(up|UP))|([0-9a-zA-Z]{4,6}(ca|CA))|([0-9a-zA-Z]{4,6}(de|DE))$/"],
             "*.nodal_name"=>["required", "regex:/^([0-9a-zA-Z_-]|\s){2,60}$/"],
-            "*.site_code"=>["required","unique:nodals,nodal_code","regex:/^([0-9a-zA-Z]{4,6}(up|UP))|([0-9a-zA-Z]{4,6}(ca|CA))|([0-9a-zA-Z]{4,6}(de|DE))$/"],
+            "*.site_code"=>["required","unique:nodals,site_code","regex:/^([0-9a-zA-Z]{4,6}(up|UP))|([0-9a-zA-Z]{4,6}(ca|CA))|([0-9a-zA-Z]{4,6}(de|DE))$/"],
             
         
 

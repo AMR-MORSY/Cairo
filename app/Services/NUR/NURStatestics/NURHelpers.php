@@ -74,27 +74,54 @@ class NURHelpers{
         }
         return $oz;
     }
+    // public function zonesRepeatedSites($zones)
+    // {
+    //     $oz = [];
+      
+    //     $siteCodes = $this->NUR->groupBy("problem_site_code")->keys();
+    //     foreach ($zones as $zone) {
+    //         $subs = [];
+          
+    //         foreach ($siteCodes as $code) {
+    //             $nur=$this->NUR->where("oz",$zone )->where("problem_site_code", $code);
+
+    //             if(count($nur)>0)
+    //             {
+    //                 $siteName = $this->NUR->firstWhere("problem_site_code", $code)->problem_site_name;
+    //                 $site["siteName"]=$siteName;
+    //                 $site["siteCode"]=$code;
+    //                 $site["count"] =$this->NUR->where("oz",$zone)->where("problem_site_code", $code)->count();
+    //                 array_push($subs,$site);
+
+    //             }
+
+              
+    //         }
+
+    //         $sub = collect($subs);
+        
+    //         $sub=$sub->sortByDesc("count");
+    //         $sub = $sub->take(5);
+    //         $oz[$zone] = $sub;
+    //     }
+    //     return $oz;
+    // }
     public function zonesRepeatedSites($zones)
     {
         $oz = [];
       
-        $siteCodes = $this->NUR->groupBy("problem_site_code")->keys();
+       
         foreach ($zones as $zone) {
             $subs = [];
-          
-            foreach ($siteCodes as $code) {
-                $nur=$this->NUR->where("oz",$zone )->where("problem_site_code", $code);
+            $siteCodes = $this->NUR->where("oz",$zone )->groupBy("problem_site_code");
+            foreach ($siteCodes as $key=> $codes) {
 
-                if(count($nur)>0)
-                {
-                    $siteName = $this->NUR->firstWhere("problem_site_code", $code)->problem_site_name;
-                    $site["siteName"]=$siteName;
-                    $site["siteCode"]=$code;
-                    $site["count"] =$this->NUR->where("oz",$zone)->where("problem_site_code", $code)->count();
+                
+                
+                    $site["siteName"]=$codes->first()->problem_site_name;
+                    $site["siteCode"]=$codes->first()->problem_site_code;
+                    $site["count"]=$codes->count();
                     array_push($subs,$site);
-
-                }
-
               
             }
 
@@ -111,23 +138,20 @@ class NURHelpers{
     {
         $oz = [];
       
-        $siteCodes = $this->NUR->groupBy("problem_site_code")->keys();
+       
         foreach ($zones as $zone) {
             $subs = [];
+            $siteCodes = $this->NUR->where("oz",$zone )->groupBy("problem_site_code");
           
-            foreach ($siteCodes as $code) {
+            foreach ($siteCodes as $key=> $codes) {
+                $site["siteName"]=$codes->first()->problem_site_name;
+                $site["siteCode"]=$codes->first()->problem_site_code;
+                $site["NUR"]=number_format($codes->sum($period), 2, '.', ',');
+                array_push($subs,$site);
 
-                $nur=$this->NUR->where("oz",$zone )->where("problem_site_code", $code);
-                if(count($nur)>0)
-                {
-                    $siteName = $this->NUR->firstWhere("problem_site_code", $code)->problem_site_name;
-                    $site["siteName"]=$siteName;
-                    $site["siteCode"]=$code;
-                    $site["NUR"] = number_format($this->NUR->where("oz",$zone)->where("problem_site_code", $code)->sum($period), 2, '.', ',');
-                    array_push($subs,$site);
 
-                }
-             
+              
+               
                
 
                
@@ -146,6 +170,45 @@ class NURHelpers{
         }
         return $oz;
     }
+    // public function zonesTopSitesNur($zones,$period)
+    // {
+    //     $oz = [];
+      
+    //     $siteCodes = $this->NUR->groupBy("problem_site_code")->keys();
+    //     foreach ($zones as $zone) {
+    //         $subs = [];
+          
+    //         foreach ($siteCodes as $code) {
+
+    //             $nur=$this->NUR->where("oz",$zone )->where("problem_site_code", $code);
+    //             if(count($nur)>0)
+    //             {
+    //                 $siteName = $this->NUR->firstWhere("problem_site_code", $code)->problem_site_name;
+    //                 $site["siteName"]=$siteName;
+    //                 $site["siteCode"]=$code;
+    //                 $site["NUR"] = number_format($this->NUR->where("oz",$zone)->where("problem_site_code", $code)->sum($period), 2, '.', ',');
+    //                 array_push($subs,$site);
+
+    //             }
+             
+               
+
+               
+    //         }
+
+            
+
+
+
+
+    //         $sub = collect($subs);
+        
+    //         $sub=$sub->sortByDesc("NUR");
+    //         $sub = $sub->take(5);
+    //         $oz[$zone] = $sub;
+    //     }
+    //     return $oz;
+    // }
 
     public function zonesAccessCountTickts($zones)
     {
