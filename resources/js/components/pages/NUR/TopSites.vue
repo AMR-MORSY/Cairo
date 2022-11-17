@@ -17,6 +17,8 @@
               responsiveLayout="scroll"
               class="p-datatable-sm"
               stripedRows
+              :paginator="true"
+              :rows="5"
               v-model:selection="selectedSite"
               selectionMode="single"
               dataKey="siteCode"

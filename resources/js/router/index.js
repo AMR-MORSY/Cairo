@@ -19,16 +19,22 @@ import modificationsIndex from "../components/pages/Modifications/modificationsI
 import energyIndex from "../components/pages/energySheet/energyIndex.vue";
 import Details from "../components/pages/sites/Details.vue";
 import CascadesUpdate from "../components/pages/sites/CascadesUpdate.vue";
-
+import SiteModifications from "../components/pages/Modifications/SiteModifications.vue";
+import NewModification from "../components/pages/Modifications/NewModification.vue";
+import UpdateModification from "../components/pages/Modifications/UpdateModification.vue";
+ 
 const routes = [
     { path: "/energysheet/sheet", component: Sheet },
     { path: "/energysheet/energyIndex", component: energyIndex },
     { path: "/nur", component: nurIndex },
     {path:"/sites/details/:site_code",component:Details,props:true},
     {path:"/modifications/index",component:modificationsIndex},
+    {path:"/modifications/new/:site_code/:site_name",component:NewModification,props:true},
+    {path:"/modifications/update/:id",component:UpdateModification,props:true},
     { path: "/sites/cascades", component: cascades },
     {path:"/sites/cascades/update/:site_code",component:CascadesUpdate,props:true},
     { path: "/modifications", component: modifications },
+    { path: "/modifications/sitemodifications/:site_code/:site_name", component: SiteModifications,props:true },
     { path: "/sites/nodals", component: nodals },
     { path: "/nur/statestics", component: NURStatestics },
     { path: "/nur/2G", component: NUR2G },

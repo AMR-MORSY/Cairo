@@ -55,6 +55,10 @@ Route::prefix("energysheet")->middleware(['auth:sanctum'])->group(function(){
 Route::prefix('modifications')->middleware(['auth:sanctum',"role:admin|super-admin"])->group(function(){
     Route::get("/analysis",[ModificationsController::class,"analysis"])->name("analysis");
     Route::post("/index",[ModificationsController::class,"index"])->name("index");
+    Route::post("/update",[ModificationsController::class,"modificationUpdate"])->name("modification_update");
+    Route::get("/siteModifications/{site_code}",[ModificationsController::class,"siteModifications"])->name("siteModifications");
+    Route::get("/details/{id}",[ModificationsController::class,"modificationDetails"])->name("details");
+    Route::post("/new",[ModificationsController::class,"newModification"])->name("new_modification");
 });
 
 
@@ -65,6 +69,7 @@ Route::prefix('sites')->middleware(['auth:sanctum',"role:super-admin"])->group(f
     Route::get('/cascades',[CascadesController::class,"exportAllCascades"])->name("all_cascades");
     Route::post('/cascades',[CascadesController::class,"importCascades"])->name("import_cascades");
     Route::post('/nodals',[NodalsController::class,"importNodals"])->name("import_nodals");
+    Route::post('/updateCascades',[CascadesController::class,"updateCascades"])->name("updateCascades");
 
 });
 Route::prefix('sites')->middleware(['auth:sanctum',])->group(function(){

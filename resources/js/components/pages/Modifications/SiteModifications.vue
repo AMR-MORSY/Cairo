@@ -1,0 +1,143 @@
+<template>
+  <section id="site-modification" >
+    <div class="container mt-5">
+      <Fieldset class="mt-5">
+        <template #legend>{{ site_code }}-{{ site_name }} </template>
+        <div class="row mt-5">
+          <div class="col-12">
+            <DataTable
+              :value="modifications"
+              responsiveLayout="scroll"
+              class="p-datatable-sm"
+              stripedRows
+              selectionMode="single"
+              v-model:selection="selectedModification"
+              @row-select="onRowSelect"
+            >
+              <template #header> </template>
+              <Column selectionMode="single"></Column>
+
+              <Column
+                v-for="col in columns"
+                :field="col.field"
+                :header="col.header"
+                :key="col.field"
+              ></Column>
+            </DataTable>
+          </div>
+          <div class="col-6 col-md-4 mt-3">
+            <Button
+              label="Update"
+              @click="gotToUpdateModification"
+              class="p-button-raised p-button-warning"
+            />
+          </div>
+          <div class="col-6 col-md-4 mt-3">
+            <Button
+              label="New Modification"
+              @click="insertNewModification"
+              class="p-button-raised p-button-secondary"
+            />
+          </div>
+        </div>
+      </Fieldset>
+    </div>
+  </section>
+</template>
+
+<script>
+import Modifications from "../../../apis/Modifications";
+export default {
+  data() {
+    return {
+      modifications: null,
+      selectedModification: null,
+    };
+  },
+  name: "SiteModifications",
+  props: ["site_code", "site_name"],
+  emits: ["displayNoneSpinner"],
+  watch: {
+    site_code() {
+      this.getSiteModifications();
+    },
+  },
+  mounted() {
+    this.getSiteModifications();
+  },
+  created() {
+    this.columns = [
+      { field: "subcontractor", header: "Subcontractor" },
+      { field: "action", header: "Action" },
+      { field: "requester", header: "Requester" },
+      { field: "request_date", header: "Request Date" },
+      { field: "project", header: "Project" },
+      { field: "finish_date", header: "Finish Date" },
+      { field: "status", header: "Status" },
+      { field: "cost", header: "Cost" },
+    ];
+  },
+  methods: {
+    getSiteModifications() {
+      this.$emit("displayNoneSpinner", false);
+      Modifications.getSiteModifications(this.site_code)
+        .then((response) => {
+          console.log(response);
+          this.modifications = response.data.modifications;
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+        .finally(() => {
+          this.$emit("displayNoneSpinner", true);
+        });
+    },
+    onRowSelect() {
+      console.log(this.selectedModification);
+    },
+    gotToUpdateModification() {
+      this.$router.push(
+        `/modifications/update/${this.selectedModification.id}`
+      );
+    },
+    insertNewModification() {
+      this.$router.push(
+        `/modifications/new/${this.site_code}/${this.site_name}`
+      );
+    },
+  },
+};
+</script>
+
+<style lang="scss" scoped>
+#site-modification{
+  margin-top: 5em;
+}
+::v-deep(.p-fieldset) {
+  position: relative;
+
+  .p-fieldset-legend {
+    width: 25%;
+    color: white;
+    text-align: center;
+    position: absolute;
+    top: 30px;
+    left: 50px;
+    z-index: 2;
+    background-color: rgba($color: gray, $alpha: 0.9);
+  }
+  // .p-fieldset-content {
+  //   background-color: green;
+  // }
+  .p-datatable {
+    width: 100%;
+    margin-top: 50px;
+    z-index: 1;
+    .p-datatable-header {
+      height: 50px;
+    }
+  }
+}
+@media screen and (max-width: 576px) {
+}
+</style>

@@ -174,6 +174,8 @@ class ShowNURController extends Controller
             $NUR['NUR2G']=$statestics->NUR2GStatestics();
             $NUR['NUR3G']=$statestics->NUR3GStatestics();
             $NUR['NUR4G']=$statestics->NUR4GStatestics();
+            $NUR["topRepeated"]=$statestics->zonesTopRepeated();
+             $NUR["topNUR"]=$statestics->zonesTopNUR();
             $NUR['combined']=$statestics->combinedNUR();
             return $NUR;
           

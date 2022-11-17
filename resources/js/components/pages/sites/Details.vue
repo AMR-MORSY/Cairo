@@ -10,7 +10,7 @@
                 <span class="header">{{ siteName }}</span>
               </template>
 
-              <div class="row">
+              <div class="row site-details">
                 <div class="col-6 col-md-4">
                   <div class="input-field">
                     <h6>Site code:</h6>
@@ -192,6 +192,18 @@
                   </div>
                 </div>
               </div>
+              <div class="row mt-5 buttons">
+                <div class="col-6 col-md-4">
+                  <Button label="Modifications" @click="gotToSiteModifications" class="p-button-raised p-button-warning" />
+                </div>
+                <div class="col-6 col-md-4">
+                  <Button label="NUR" class="p-button-raised p-button-secondary" />
+                </div>
+                <div class="col-6 col-md-4">
+                  <Button label="Update" class="p-button-raised p-button-help" />
+                </div>
+               
+              </div>
             </TabPanel>
             <TabPanel>
               <template #header>
@@ -349,6 +361,12 @@ export default {
     onRowSelect() {
        this.$router.push(`/sites/details/${this.selectedSite.cascade_code}`);
     },
+    gotToSiteModifications()
+    {
+       this.$router.push(`/modifications/sitemodifications/${this.siteCode}/${this.siteName}`);
+
+
+    },
 
     goToUpdateCascadesPage()
     {
@@ -382,5 +400,13 @@ export default {
   .header {
     color: #79589f;
   }
+}
+.site-details,.buttons{
+  border: 1px solid #79589f;
+  border-radius: 5px;
+  padding: 3rem 0;
+}
+.buttons{
+   padding: 1rem 0;
 }
 </style>

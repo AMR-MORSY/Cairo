@@ -29,5 +29,9 @@ export default {
     getSiteDetails(id)
     {
       return allInstances.Api.get(`/sites/details/${id}`)
+    },
+    updateCascades(data)
+    {
+      return allInstances.Api.post("/sites/updateCascades",data)
     }
 };

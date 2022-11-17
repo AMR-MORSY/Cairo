@@ -239,13 +239,13 @@ export default {
           datasets: [
             {
               label: "2G NUR",
-              backgroundColor: "#42A5F5",
+              backgroundColor: "#7F00FF",
               data: Object.values(NUR.NUR2G.zonesNUR2G),
               borderWidth: 1,
             },
             {
               label: "No.tickets",
-              backgroundColor: "red",
+              backgroundColor: "#C3B1E1",
               data: Object.values(NUR.NUR2G.zonesTotalNumTickets),
               borderWidth: 1,
             },
@@ -257,13 +257,13 @@ export default {
           datasets: [
             {
               label: "3G NUR",
-              backgroundColor: "#42A5F5",
+              backgroundColor: "#7F00FF",
               data: Object.values(NUR.NUR3G.zonesNUR3G),
               borderWidth: 1,
             },
             {
               label: "No.tickets",
-              backgroundColor: "red",
+              backgroundColor: "#C3B1E1",
               data: Object.values(NUR.NUR3G.zonesTotalNumTickets),
               borderWidth: 1,
             },
@@ -276,13 +276,13 @@ export default {
           datasets: [
             {
               label: "4G NUR",
-              backgroundColor: "#42A5F5",
-              data: Object.values(NUR.NUR4G.zonesTotalNumTickets),
+              backgroundColor: "#7F00FF",
+              data: Object.values(NUR.NUR4G.zonesNUR4G),
               borderWidth: 1,
             },
             {
               label: "No.tickets",
-              backgroundColor: "red",
+              backgroundColor: "#C3B1E1",
               data: Object.values(NUR.NUR4G.zonesTotalNumTickets),
               borderWidth: 1,
             },
@@ -295,10 +295,10 @@ export default {
           datasets: [
             {
               label: "Combined NUR",
-              backgroundColor: "red",
+              backgroundColor: "#C3B1E1",
               data: Object.values(NUR.combined),
               borderWidth: 1,
-              barThickness: 8,
+             
             },
           ],
         };
@@ -327,12 +327,12 @@ export default {
             {
               data: response.exceed,
               label: "exceed SLA",
-              backgroundColor: "#42A5F5",
+              backgroundColor: "#7F00FF",
             },
             {
               data: response.withinSLA,
               label: "within SLA",
-              backgroundColor: "red",
+              backgroundColor: "#C3B1E1",
             },
           ],
         };
@@ -361,12 +361,12 @@ export default {
             {
               data: response.exceed,
               label: "exceed SLA",
-              backgroundColor: "#42A5F5",
+              backgroundColor: "#7F00FF",
             },
             {
               data: response.withinSLA,
               label: "within SLA",
-              backgroundColor: "red",
+              backgroundColor: "#C3B1E1",
             },
           ],
         };
@@ -385,29 +385,29 @@ export default {
         this.gizaGen = NUR.NUR3G.zonesNUR3GGenStatestics["GIZA"];
 
         this.cairoSouthTopNUR = Object.values(
-          NUR.NUR3G.zonesNUR3GTopSitesNUR["CAIRO SOUTH"]
+          NUR.topNUR["CAIRO SOUTH"]
         );
         this.cairoEastTopNUR = Object.values(
-          NUR.NUR3G.zonesNUR3GTopSitesNUR["CAIRO EAST"]
+          NUR.topNUR["CAIRO EAST"]
         );
         this.cairoNorthTopNUR = Object.values(
-          NUR.NUR3G.zonesNUR3GTopSitesNUR["CAIRO NORTH"]
+          NUR.topNUR["CAIRO NORTH"]
         );
         this.gizaTopNUR = Object.values(
-          NUR.NUR3G.zonesNUR3GTopSitesNUR["GIZA"]
+          NUR.topNUR["GIZA"]
         );
 
         this.cairoSouthRepeatedSites = Object.values(
-          NUR.NUR3G.zonesNUR3GRepeatedSitesNUR["CAIRO SOUTH"]
+          NUR.topRepeated["CAIRO SOUTH"]
         );
         this.cairoEastRepeatedSites = Object.values(
-          NUR.NUR3G.zonesNUR3GRepeatedSitesNUR["CAIRO EAST"]
+          NUR.topRepeated["CAIRO EAST"]
         );
         this.cairoNorthRepeatedSites = Object.values(
-          NUR.NUR3G.zonesNUR3GRepeatedSitesNUR["CAIRO NORTH"]
+          NUR.topRepeated["CAIRO NORTH"]
         );
         this.gizaRepeatedSites = Object.values(
-          NUR.NUR3G.zonesNUR3GRepeatedSitesNUR["GIZA"]
+          NUR.topRepeated["GIZA"]
         );
 
         this.cairoSouthAccessStatesitcs={

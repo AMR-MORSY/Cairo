@@ -22,7 +22,7 @@
                 }}</span>
               </div>
               <div class="product-list-action">
-                <h6 class="mb-2">{{ slotProps.item.count }}</h6>
+                <h6 class="mb-2">{{ slotProps.item.countCascades }}</h6>
               </div>
             </div>
           </template>
@@ -106,25 +106,91 @@ export default {
       if (isFound.length > 0) {
         this.isDisabled = false;
         console.log(this.isDisabled);
-      }
-      else if (isFound.length == 0) {
+      } else if (isFound.length == 0) {
         this.isDisabled = true;
         console.log(this.isDisabled);
-      }
-    else if (
+      } else if (
         this.pickListData[1].length == 0 &&
         this.pickListData[0].length > this.initialCascadesCount
       ) {
         this.isDisabled = false;
         console.log(this.isDisabled);
-      }
-    else if (this.pickListData[0].length > this.initialCascadesCount) {
+      } else if (this.pickListData[0].length > this.initialCascadesCount) {
         this.isDisabled = false;
         console.log(this.isDisabled);
       }
     },
     updateCascades() {
       console.log(this.pickListData);
+      let data = {
+        cascades: [],
+        siteCode: this.siteCode,
+      };
+      if (this.pickListData[0].length != 0) {
+        data = {
+          cascades: this.pickListData[0],
+          siteCode: this.siteCode,
+        };
+      }
+      
+
+      console.log(data);
+      Sites.updateCascades(data)
+        .then((response) => {
+          console.log(response);
+          if ((response.status = 200)) {
+            this.$toast.add({
+              severity: "success",
+              summary: "Successfully",
+              detail: response.data.message,
+              life: 3000,
+            });
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          if (error.response.status == 406) {
+            error.response.data.errors.forEach((element) => {
+              this.$toast.add({
+                severity: "error",
+                summary: "Oops",
+                detail: element,
+                life: 6000,
+              });
+            });
+          } else if (error.response.status == 422) {
+            if (error.response.data.errors.cascade_name) {
+              error.response.data.errors.cascade_name.forEach((element) => {
+                this.$toast.add({
+                  severity: "error",
+                  summary: "Oops",
+                  detail: element,
+                  life: 6000,
+                });
+              });
+            }
+            if (error.response.data.errors.cascade_code) {
+              error.response.data.errors.cascade_name.forEach((element) => {
+                this.$toast.add({
+                  severity: "error",
+                  summary: "Oops",
+                  detail: element,
+                  life: 6000,
+                });
+              });
+            }
+            if (error.response.data.errors.siteCode) {
+              error.response.data.errors.cascade_name.forEach((element) => {
+                this.$toast.add({
+                  severity: "error",
+                  summary: "Oops",
+                  detail: element,
+                  life: 6000,
+                });
+              });
+            }
+          }
+        });
     },
     submitSearch() {
       Sites.getSiteDetails(this.search)
@@ -157,7 +223,7 @@ export default {
                   let newCascade = {
                     cascade_code: options.data.site_code,
                     cascade_name: options.data.site_name,
-                    count: response.data.cascades.length,
+                    countCascades: response.data.cascades.length,
                   };
                   let isFound = false;
                   this.pickListData[0].forEach((element) => {

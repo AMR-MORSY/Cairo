@@ -37,6 +37,10 @@ import Details from "./components/pages/sites/Details.vue";
 import TabView from 'primevue/tabview';
 import TabPanel from 'primevue/tabpanel';
 import PickList from 'primevue/picklist';
+import Fieldset from 'primevue/fieldset';
+import Dropdown from 'primevue/dropdown';
+import Textarea from 'primevue/textarea';
+import Calendar from 'primevue/calendar';
 
 
 
@@ -57,8 +61,12 @@ createApp(app)
 
 .component("Toast",Toast)
 .component("SpinnerPage",SpinnerPage)
+.component("Fieldset",Fieldset)
 .component("DynamicDialog",DynamicDialog)
 .component("modal",modal)
+.component("Dropdown",Dropdown)
+.component("Calendar",Calendar)
+.component("Textarea",Textarea)
 .component("Details",Details)
 .component("Dialog",Dialog)
 .component("Badge",Badge)

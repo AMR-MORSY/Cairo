@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Card class="mt-5" style="background-color: #79589f">
+    <Card class="mt-5" style="background-color:#C3B1E1">
       <template #title>
         <p style="font-size: 16px; color: white; pading: 0; text-align: center">
           Cairo North
@@ -121,13 +121,19 @@ export default {
           data: Object.values(this.cairoNorthSubsystem),
 
           backgroundColor: [
-            "red",
-            "green",
-            "yellow",
-            "blue",
-            "purple",
-            "black",
-            "gray",
+            "#7F00FF",
+            "#C3B1E1",
+            "#E0B0FF",
+            "#5D3FD3",
+            "#CF9FFF",
+            "#BF40BF",
+            "#CCCCFF",
+            "#BDB5D5",
+            "#E6E6FA",
+            "#AA98A9",
+            "#953553",
+            "#800080",
+
           ],
         },
       ],
@@ -139,17 +145,17 @@ export default {
         {
           data: [this.cairoNorthAccessStatesitcs.NUR,,],
           label: "NUR",
-          backgroundColor: "yellow",
+          backgroundColor: "#7F00FF",
         },
         {
           data: [,this.cairoNorthAccessStatesitcs.totalTickets,],
           label: "Total Tickets",
-          backgroundColor: "red",
+          backgroundColor: "#C3B1E1",
         },
         {
           data: [,,this.cairoNorthAccessStatesitcs.accessTickets],
           label: "Access Tickets",
-          backgroundColor: "blue",
+          backgroundColor: "#800080",
         },
       ],
     };
@@ -213,12 +219,12 @@ export default {
           {
             data: count,
             label: "Count",
-            backgroundColor: "red",
+            backgroundColor: "#7F00FF",
           },
           {
             data: NUR,
             label: "NUR",
-            backgroundColor: "blue",
+            backgroundColor: "#C3B1E1",
           },
         ],
       };
