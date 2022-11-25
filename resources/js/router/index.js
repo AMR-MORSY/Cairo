@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import Sheet from "../components/pages/energySheet/Sheet.vue";
 import notFount from "../components/notFound.vue";
 import newSitesInsert from "../components/pages/sites/newSitesInsert.vue";
+import newSiteInsert from "../components/pages/sites/newSiteInsert.vue";
 import login from "../components/pages/User/login.vue";
 import register from "../components/pages/User/register.vue";
 import home from "../components/home.vue";
@@ -22,28 +23,39 @@ import CascadesUpdate from "../components/pages/sites/CascadesUpdate.vue";
 import SiteModifications from "../components/pages/Modifications/SiteModifications.vue";
 import NewModification from "../components/pages/Modifications/NewModification.vue";
 import UpdateModification from "../components/pages/Modifications/UpdateModification.vue";
+import dashboard from "../components/pages/dashboard.vue";
+import NUR from "../components/pages/NUR/NUR.vue";
+import energy from "../components/pages/energySheet/energy.vue";
+import sites from "../components/pages/sites/sites.vue";
+import users from "../components/pages/User/users.vue";
  
 const routes = [
-    { path: "/energysheet/sheet", component: Sheet },
-    { path: "/energysheet/energyIndex", component: energyIndex },
-    { path: "/nur", component: nurIndex },
-    {path:"/sites/details/:site_code",component:Details,props:true},
-    {path:"/modifications/index",component:modificationsIndex},
+    { path: "/energy/sheet", component: Sheet },
+    { path: "/energy", component: energy },
+    { path: "/energy/index", component: energyIndex },
+    { path: "/dashboard", component: dashboard },
+    {path:"/modifications/index/:columnName/:columnValue",component:modificationsIndex,props:true},
     {path:"/modifications/new/:site_code/:site_name",component:NewModification,props:true},
     {path:"/modifications/update/:id",component:UpdateModification,props:true},
+    { path: "/sites", component: sites },
+    {path:"/sites/details/:site_code",component:Details,props:true},
     { path: "/sites/cascades", component: cascades },
+    { path: "/sites/storeSites", component: newSitesInsert },
+    { path: "/sites/storeSite", component: newSiteInsert },
+    { path: "/sites/nodals", component: nodals },
     {path:"/sites/cascades/update/:site_code",component:CascadesUpdate,props:true},
     { path: "/modifications", component: modifications },
     { path: "/modifications/sitemodifications/:site_code/:site_name", component: SiteModifications,props:true },
-    { path: "/sites/nodals", component: nodals },
-    { path: "/nur/statestics", component: NURStatestics },
+    { path: "/nur", component: NUR },
+    { path: "/nur/index", component: nurIndex },
+    { path: "/nur/statestics/:week_month/:week/:month/:year", component: NURStatestics,props:true },
     { path: "/nur/2G", component: NUR2G },
     { path: "/nur/3G", component: NUR3G },
     { path: "/nur/4G", component: NUR4G },
     { path: "/", redirect: "/home" },
     { path: "/home", component: home },
     { path: "/:pathMatch(.*)*", component: notFount },
-    { path: "/sites/store", component: newSitesInsert },
+    { path: "/users", component: users },
     { path: "/user/login", component: login, name: "login" },
     { path: "/user/register", component: register },
     { path: "/user/resetpassword", component: resetPassword },

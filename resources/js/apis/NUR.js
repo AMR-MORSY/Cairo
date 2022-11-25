@@ -21,7 +21,7 @@ export default {
     },
     getNur(data)
     {
-        return allInstances.Api.post("/Nur/show", data);
+        return allInstances.Api.get(`/Nur/show/${data.week_month}/${data.week}/${data.month}/${data.year}`);
 
     },
     getSiteNUR(siteCode)

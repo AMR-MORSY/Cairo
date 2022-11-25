@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Modifications;
 
+use Carbon\Carbon;
 use App\Models\Sites\Site;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -44,14 +45,18 @@ class ModificationsController extends Controller
         ]);
     }
 
-    public function index(Request $request)
+    public function index($colmnName,$colmnValue)
     {
-        $validator = Validator::make($request->all(), [
+        $data=[
+            "columnName" => $colmnName,
+            "columnValue" =>$colmnValue
+        ];
+        $validator = Validator::make($data, [
             "columnName" => ['required', "regex:/(status|requester|subcontractor|project)/"],
-            "columnValue" => 'required', 'string'
+            "columnValue" => ['required', 'string']
         ]);
         if ($validator->fails()) {
-            $errors = $validator->errors()->messages();
+          
             return response()->json(array(
                 'success' => false,
                 'message' => 'There are incorect values in the form!',
@@ -61,7 +66,7 @@ class ModificationsController extends Controller
 
             $this->throwValidationException(
 
-                $request,
+                
                 $validator
 
             );
@@ -213,6 +218,12 @@ class ModificationsController extends Controller
         }
     }
 
+    private function dateFormat($date)
+    {
+       $newDate= Carbon::parse($date);
+       return $newDate=$newDate->format("Y-m-d");
+    }
+
     public function newModification(Request $request)
     {
         // $data=json_encode($request->all(),true);
@@ -251,7 +262,20 @@ class ModificationsController extends Controller
             );
         } else {
             $validated = $validator->validated();
-            // Modification::create($validated);
+             Modification::create([
+                "site_code"=>$validated["siteCode"],
+            "site_name"=>$validated["siteName"],
+            "cost"=>$validated["cost"],
+            "status"=>$validated["status"]['status'],
+            "project"=>$validated["project"]["project"],
+            "subcontractor"=>$validated["subcontractor"]['subcontractor'],
+            "requester"=>$validated["requester"]['requester'],
+            "action"=>$validated["action"],
+            "materials"=>$validated["materials"],
+            "request_date"=>$this->dateFormat(  $validated["request_date"]) ,
+            "finish_date"=>$this->dateFormat(  $validated["finish_date"]),
+    
+        ]);
             return response()->json([
                 "message"=>$validated
 

@@ -1,106 +1,127 @@
 <template>
   <div class="container mt-5">
-    <Toast/>
-    <form
-      id="energysheet"
-      @submit.prevent="submit2GNurSheet"
-      enctype="multipart/form-data"
-    >
-      <div class="errors mt-5"></div>
-      <div class="row index">
-        <div class="col-12" style="color: red; text-align: center">
-          <div v-if="serverError">
-            {{ serverError }}
-          </div>
-        </div>
-
-        <div class="col-6">
-          <div class="form-group">
-            <select v-model="week" id="weeks" class="form-control">
-              <option value="">select week</option>
-
-              <option v-for="week in weeks" :key="week">{{ week }}</option>
-            </select>
-            <div v-if="weekErrors">
-              <ul>
-                <li v-for="error in weekErrors" style="color: red" :key="error">
-                  {{ error }}
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div class="col-6">
-          <div class="form-group">
-            <select v-model="year" class="form-control">
-              <option value="">select year</option>
-
-              <option v-for="year in years" :key="year">{{ year }}</option>
-            </select>
-            <div v-if="yearErrors">
-              <ul>
-                <li v-for="error in yearErrors" style="color: red" :key="error">
-                  {{ error }}
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-6">
-          <div class="form-group">
-            <label for="power">2G Sheet:</label>
-            <input
-              type="file"
-              name="energy_sheet"
-              class="form-control"
-              id="energy_sheet"
-              
-              @change="Nur2GSheetFile"
-            />
-            <div v-if="Nur2GSheetErrors">
-              <ul>
-                <li
-                  v-for="error in Nur2GSheetErrors"
-                  style="color: red"
-                  :key="error"
-                >
-                  {{ error }}
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-6">
-          <div class="form-group">
-            <label for="power">2G Cells:</label>
-            <input type="number" class="form-control" v-model="cells" />
-            <div v-if="cellsErrors">
-              <ul>
-                <li
-                  v-for="error in cellsErrors"
-                  style="color: red"
-                  :key="error"
-                >
-                  {{ error }}
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-12 mt-2">
-          <spinner-button
-            type="submit"
-            :show-spinner="showSpinner"
-            class="btn btn-primary"
-          >
-            <span> Submit</span>
-          </spinner-button>
-        </div>
+    <Toast />
+    <div class="card index">
+      <div class="header">
+        <p>2G</p>
       </div>
-    </form>
+      <form
+        id="energysheet"
+        @submit.prevent="submit2GNurSheet"
+        enctype="multipart/form-data"
+      >
+        <div class="errors "></div>
+        <div class="row ">
+          <div class="col-12" style="color: red; text-align: center">
+            <div v-if="serverError">
+              {{ serverError }}
+            </div>
+          </div>
+
+          <div class="col-12 col-md-6">
+            <div class="form-group">
+              <label for="weeks">Week:</label>
+              <select v-model="week" id="weeks" class="form-select">
+                <option value="">select week</option>
+
+                <option v-for="week in weeks" :key="week">{{ week }}</option>
+              </select>
+              <div v-if="weekErrors">
+                <ul>
+                  <li
+                    v-for="error in weekErrors"
+                    style="color: red"
+                    :key="error"
+                  >
+                    {{ error }}
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-md-6">
+            <div class="form-group">
+              <label for="year">Year:</label>
+              <select v-model="year" id="year" class="form-select">
+                <option value="">select year</option>
+
+                <option v-for="year in years" :key="year">{{ year }}</option>
+              </select>
+              <div v-if="yearErrors">
+                <ul>
+                  <li
+                    v-for="error in yearErrors"
+                    style="color: red"
+                    :key="error"
+                  >
+                    {{ error }}
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-6">
+            <div class="form-group">
+              <label for="power">2G Sheet:</label>
+              <input
+                type="file"
+                name="energy_sheet"
+                class="form-control"
+                id="energy_sheet"
+                @change="Nur2GSheetFile"
+              />
+              <div v-if="Nur2GSheetErrors">
+                <ul>
+                  <li
+                    v-for="error in Nur2GSheetErrors"
+                    style="color: red"
+                    :key="error"
+                  >
+                    {{ error }}
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-6">
+            <div class="form-group">
+              <label for="power">2G Cells:</label>
+              <input
+                type="number"
+                class="form-control"
+                placeholder="2G Cells"
+                v-model="cells"
+              />
+              <div v-if="cellsErrors">
+                <ul>
+                  <li
+                    v-for="error in cellsErrors"
+                    style="color: red"
+                    :key="error"
+                  >
+                    {{ error }}
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 mt-2">
+            <spinner-button
+              type="submit"
+              :show-spinner="showSpinner"
+              class="btn "
+              style="background-color:#79589f;color:white;"
+            >
+              <span> Submit</span>
+            </spinner-button>
+          </div>
+        </div>
+      </form>
+    </div>
+
     <div class="helper-table-container">
       <helper-table v-if="sheetValidationErrors">
         <template #header>
@@ -124,9 +145,12 @@
             </td>
             <td class="text-left align-middle">
               <ul>
-                <li>Site Code:{{ error.values["Problem source site code"] }}</li>
-                <li>Site Name:{{ error.values["Problem source site name"] }}</li>
-              
+                <li>
+                  Site Code:{{ error.values["Problem source site code"] }}
+                </li>
+                <li>
+                  Site Name:{{ error.values["Problem source site name"] }}
+                </li>
               </ul>
             </td>
           </tr>
@@ -134,14 +158,7 @@
       </helper-table>
     </div>
   </div>
-  <modal :visible="showModal">
-    <template #body>
-      <p class="text-center">{{ successMessage }}</p>
-    </template>
-    <template #footer>
-      <button class="btn btn-danger" @click="closeModal">close</button>
-    </template>
-  </modal>
+  
 </template>
 
 <script>
@@ -192,7 +209,12 @@ export default {
           console.log(response.data.message);
           this.successMessage = response.data.message;
           // this.showModal = true;
-            this.$toast.add({severity:'success', summary: 'Success Message', detail:'inserted Successfully', life: 6000});
+          this.$toast.add({
+            severity: "success",
+            summary: "Success Message",
+            detail: "inserted Successfully",
+            life: 6000,
+          });
         })
         .catch((error) => {
           if (error.response) {
@@ -266,7 +288,6 @@ export default {
   },
   mounted() {
     this.getNur2GSIndex();
-  
   },
 };
 </script>
@@ -277,8 +298,20 @@ export default {
   width: 70%;
   margin-left: auto;
   margin-right: auto;
+  padding: 2rem;
 }
 .index {
   margin-top: 6em;
+  .header{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    p{
+      font-size: 2rem;
+      font-weight: 900;
+      color: darkmagenta;
+    }
+  }
 }
 </style>

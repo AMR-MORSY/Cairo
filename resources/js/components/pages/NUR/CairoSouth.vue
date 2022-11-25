@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Card class="mt-5" style="background-color: #C3B1E1">
+    <Card class="mt-5" style="background-color: #c3b1e1">
       <template #title>
         <p style="font-size: 16px; color: white; pading: 0; text-align: center">
           Cairo South
@@ -89,7 +89,7 @@ export default {
   data() {
     return {
       subsystem: null,
-      accessStatesitcs:null,
+      accessStatesitcs: null,
       generatorStatestics: null,
       lightOptions: {
         plugins: {
@@ -108,56 +108,77 @@ export default {
   },
   components: {
     TopSites,
-        siteNURTable,
+    siteNURTable,
   },
-  props: ["cairoSouthSubsystem", "cairoSouthTopNUR", "cairoSouthGen","cairoSouthRepeatedSites","cairoSouthAccessStatesitcs"],
+  props: [
+    "cairoSouthSubsystem",
+    "cairoSouthTopNUR",
+    "cairoSouthGen",
+    "cairoSouthRepeatedSites",
+    "cairoSouthAccessStatesitcs",
+  ],
   name: "CairoSouth",
-  beforeMount() {
-    this.subsystem = {
-      labels: Object.keys(this.cairoSouthSubsystem),
-      datasets: [
-        {
-          data: Object.values(this.cairoSouthSubsystem),
+mounted() {
+    if (this.cairoSouthSubsystem) {
+      this.subsystem = {
+        labels: Object.keys(this.cairoSouthSubsystem),
+        datasets: [
+          {
+            data: Object.values(this.cairoSouthSubsystem),
 
-          backgroundColor: [
-           "#7F00FF",
-            "#C3B1E1",
-            "#E0B0FF",
-            "#5D3FD3",
-            "#CF9FFF",
-            "#BF40BF",
-            "#CCCCFF",
-            "#BDB5D5",
-            "#E6E6FA",
-            "#AA98A9",
-            "#953553",
-            "#800080",
+            backgroundColor: [
+              "#7F00FF",
+              "#C3B1E1",
+              "#E0B0FF",
+              "#5D3FD3",
+              "#CF9FFF",
+              "#BF40BF",
+              "#CCCCFF",
+              "#BDB5D5",
+              "#E6E6FA",
+              "#AA98A9",
+              "#953553",
+              "#800080",
+            ],
+          },
+        ],
+      };
+    }
 
-          ],
-        },
-      ],
-    };
-    this.genStatestics(this.cairoSouthGen);
-     this.accessStatesitcs = {
+
+
+    if(this.cairoSouthGen)
+    {
+       this.genStatestics(this.cairoSouthGen);
+
+    }
+    if(this.cairoSouthAccessStatesitcs)
+    {
+       this.accessStatesitcs = {
       labels: ["NUR", "Total Tickets", "Access Tickets"],
       datasets: [
         {
-          data: [this.cairoSouthAccessStatesitcs.NUR,,],
+          data: [this.cairoSouthAccessStatesitcs.NUR, ,],
           label: "NUR",
           backgroundColor: "#7F00FF",
         },
         {
-          data: [,this.cairoSouthAccessStatesitcs.totalTickets,],
+          data: [, this.cairoSouthAccessStatesitcs.totalTickets],
           label: "Total Tickets",
           backgroundColor: "#C3B1E1",
         },
         {
-          data: [,,this.cairoSouthAccessStatesitcs.accessTickets],
+          data: [, , this.cairoSouthAccessStatesitcs.accessTickets],
           label: "Access Tickets",
           backgroundColor: "#800080",
         },
       ],
     };
+
+    }
+
+   
+   
   },
   methods: {
     getSiteNUR(event) {
@@ -172,7 +193,6 @@ export default {
             "960px": "75vw",
             "640px": "90vw",
           },
-         
         },
         // templates: {
         //   footer: () => {

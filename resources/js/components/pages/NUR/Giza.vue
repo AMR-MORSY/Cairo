@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Card class="mt-5" style="background-color: #C3B1E1">
+    <Card class="mt-5" style="background-color: #c3b1e1">
       <template #title>
         <p style="font-size: 16px; color: white; pading: 0; text-align: center">
           Giza
@@ -118,53 +118,58 @@ export default {
     "gizaAccessStatesitcs",
   ],
   name: "CairoEast",
-  beforeMount() {
-    this.subsystem = {
-      labels: Object.keys(this.gizaSubsystem),
-      datasets: [
-        {
-          data: Object.values(this.gizaSubsystem),
+  mounted() {
+    if (this.gizaSubsystem) {
+      this.subsystem = {
+        labels: Object.keys(this.gizaSubsystem),
+        datasets: [
+          {
+            data: Object.values(this.gizaSubsystem),
 
-          backgroundColor: [
-           "#7F00FF",
-            "#C3B1E1",
-            "#E0B0FF",
-            "#5D3FD3",
-            "#CF9FFF",
-            "#BF40BF",
-            "#CCCCFF",
-            "#BDB5D5",
-            "#E6E6FA",
-            "#AA98A9",
-            "#953553",
-            "#800080",
+            backgroundColor: [
+              "#7F00FF",
+              "#C3B1E1",
+              "#E0B0FF",
+              "#5D3FD3",
+              "#CF9FFF",
+              "#BF40BF",
+              "#CCCCFF",
+              "#BDB5D5",
+              "#E6E6FA",
+              "#AA98A9",
+              "#953553",
+              "#800080",
+            ],
+          },
+        ],
+      };
+    }
 
-          ],
-        },
-      ],
-    };
-    this.accessStatesitcs = {
-      labels: ["NUR", "Total Tickets", "Access Tickets"],
-      datasets: [
-        {
-          data: [this.gizaAccessStatesitcs.NUR,,],
-          label: "NUR",
-          backgroundColor: "#7F00FF",
-        },
-        {
-          data: [,this.gizaAccessStatesitcs.totalTickets,],
-          label: "Total Tickets",
-          backgroundColor: "#C3B1E1",
-        },
-        {
-          data: [,,this.gizaAccessStatesitcs.accessTickets],
-          label: "Access Tickets",
-          backgroundColor: "#800080",
-        },
-      ],
-    };
-    this.genStatestics(this.gizaGen);
-   
+    if (this.gizaAccessStatesitcs) {
+      this.accessStatesitcs = {
+        labels: ["NUR", "Total Tickets", "Access Tickets"],
+        datasets: [
+          {
+            data: [this.gizaAccessStatesitcs.NUR, ,],
+            label: "NUR",
+            backgroundColor: "#7F00FF",
+          },
+          {
+            data: [, this.gizaAccessStatesitcs.totalTickets],
+            label: "Total Tickets",
+            backgroundColor: "#C3B1E1",
+          },
+          {
+            data: [, , this.gizaAccessStatesitcs.accessTickets],
+            label: "Access Tickets",
+            backgroundColor: "#800080",
+          },
+        ],
+      };
+    }
+    if (this.gizaGen) {
+      this.genStatestics(this.gizaGen);
+    }
   },
   methods: {
     getSiteNUR(event) {
@@ -236,8 +241,6 @@ export default {
 
       this.generatorStatestics = chart;
     },
-
-   
   },
 };
 </script>

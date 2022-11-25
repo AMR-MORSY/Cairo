@@ -12,7 +12,7 @@
 
   <SpinnerPage :displayNone="displaySpinnerPage"></SpinnerPage>
 
-  <router-view ></router-view>
+  <router-view @displayNoneSpinner="displayTheSpinner"></router-view>
 </template>
 
 <script>
@@ -151,6 +151,7 @@ export default {
 </script>
 
 <style lang="scss" >
+
 body {
   background-color: #dde0e3;
 }

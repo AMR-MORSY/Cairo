@@ -41,6 +41,11 @@ import Fieldset from 'primevue/fieldset';
 import Dropdown from 'primevue/dropdown';
 import Textarea from 'primevue/textarea';
 import Calendar from 'primevue/calendar';
+import Datepicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css';
+import Divider from 'primevue/divider';
+
+
 
 
 
@@ -59,12 +64,14 @@ createApp(app)
 .use(DialogService)
 .directive('tooltip', Tooltip)
 
+.component('Datepicker', Datepicker)
 .component("Toast",Toast)
 .component("SpinnerPage",SpinnerPage)
 .component("Fieldset",Fieldset)
 .component("DynamicDialog",DynamicDialog)
 .component("modal",modal)
 .component("Dropdown",Dropdown)
+.component("Divider",Divider)
 .component("Calendar",Calendar)
 .component("Textarea",Textarea)
 .component("Details",Details)

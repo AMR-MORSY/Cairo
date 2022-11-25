@@ -128,15 +128,8 @@ export default {
         columnValue:this.columnValue
       };
       console.log(data);
-      Modifications.getModificationIndex(data).then(response=>{
-        console.log(response);
-        this.$store.dispatch("modificationIndex",response.data.modifications);
-        this.$router.push("/modifications/index");
-
-      }).catch(error=>{
-        console.log(error);
-
-      })
+      this.$router.push(`/modifications/index/${this.column}/${this.columnValue}`);
+     
     },
   },
 };

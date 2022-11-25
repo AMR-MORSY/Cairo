@@ -8,7 +8,7 @@ export default {
     },
     getModificationIndex(data)
     {
-        return allInstances.Api.post("/modifications/index",data);
+        return allInstances.Api.get(`/modifications/index/${data.columnName}/${data.columnValue}`);
     },
     getSiteModifications(siteCode)
     {

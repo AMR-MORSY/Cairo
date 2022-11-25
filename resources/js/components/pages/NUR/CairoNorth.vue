@@ -113,7 +113,9 @@ export default {
   },
   props: ["cairoNorthSubsystem", "cairoNorthTopNUR", "cairoNorthGen","cairoNorthRepeatedSites","cairoNorthAccessStatesitcs"],
   name: "CairoNorth",
-  beforeMount() {
+mounted() {
+  if(this.cairoNorthSubsystem)
+  {
     this.subsystem = {
       labels: Object.keys(this.cairoNorthSubsystem),
       datasets: [
@@ -138,8 +140,16 @@ export default {
         },
       ],
     };
-    this.genStatestics(this.cairoNorthGen);
-     this.accessStatesitcs = {
+
+  }
+    if(this.cairoNorthGen)
+    {
+       this.genStatestics(this.cairoNorthGen);
+
+    }
+    if(this.cairoNorthAccessStatesitcs)
+    {
+         this.accessStatesitcs = {
       labels: ["NUR", "Total Tickets", "Access Tickets"],
       datasets: [
         {
@@ -159,6 +169,10 @@ export default {
         },
       ],
     };
+
+    }
+   
+  
   },
   methods: {
     getSiteNUR(event) {

@@ -17,20 +17,26 @@ class ShowNURController extends Controller
     {
         $this->middleware(["role:admin|super-admin"]);
     }
-    public function show_nur(Request $request)
+    public function show_nur($week_month,$week,$month,$year)
     {
-        if($request->input('week'))
+        $data=[
+            "week_month"=>$week_month,
+            "week"=>$week,
+            "month"=>$month,
+            "year"=>$year
+        ];
+        if($week!=0)
         {
             
-            $validator=Validator::make($request->all(),["month"=>"nullable","week"=>["required",'regex:/^(week)$/'],"year" => ['required', 'regex:/^2[0-9]{3}$/'],"week_month"=>['required','regex:/^(?:[1-9]|[1-3][0-9]|4[0-8])$/']]);
+            $validator=Validator::make($data,["month"=>"nullable","week"=>["required",'regex:/^(week)$/'],"year" => ['required', 'regex:/^2[0-9]{3}$/'],"week_month"=>['required','regex:/^(?:[1-9]|[1-3][0-9]|4[0-8])$/']]);
            
         }
-         if($request->input('month'))
+        else if($month!=0)
         {
-            $validator=Validator::make($request->all(),["week"=>"nullable","month"=>["required",'regex:/^(month)$/'],"year" => ['required', 'regex:/^2[0-9]{3}$/'],"week_month"=>['required','regex:/^[1-9]|1[0-2]$/']]);
+            $validator=Validator::make($data,["week"=>"nullable","month"=>["required",'regex:/^(month)$/'],"year" => ['required', 'regex:/^2[0-9]{3}$/'],"week_month"=>['required','regex:/^[1-9]|1[0-2]$/']]);
             
         }
-        else if(!$request->input('week') && !$request->input('month'))
+        else if($week==0 && $month==0)
         {
             return response()->json([
                 'period_error' => "Please select week or month",
@@ -46,13 +52,13 @@ class ShowNURController extends Controller
         else{
             $validated=$validator->validated();
 
-            if(isset($validated['month']))
+            if($validated['month']=="month")
             {
               $monthlyNUR= $this->getMonthlyNUR($validated['week_month'],$validated['year']);
               if($monthlyNUR['error'])
               {
                 return response()->json([
-                    "error"=>$monthlyNUR['errors']
+                    "errors"=>$monthlyNUR['errors']
 
                 ],404);
 
@@ -74,7 +80,7 @@ class ShowNURController extends Controller
                 if(isset($weeklyNUR['error']))
                 {
                     return response()->json([
-                        "error"=>$weeklyNUR['errors']
+                        "errors"=>$weeklyNUR['errors'],
     
                     ],404);
     

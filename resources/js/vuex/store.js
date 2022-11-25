@@ -9,7 +9,7 @@ const store = createStore({
         sessionTimeOut:false,
         sessionEnd:false,
         NUR:null,
-        modificationIndex:null,
+        // modificationIndex:null,
 
     },
     getters: {},
@@ -74,10 +74,10 @@ const store = createStore({
         {
             state.NUR=nur;
         },
-        STORE_MODIFICATIONS_INDEX(state,modificationIndex)
-        {
-            state.modificationIndex=modificationIndex;
-        }
+        // STORE_MODIFICATIONS_INDEX(state,modificationIndex)
+        // {
+        //     state.modificationIndex=modificationIndex;
+        // }
     },
     actions: {
         changeLoginState({ commit }, status) {
@@ -95,11 +95,11 @@ const store = createStore({
         setNUR({commit},NUR){
             commit("SET_NUR",NUR);
         },
-        modificationIndex({commit},modificationIndex)
-        {
-            commit("STORE_MODIFICATIONS_INDEX",modificationIndex)
+        // modificationIndex({commit},modificationIndex)
+        // {
+        //     commit("STORE_MODIFICATIONS_INDEX",modificationIndex)
 
-        }
+        // }
     },
 });
 export default store;

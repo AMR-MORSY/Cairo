@@ -46,15 +46,10 @@
           <p class="nav-link"></p>
         </li>
         <li class="nav-item dropdown">
-          <a
-            class="nav-link dropdown-toggle"
-            id="dropdownMenuLink"
-            aria-haspopup="true"
-            aria-expanded="false"
-            v-if="isLogin"
-          >
-            Admin
-          </a>
+         
+          <router-link to="/dashboard"   class="nav-link dropdown-toggle" v-if="isLogin">Dashboard</router-link>
+        
+        
           <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
             <li class="nav-item">
               <div class="test">

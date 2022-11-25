@@ -38,14 +38,25 @@
                   />
                 </div>
                 <div class="col-md-4">
-                  <Dropdown
+                  <!-- <Dropdown
                     id="dropdown"
                     v-model="project"
                     :options="project_options"
                     optionLabel="project"
                     placeholder="Project"
                     class="p-invalid"
-                  />
+                  emptySelectionMessage
+                 
+                  /> -->
+                  <select
+                    class="form-select"
+                    aria-label="Default select example"
+                  >
+                    <option selected>Open this select menu</option>
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                  </select>
                 </div>
                 <div class="col-12 col-md-6">
                   <span id="Action">Action:</span>
@@ -56,24 +67,45 @@
                     rows="5"
                     cols="60"
                     class="p-invalid"
+                    required
                   />
                 </div>
                 <div class="col-12 col-md-6">
-                  <Calendar
+                  <!-- <Calendar
                     v-model="request_date"
                     placeholder="Request Date"
                     class="p-invalid"
                     :showIcon="true"
                     :showWeek="true"
+                    dateFormat="yy/mm/dd"
+                 
+                  /> -->
+                  <!-- <input
+                    type="date"
+                    v-model="request_date"
+                    placeholder="Request Date"
+                 
+                  /> -->
+
+                  <Datepicker
+                    v-model="request_date"
+                    placeholder="Request Date"
+                    required
                   />
                 </div>
                 <div class="col-12 col-md-6">
-                  <Calendar
+                  <!-- <Calendar
                     v-model="finish_date"
                     placeholder="Finish Date"
                     :class="{ 'p-invalid': !finish_date }"
                     :showIcon="true"
                     :showWeek="true"
+                    dateFormat="yy/mm/dd"
+                  /> -->
+                    <Datepicker
+                    v-model="finish_date"
+                    placeholder="Finish Date"
+                    required
                   />
                 </div>
               </div>
@@ -157,7 +189,6 @@ export default {
     },
   },
   mounted() {},
- 
 
   methods: {
     insertNewModification() {
@@ -175,6 +206,7 @@ export default {
         action: this.action,
         materials: this.materials,
       };
+      console.log(data);
       Modifications.insertNewModification(data)
         .then((response) => {
           console.log(response);
@@ -311,6 +343,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
+
+
+
 ::v-deep(.p-fieldset) {
   position: relative;
 
@@ -324,8 +360,7 @@ export default {
     z-index: 2;
     background-color: rgba($color: gray, $alpha: 1);
   }
-}
-::v-deep(.p-calendar) {
+
   .p-button {
     background-color: #79589f !important;
     border-color: #79589f !important;
@@ -336,7 +371,26 @@ export default {
   .p-inputtext:focus {
     box-shadow: 0px 0px 3px 2px #79589f !important;
   }
+
+  .p-inputtextarea {
+    resize: none;
+    width: 100%;
+  }
 }
+
+// $dp__border_radius: 30px !default;
+
+.form-select option:hover{
+  background-color: #79589f !important;
+}
+.dp__theme_light {
+  --dp-text-color: red;
+
+  --dp-icon-color: #79589f;
+
+  --dp-border-color: #79589f;
+}
+
 .form {
   margin-top: 50px;
   width: 100%;

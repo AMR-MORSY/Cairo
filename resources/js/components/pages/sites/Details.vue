@@ -305,6 +305,7 @@ export default {
     };
   },
   props:["site_code"],
+  emits:["displayNoneSpinner"],
   name: "Details",
   watch:{
     site_code(){
@@ -333,6 +334,7 @@ export default {
   },
   methods: {
     getSiteDetails() {
+          this.$emit("displayNoneSpinner", false);
       Sites.getSiteDetails(this.site_code)
         .then((response) => {
           console.log(response);
@@ -356,7 +358,9 @@ export default {
         })
         .catch((error) => {
           console.log(error);
-        });
+        }) .finally(() => {
+            this.$emit("displayNoneSpinner", true);
+          });
     },
     onRowSelect() {
        this.$router.push(`/sites/details/${this.selectedSite.cascade_code}`);

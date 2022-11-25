@@ -1,7 +1,7 @@
 <template>
   <main class="form-signin w-25 m-auto">
-    <form @submit.prevent="submitLoginForm">
-      <img class="mb-4" alt="" width="72" height="57" />
+    <!-- <form @submit.prevent="submitLoginForm"> -->
+    <!-- <img class="mb-4" alt="" width="72" height="57" />
       <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
 
       <div v-if="credentialsError">
@@ -47,84 +47,88 @@
       </div>
       <button class="w-100 btn btn-lg btn-primary" type="submit">
         Sign in
-      </button>
-    </form>
+      </button> -->
+    <!-- </form> -->
   </main>
 
-  <div class="container">
+  <div class="container mb-3">
     <div class="row">
       <div class="col-12 col-lg-4"></div>
       <div class="col-12 col-lg-4">
-        <Card>
-          <template #header> </template>
-          <template #title class="p-card-title">
-            <p class="text-center">Login</p>
-          </template>
-          <template #content>
-            <div
-              class="
-                d-flex
-                flex-column
-                align-items-center
-                justify-content-center
-                w-100
-              "
-            >
-              <div class="field w-75">
-                <span class="p-float-label">
-                  <InputText
-                    id="inputtext"
-                    class="w-100"
-                    type="text"
-                    v-model="value1"
-                  />
-                  <label for="inputtext">Email</label>
-                </span>
-              </div>
+        <div class="form-container">
+          <Card style="border: 1px solid #79589f; border-radius: 5px">
+            <template #title class="p-card-title">
+              <p class="text-center" style="color: #79589f">Login</p>
+            </template>
+            <template #content>
+              <form @submit.prevent="submitLoginForm">
+                <div class="row">
+                  <div class="col-12">
+                    <div class="field w-100">
+                      <span class="p-float-label">
+                        <InputText
+                          id="inputtext"
+                          class="w-100"
+                          type="text"
+                          v-model="form.email"
+                          :class="{ 'p-invalid': emailError }"
+                        />
+                        <label for="inputtext">Email</label>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <div class="field w-100 mt-4">
+                      <span class="p-float-label">
+                        <Password
+                          toggleMask
+                          v-model="form.password"
+                          id="password"
+                          class="w-100"
+                          :feedback="false"
+                          :class="{'p-invalid': passwordError }"
+                        ></Password>
+                        <label for="password">Password</label>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="col-12 mt-2">
+                    <div
+                      class="
+                        d-flex
+                        w-100
+                        align-items-center
+                        justify-content-flex-start
+                        mt-3
+                      "
+                    >
+                      <router-link to="/user/resetPassword"
+                        >Forgot Password?</router-link
+                      >
+                    </div>
+                  </div>
 
-              <div class="field w-75 mt-4">
-                <span class="p-float-label">
-                  <Password
-                    toggleMask
-                    id="password"
-                    class="w-100"
-                    :feedback="false"
-                  ></Password>
-                  <label for="password">Password</label>
-                </span>
-              </div>
-               <div class="
-                d-flex
-                w-75
-                align-items-center
-                justify-content-flex-start mt-3
-              ">
-                <router-link to="/user/resetPassword"
-                  >Forgot Password?</router-link
-                >
-              </div>
-              
-            </div>
-           
-          </template>
-          <template #footer>
-            <div class="d-flex align-item-center justify-content-center">
-              <Button
-                label="Sign in"
-                class="w-75"
-                style="
-                  margin-left: 0.5em;
-                  background-color: red;
-                  border-color: unset;
-                "
-              />
-            </div>
-          </template>
-        </Card>
+                  <div class="col-12">
+                      <Button
+                    label="Sign in"
+                    class="w-100 mt-4 "
+                    type="submit"
+                       style="background-color: #79589f"
+                  />
+
+                  </div>
+
+                
+                </div>
+              </form>
+            </template>
+          </Card>
+        </div>
       </div>
       <div class="col-12 col-lg-4"></div>
     </div>
   </div>
+  <Toast />
 </template>
 
 <script>
@@ -139,27 +143,13 @@ export default {
       },
 
       passwordError: null,
-      credentialsError: null,
 
       emailError: null,
     };
   },
   name: "login",
+  emits: ["displayNoneSpinner"],
   computed: {
-    isPassInvalid() {
-      if (this.passwordError || this.credentialsError) {
-        return true;
-      } else {
-        return false;
-      }
-    },
-    isEmailInvalid() {
-      if (this.emailError || this.credentialsError) {
-        return true;
-      } else {
-        return false;
-      }
-    },
     isLogin() {
       return this.$store.state.isLogin;
     },
@@ -176,9 +166,7 @@ export default {
     submitLoginForm() {
       this.passwordError = null;
       this.emailError = null;
-      this.credentialsError = null;
-      // this.isPassInvalid=false;
-      // this.isEmailInvalid=false;
+
       if (!this.form.email) {
         this.emailError = "Email is required";
       }
@@ -186,6 +174,7 @@ export default {
         this.passwordError = "Password is required";
       }
       if (!this.passwordError && !this.emailError) {
+        this.$emit("displayNoneSpinner", false);
         User.login(this.form)
           .then((response) => {
             this.$store.dispatch("changeLoginState", true);
@@ -202,19 +191,26 @@ export default {
             if (error.response) {
               console.log(error.response);
               if (error.response.status == 401) {
-                this.credentialsError = error.response.data.message;
+                this.$toast.add({
+                  severity: "error",
+                  summary: "Error Message",
+                  detail: error.response.data.message,
+                  life: 6000,
+                });
               }
 
               if (error.response.status == 422) {
-                let err = error.response.data.errors;
-                if (err.email) {
-                  this.emailError = err.email;
-                }
-                if (err.password) {
-                  this.passwordError = err.password;
-                }
+                this.$toast.add({
+                  severity: "error",
+                  summary: "Error Message",
+                  detail: "invalid credentials",
+                  life: 6000,
+                });
               }
             }
+          })
+          .finally(() => {
+            this.$emit("displayNoneSpinner", true);
           });
       }
     },
@@ -223,9 +219,37 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-::v-deep(.p-password input) {
-  width: 300%;
+.form-container {
+  margin-top: 6em;
 }
+
+::v-deep(.p-password input) {
+  width: 100%;
+  border-color: #79589f ;
+}
+::v-deep(.p-password input:focus) {
+  border-color: #79589f !important;
+  box-shadow: 0px 0px 3px 2px #79589f !important;
+}
+.p-button {
+  background-color: #79589f !important;
+  border-color: #79589f !important;
+}
+.p-button:focus {
+  box-shadow: 0px 0px 3px 2px #79589f !important ;
+}
+.p-inputtext {
+  border-color: #79589f;
+}
+.p-inputtext:focus {
+  box-shadow: 0px 0px 3px 2px #79589f !important;
+  border-color: #79589f !important ;
+}
+.p-inputtext:hover{
+   border-color: #79589f !important ;
+
+}
+
 .bd-placeholder-img {
   font-size: 1.125rem;
   text-anchor: middle;

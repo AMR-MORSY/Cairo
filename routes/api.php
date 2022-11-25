@@ -54,7 +54,7 @@ Route::prefix("energysheet")->middleware(['auth:sanctum'])->group(function(){
 
 Route::prefix('modifications')->middleware(['auth:sanctum',"role:admin|super-admin"])->group(function(){
     Route::get("/analysis",[ModificationsController::class,"analysis"])->name("analysis");
-    Route::post("/index",[ModificationsController::class,"index"])->name("index");
+    Route::get("/index/{columnName}/{columnValue}",[ModificationsController::class,"index"])->name("index");
     Route::post("/update",[ModificationsController::class,"modificationUpdate"])->name("modification_update");
     Route::get("/siteModifications/{site_code}",[ModificationsController::class,"siteModifications"])->name("siteModifications");
     Route::get("/details/{id}",[ModificationsController::class,"modificationDetails"])->name("details");
@@ -88,7 +88,7 @@ Route::prefix('Nur')->middleware(['auth:sanctum',"role:super-admin"])->group(fun
 });
 Route::prefix('Nur')->middleware(['auth:sanctum',"role:admin|super-admin"])->group(function(){
     Route::post('/siteNUR',[ShowNURController::class,"SiteNUR"])->name("siteNUR");
-    Route::post('/show',[ShowNURController::class,"show_nur"])->name("show_nur");
+    Route::get('/show/{week_month}/{week}/{month}/{year}',[ShowNURController::class,"show_nur"])->name("show_nur");
 });
 
 Route::prefix("user")->group(function(){

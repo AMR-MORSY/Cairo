@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Card class="mt-5" style="background-color: #C3B1E1">
+    <Card class="mt-5" style="background-color: #c3b1e1">
       <template #title>
         <p style="font-size: 16px; color: white; pading: 0; text-align: center">
           Cairo East
@@ -36,7 +36,7 @@
               </template>
             </Card>
           </div>
-            <div class="col-12 col-md-6 col-lg-4 mt-2">
+          <div class="col-12 col-md-6 col-lg-4 mt-2">
             <Card>
               <template #title>
                 <p style="font-size: 16px; pading: 0; text-align: center">
@@ -64,7 +64,7 @@
               </template>
             </TopSites>
           </div>
-            <div class="col-12 col-md-6 mt-2">
+          <div class="col-12 col-md-6 mt-2">
             <TopSites :zoneNUR="cairoEastRepeatedSites" @siteNUR="getSiteNUR">
               <template #header> Repeated Sites </template>
               <template #columns>
@@ -90,7 +90,7 @@ export default {
     return {
       subsystem: null,
       generatorStatestics: null,
-      accessStatesitcs:null,
+      accessStatesitcs: null,
       lightOptions: {
         plugins: {
           legend: {
@@ -108,56 +108,68 @@ export default {
   },
   components: {
     TopSites,
-        siteNURTable,
+    siteNURTable,
   },
-  props: ["cairoEastSubsystem", "cairoEastTopNUR", "cairoEastGen","cairoEastRepeatedSites","cairoEastAccessStatesitcs"],
+  props: [
+    "cairoEastSubsystem",
+    "cairoEastTopNUR",
+    "cairoEastGen",
+    "cairoEastRepeatedSites",
+    "cairoEastAccessStatesitcs",
+  ],
   name: "CairoEast",
-  beforeMount() {
-    this.subsystem = {
-      labels: Object.keys(this.cairoEastSubsystem),
-      datasets: [
-        {
-          data: Object.values(this.cairoEastSubsystem),
+  mounted() {
+    if (this.cairoEastSubsystem) {
+      this.subsystem = {
+        labels: Object.keys(this.cairoEastSubsystem),
+        datasets: [
+          {
+            data: Object.values(this.cairoEastSubsystem),
 
-          backgroundColor: [
-            "#7F00FF",
-            "#C3B1E1",
-            "#E0B0FF",
-            "#5D3FD3",
-            "#CF9FFF",
-            "#BF40BF",
-            "#CCCCFF",
-            "#BDB5D5",
-            "#E6E6FA",
-            "#AA98A9",
-            "#953553",
-            "#800080",
+            backgroundColor: [
+              "#7F00FF",
+              "#C3B1E1",
+              "#E0B0FF",
+              "#5D3FD3",
+              "#CF9FFF",
+              "#BF40BF",
+              "#CCCCFF",
+              "#BDB5D5",
+              "#E6E6FA",
+              "#AA98A9",
+              "#953553",
+              "#800080",
+            ],
+          },
+        ],
+      };
+    }
 
-          ],
-        },
-      ],
-    };
-    this.genStatestics(this.cairoEastGen);
+    if (this.cairoEastGen) {
+      this.genStatestics(this.cairoEastGen);
+    }
+    if (this.cairoEastAccessStatesitcs) {
       this.accessStatesitcs = {
-      labels: ["NUR", "Total Tickets", "Access Tickets"],
-      datasets: [
-        {
-          data: [this.cairoEastAccessStatesitcs.NUR,,],
-          label: "NUR",
-          backgroundColor: "#7F00FF",
-        },
-        {
-          data: [,this.cairoEastAccessStatesitcs.totalTickets,],
-          label: "Total Tickets",
-          backgroundColor: "#C3B1E1",
-        },
-        {
-          data: [,,this.cairoEastAccessStatesitcs.accessTickets],
-          label: "Access Tickets",
-          backgroundColor: "#800080",
-        },
-      ],
-    };
+        labels: ["NUR", "Total Tickets", "Access Tickets"],
+        datasets: [
+          {
+            data: [this.cairoEastAccessStatesitcs.NUR, ,],
+            label: "NUR",
+            backgroundColor: "#7F00FF",
+          },
+          {
+            data: [, this.cairoEastAccessStatesitcs.totalTickets],
+            label: "Total Tickets",
+            backgroundColor: "#C3B1E1",
+          },
+          {
+            data: [, , this.cairoEastAccessStatesitcs.accessTickets],
+            label: "Access Tickets",
+            backgroundColor: "#800080",
+          },
+        ],
+      };
+    }
   },
   methods: {
     getSiteNUR(event) {
@@ -172,7 +184,7 @@ export default {
             "960px": "75vw",
             "640px": "90vw",
           },
-        //   modal: true,
+          //   modal: true,
         },
         // templates: {
         //   footer: () => {

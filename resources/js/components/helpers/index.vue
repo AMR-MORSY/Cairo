@@ -109,7 +109,7 @@ export default {
       week_month: "",
       week_monthError: null,
       week: "week",
-      month: "",
+      month: 0,
       weeks: true,
       months: false,
       notFoundErrors: null,
@@ -138,25 +138,13 @@ export default {
           year: this.year,
         };
         console.log(data);
-        this.showSpinner = true;
+        
         if (this.alarms == "NUR") {
-          NUR.getNur(data)
-            .then((response) => {
-              console.log(response);
-              this.$store.dispatch("setNUR", response.data.NUR);
-              this.$router.push("/nur/statestics");
-            })
-            .catch((error) => {
-              console.log(error);
-              if (error.response.status == 404) {
-                this.notFoundErrors = error.response.data.error;
-              }
-            })
-            .finally(() => {
-              this.showSpinner = false;
-            });
+          this.$router.push(`/nur/statestics/${this.week_month}/${this.week}/${this.month}/${this.year}`);
+          
         }
         else{
+          this.showSpinner = true;
             Energy.getEnergyStatestics(data).then((response)=>{
                 console.log(response)
 
@@ -184,12 +172,12 @@ export default {
       if (period.periods == "week") {
         this.periods = period.figures;
         this.week = "week";
-        this.month = "";
+        this.month = 0;
         this.weeks = true;
         this.months = false;
       } else {
         this.periods = period.figures;
-        this.week = "";
+        this.week = 0;
         this.month = "month";
         this.weeks = false;
         this.months = true;

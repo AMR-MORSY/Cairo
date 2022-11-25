@@ -1,5 +1,5 @@
 <template>
-     <div :class="{ display: displayNone, spinner: !displayNone }">
+     <div :class="{ 'display': displayNone, 'spinner': !displayNone }">
         <ProgressSpinner />
       </div>
 </template>
