@@ -2,28 +2,28 @@
   <section id="analysis">
     <div class="container">
       
-      <div class="form-container">
+      <div class="card index">
         <div v-if="serverError">
           <p style="color: red">{{ serverError }}</p>
         </div>
         <form @submit.prevent="submitFilterForm">
           <div class="row">
-            <div class="col-6">
+            <div class="col-12 col-md-6">
               <div class="form-group">
-                <label for="column">Filter By:</label>
-                <select class="form-control" @change="submitColumn" id="column">
-                  <option value=""></option>
+              
+                <select class="form-select" @change="submitColumn" id="column">
+                  <option value="">Filter By:</option>
                   <option v-for="column in columns" :key="column">
                     {{ column }}
                   </option>
                 </select>
               </div>
             </div>
-            <div class="col-6">
+            <div class="col-12 col-md-6">
               <div class="form-group">
-                <label></label>
+               
                 <select
-                  class="form-control"
+                  class="form-select"
                   @change="submitColumnValue"
                   id="columnValue"
                 >
@@ -35,12 +35,13 @@
               </div>
             </div>
 
-            <div class="col-12">
+            <div class="col-12 mt-3">
               <div class="button-container">
                 <button
-                  class="btn btn-primary"
+                  class="btn"
                   :disabled="disabled"
                   type="submit"
+                          style="background-color:#79589f;color:white;"
                 >
                   submit
                 </button>
@@ -136,29 +137,24 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-#analysis {
-  margin-top: 200px;
-  .container {
-    margin: auto;
-    .form-container {
-      width: 60%;
-      margin: auto;
-      .form-group {
-        // width: 50%;
-        // margin: auto;
-        label {
-          color: white;
-        }
-      }
-    }
-
-    .button-container {
-      width: 50%;
-      margin: auto;
-      padding-top: 2rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-around;
+.index,
+.helper-table-container {
+  width: 70%;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 2rem;
+}
+.index {
+  margin-top: 6em;
+  .header{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    p{
+      font-size: 2rem;
+      font-weight: 900;
+      color: darkmagenta;
     }
   }
 }

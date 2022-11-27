@@ -59,18 +59,20 @@ Route::prefix('modifications')->middleware(['auth:sanctum',"role:admin|super-adm
     Route::get("/siteModifications/{site_code}",[ModificationsController::class,"siteModifications"])->name("siteModifications");
     Route::get("/details/{id}",[ModificationsController::class,"modificationDetails"])->name("details");
     Route::post("/new",[ModificationsController::class,"newModification"])->name("new_modification");
+    Route::post("/delete",[ModificationsController::class,"deleteModification"])->name("delete_modification");
 });
 
 
 Route::prefix('sites')->middleware(['auth:sanctum',"role:super-admin"])->group(function(){
     // Route::get('/newsitesinsert',[SitesController::class,"index"])->name("sites");
+    Route::post('/create',[SuperAdminSitesController::class,"siteCreate"])->name("create_site");
     Route::post('/store',[SuperAdminSitesController::class,"store"])->name("store_sites");
     Route::get('/downloadAll',[SuperAdminSitesController::class,"export_all"])->name("export_all");
     Route::get('/cascades',[CascadesController::class,"exportAllCascades"])->name("all_cascades");
     Route::post('/cascades',[CascadesController::class,"importCascades"])->name("import_cascades");
     Route::post('/nodals',[NodalsController::class,"importNodals"])->name("import_nodals");
     Route::post('/updateCascades',[CascadesController::class,"updateCascades"])->name("updateCascades");
-
+    
 });
 Route::prefix('sites')->middleware(['auth:sanctum',])->group(function(){
     Route::get('/search/{search}',[NormalUsersSitesController::class,"search"])->name("search_sites");

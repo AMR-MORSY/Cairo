@@ -1,5 +1,5 @@
 <template>
-  <section id="site-modification" >
+  <section id="site-modification">
     <div class="container mt-5">
       <Fieldset class="mt-5">
         <template #legend>{{ site_code }}-{{ site_name }} </template>
@@ -30,6 +30,7 @@
               label="Update"
               @click="gotToUpdateModification"
               class="p-button-raised p-button-warning"
+              :disabled="!isRowSelected"
             />
           </div>
           <div class="col-6 col-md-4 mt-3">
@@ -39,10 +40,19 @@
               class="p-button-raised p-button-secondary"
             />
           </div>
+          <div class="col-6 col-md-4 mt-3">
+            <Button
+              label="Delete"
+              @click="deleteModification"
+              class="p-button-raised p-button-danger"
+              :disabled="!isRowSelected"
+            />
+          </div>
         </div>
       </Fieldset>
     </div>
   </section>
+  <ConfirmDialog></ConfirmDialog>
 </template>
 
 <script>
@@ -52,6 +62,7 @@ export default {
     return {
       modifications: null,
       selectedModification: null,
+      isRowSelected: false,
     };
   },
   name: "SiteModifications",
@@ -75,6 +86,7 @@ export default {
       { field: "finish_date", header: "Finish Date" },
       { field: "status", header: "Status" },
       { field: "cost", header: "Cost" },
+      { field: "materials", header: "Materials" },
     ];
   },
   methods: {
@@ -93,7 +105,7 @@ export default {
         });
     },
     onRowSelect() {
-      console.log(this.selectedModification);
+      this.isRowSelected = true;
     },
     gotToUpdateModification() {
       this.$router.push(
@@ -105,12 +117,34 @@ export default {
         `/modifications/new/${this.site_code}/${this.site_name}`
       );
     },
+    deleteModification() {
+      this.$confirm.require({
+        message: "Are you sure you want to proceed?",
+        header: "Confirmation",
+        icon: "pi pi-exclamation-triangle",
+        accept: () => {
+          this.$emit("displayNoneSpinner", false);
+          let data = {
+            id: this.selectedModification.id,
+          };
+
+          Modifications.deleteModification(data)
+            .then((response) => {
+              this.getSiteModifications();
+            })
+            .catch((error) => {});
+        },
+        reject: () => {
+          //callback to execute when user rejects the action
+        },
+      });
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-#site-modification{
+#site-modification {
   margin-top: 5em;
 }
 ::v-deep(.p-fieldset) {

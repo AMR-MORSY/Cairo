@@ -1,14 +1,15 @@
 <template>
   <div class="container">
-    <div class="row index">
+    <div class="card index">
       <form @submit.prevent="getNur">
+        <div class="row">
         <ul v-if="notFoundErrors">
           <li style="color: red" v-for="error in notFoundErrors" :key="error">
             {{ error }}
           </li>
         </ul>
-        <div class="col-6">
-          <div class="form-group">
+        <div class="col-12">
+            <div class="form-group">
             <input
               type="radio"
               @change="changePeriod"
@@ -20,7 +21,7 @@
             <label for="week">Week</label>
           </div>
 
-          <div class="form-grou">
+          <div class="form-group">
             <input
               type="radio"
               name="period"
@@ -30,21 +31,26 @@
             />
             <label for="month">Month</label>
           </div>
+         
         </div>
         <div class="col-6">
+         
           <div class="form-group">
             <select
               name=""
               v-model="week_month"
               :class="{ 'is-invalid': week_monthError }"
-              class="form-control"
+              class="form-select"
+             
             >
               <template v-if="weeks">
+                 <option value="">--Select Week/Month--</option>
                 <option v-for="period in periods" :key="period">
                   {{ period }}
                 </option>
               </template>
               <template v-if="months">
+                 <option value="">--Select Week/Month--</option>
                 <option
                   v-for="period in periods"
                   :value="period.num"
@@ -61,13 +67,13 @@
         </div>
         <div class="col-6">
           <div class="form-group">
-            <label for="year">Year</label>
+            <!-- <label for="year">Year</label> -->
             <select
               name=""
               id="year"
               v-model="year"
               :class="{ 'is-invalid': yearError }"
-              class="form-control"
+              class="form-select"
             >
               <option value="">--Select Year--</option>
               <option v-for="year in years" :key="year">
@@ -83,10 +89,12 @@
           <spinner-button
             type="submit"
             :show-spinner="showSpinner"
-            class="btn btn-primary"
+            class="btn"
+                style="background-color:#79589f;color:white;"
           >
             <span> Submit</span>
           </spinner-button>
+        </div>
         </div>
       </form>
     </div>
@@ -94,7 +102,7 @@
 </template>
 
 <script>
-import Energy from '../../apis/Energy';
+import Energy from "../../apis/Energy";
 import NUR from "../../apis/NUR";
 import WeeksAndMonths from "../../Helpers/WeeksAndMonths";
 
@@ -138,23 +146,23 @@ export default {
           year: this.year,
         };
         console.log(data);
-        
+
         if (this.alarms == "NUR") {
-          this.$router.push(`/nur/statestics/${this.week_month}/${this.week}/${this.month}/${this.year}`);
-          
-        }
-        else{
+          this.$router.push(
+            `/nur/statestics/${this.week_month}/${this.week}/${this.month}/${this.year}`
+          );
+        } else {
           this.showSpinner = true;
-            Energy.getEnergyStatestics(data).then((response)=>{
-                console.log(response)
-
-            }).catch((error)=>{
-                console.log(error)
-
-            }).finally(() => {
+          Energy.getEnergyStatestics(data)
+            .then((response) => {
+              console.log(response);
+            })
+            .catch((error) => {
+              console.log(error);
+            })
+            .finally(() => {
               this.showSpinner = false;
             });
-
         }
       }
     },
@@ -196,8 +204,20 @@ export default {
   width: 70%;
   margin-left: auto;
   margin-right: auto;
+  padding: 2rem;
 }
 .index {
   margin-top: 6em;
+  .header{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    p{
+      font-size: 2rem;
+      font-weight: 900;
+      color: darkmagenta;
+    }
+  }
 }
 </style>

@@ -33,5 +33,10 @@ export default {
     updateCascades(data)
     {
       return allInstances.Api.post("/sites/updateCascades",data)
+    },
+    createNewSite(data)
+    {
+      return allInstances.Api.post("/sites/create",data)
+
     }
 };

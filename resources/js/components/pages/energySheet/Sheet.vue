@@ -1,21 +1,22 @@
 <template>
   <div class="container mt-5">
+    <div class="card index">
     <form
       id="energysheet"
       @submit.prevent="submitEnergySheet"
       enctype="multipart/form-data"
     >
-      <div class="errors mt-5"></div>
-      <div class="row index">
+    
+      <div class="row">
         <div class="col-12">
           <div v-if="serverError">
             {{ serverError }}
           </div>
         </div>
 
-        <div class="col-6">
+        <div class="col-12 col-md-6">
           <div class="form-group">
-            <select v-model="week" id="weeks" class="form-control">
+            <select v-model="week" id="weeks" class="form-select">
               <option value="">select week</option>
 
               <option v-for="week in weeks" :key="week">{{ week }}</option>
@@ -29,9 +30,9 @@
             </div>
           </div>
         </div>
-        <div class="col-6">
+        <div class="col-12 col-md-6">
           <div class="form-group">
-            <select v-model="year" class="form-control">
+            <select v-model="year" class="form-select">
               <option value="">select year</option>
 
               <option v-for="year in years" :key="year">{{ year }}</option>
@@ -46,7 +47,7 @@
           </div>
         </div>
 
-        <div class="col-12">
+        <div class="col-12 col-md-6">
           <div class="form-group">
             <label for="power">Energy Sheet:</label>
             <input
@@ -74,13 +75,15 @@
           <spinner-button
             type="submit"
             :show-spinner="showSpinner"
-            class="btn btn-primary"
+            class="btn"
+              style="background-color:#79589f;color:white;"
           >
             <span> Submit</span>
           </spinner-button>
         </div>
       </div>
     </form>
+    </div>
     <div class="helper-table-container">
       <helper-table v-if="sheetValidationErrors">
         <template #header>
@@ -282,8 +285,20 @@ export default {
   width: 70%;
   margin-left: auto;
   margin-right: auto;
+  padding: 2rem;
 }
 .index {
   margin-top: 6em;
+  .header{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    p{
+      font-size: 2rem;
+      font-weight: 900;
+      color: darkmagenta;
+    }
+  }
 }
 </style>

@@ -5,98 +5,157 @@
         <Fieldset>
           <template #legend>{{ site_code }}-{{ site_name }} </template>
           <div class="form">
-            <form>
+            <form @submit.prevent="updateModification">
               <div class="row mt-5 p-5">
-                <div class="col-md-4">
-                  <Dropdown
-                    id="dropdown"
+                <div class="col-12 col-sm-6 col-lg-3">
+                  <label for="Subcontrator">Subcontrator:</label>
+                  <select
+                    class="form-select"
+                    id="Subcontrator"
                     v-model="subcontractor"
-                    :options="subcontractors"
-                    optionLabel="subcontractor"
-                    placeholder="Subcontractor"
-                    class="p-invalid"
-                    :editable="true"
-                  />
+                    :class="{ 'is-invalid': subcontractorError }"
+                  >
+                    <option
+                      :value="subcontractor"
+                      v-for="subcontractor in subcontractors"
+                      :key="subcontractor"
+                    >
+                      {{ subcontractor }}
+                    </option>
+                  </select>
                 </div>
-                <div class="col-md-4">
-                  <Dropdown
-                    id="dropdown"
+                <div class="col-12 col-sm-6 col-lg-3">
+                  <label for="status">Status:</label>
+
+                  <select
+                    class="form-select"
+                    id="status"
                     v-model="status"
-                    :options="status_options"
-                    optionLabel="status"
-                    placeholder="Status"
-                    :editable="true"
-                    class="p-invalid"
-                  />
+                    :class="{ 'is-invalid': statusError }"
+                  >
+                    <option
+                      :value="status"
+                      v-for="status in status_options"
+                      :key="status"
+                    >
+                      {{ status }}
+                    </option>
+                  </select>
                 </div>
-                <div class="col-md-4">
-                  <Dropdown
-                    id="dropdown"
+                <div class="col-12 col-sm-6 col-lg-3">
+                  <label for="Requesters">Requesters:</label>
+                  <select
                     v-model="requester"
-                    :options="requester_options"
-                    optionLabel="name"
-                    placeholder="Requester"
-                    class="p-invalid"
-                    :editable="true"
-                  />
+                    id="Requesters"
+                    class="form-select"
+                    :class="{ 'is-invalid': requesterError }"
+                  >
+                    <option
+                      :value="requester"
+                      v-for="requester in requester_options"
+                      :key="requester"
+                    >
+                      {{ requester }}
+                    </option>
+                  </select>
                 </div>
-                <div class="col-md-4">
-                  <Dropdown
-                    id="dropdown"
+                <div class="col-12 col-sm-6 col-lg-3">
+                  <label for="Projects">Projects:</label>
+
+                  <select
+                    class="form-select"
+                    aria-label="Default select example"
                     v-model="project"
-                    :options="project_options"
-                   :editable="true"
-                  
-                    optionLabel="project"
-                  
-                  
-                    class="p-invalid"
-                   
+                    id="Projects"
+                    :class="{ 'is-invalid': projectError }"
+                  >
+                    <option
+                      v-for="project in project_options"
+                      :value="project"
+                      :key="project"
+                    >
+                      {{ project }}
+                    </option>
+                  </select>
+                </div>
+
+                <div class="col-12 col-sm-6 col-lg-3">
+                  <label for="request">Request Date:</label>
+
+                  <Datepicker
+                    v-model="request_date"
+                    placeholder="Request Date"
+                    required
+                    id="request"
                   />
                 </div>
-                <div class="col-12 col-md-6">
-                  <span id="Action">Action:</span>
-                  <Textarea
+                <div class="col-12 col-sm-6 col-lg-3">
+                  <label for="finish">Finish Date:</label>
+
+                  <Datepicker
+                    v-model="finish_date"
+                    placeholder="Finish Date:"
+                    id="finish"
+                  />
+                </div>
+
+                <div class="col-12 col-sm-6 col-lg-3">
+                  <label for="materials">Cost</label>
+                  <input
+                    type="number"
+                    v-model="cost"
+                    class="form-control"
+                    id="materials"
+                  />
+                </div>
+                <div class="col-12 col-sm-6 col-lg-3">
+                  <label for="materials">Materials:</label>
+                  <textarea
+                    v-model="materials"
+                    class="form-control"
+                    id="materials"
+                    cols="3"
+                    rows="3"
+                  ></textarea>
+                </div>
+                <div class="col-12 col-lg-6">
+                  <label id="Action">Action:</label>
+                  <textarea
                     v-model="action"
-                    :autoResize="true"
                     id="Action"
                     rows="5"
                     cols="60"
-                    class="p-invalid"
+                    class="form-control"
+                    :class="{ 'is-invalid': actionError }"
+                  >
+                  </textarea>
+                </div>
+                <div class="col-12 col-lg-3 mt-5">
+                  <Button
+                    label="Back"
+                    type="submit"
+                    @click.prevent="goBack"
+                    class="p-button-raised p-button-warning"
+                    style="color: white"
                   />
                 </div>
-                <div class="col-12 col-md-6">
-                  <Calendar
-                    v-model="request_date"
-                    placeholder="Request Date"
-                    class="p-invalid"
-                    :showIcon="true"
-                    :showWeek="true"
-                  />
-                </div>
-                <div class="col-12 col-md-6">
-                  <Calendar
-                    v-model="finish_date"
-                    placeholder="Finish Date"
-                    :class="{ 'p-invalid': !finish_date }"
-                    :showIcon="true"
-                    :showWeek="true"
+                <div class="col-12 col-lg-3 mt-5">
+                  <Button
+                    label="Update"
+                    type="submit"
+                    class="p-button-raised p-button-warning"
+                    style="color: white"
+
                   />
                 </div>
               </div>
-
-              <Button
-                label="Update"
-                type="submit"
-                @click="updateModification"
-                class="p-button-raised p-button-warning"
-              />
             </form>
           </div>
         </Fieldset>
       </div>
     </div>
   </div>
+  <Toast />
 </template>
 
 <script>
@@ -104,19 +163,59 @@ import Modifications from "../../../apis/Modifications";
 export default {
   data() {
     return {
-      subcontractor: null,
-      site_code: null,
       site_name: null,
-      subcontractors: [{subcontractor:"OT"},{subcontractor:"Alandick"},{subcontractor:"Tri-Tech"},{subcontractor:"Siatnile"},{subcontractor:"Merc"},{subcontractor:"GP"},{subcontractor:"MBV"},{subcontractor:"Systel"},{subcontractor:"TELE-TECH"},{subcontractor:"SAG"},{subcontractor:"LM"}],
+      site_code: null,
+      subcontractor: null,
+      subcontractorError: false,
+      cost: null,
+
+      subcontractors: [
+        "OT",
+        "Alandick",
+        "Tri-Tech",
+        "Siatnile",
+        "Merc",
+        "GP",
+        "MBV",
+        "Systel",
+        "TELE-TECH",
+        "SAG",
+        "LM",
+      ],
       request_date: null,
+      request_dateError: false,
       requester: null,
-      requester_options: [{requester:"Acquisition"},{requester:"Civil Team"},{requester:"Maintenance"},{requester:"Radio"},{requester:"Transmission"},{requester:"rollout"},{requester:"GA"},{requester:"Sharing team"}],
+      requesterError: false,
+      requester_options: [
+        "Acquisition",
+        "Civil Team",
+        "Maintenance",
+        "Radio",
+        "Transmission",
+        "rollout",
+        "GA",
+        "Sharing team",
+      ],
       project: null,
-      project_options: [{project:"Normal Modification"},{project:"LTE"},{project:"Critical repair"},{project:"Repair"},{project:"LDN"},{project:"Retrofitting"},{project:"Adding sec"},{project:"NTRA"}],
+      projectError: false,
+      project_options: [
+        "Normal Modification",
+        "LTE",
+        "Critical repair",
+        "Repair",
+        "LDN",
+        "Retrofitting",
+        "Adding sec",
+        "NTRA",
+      ],
       status: null,
-      status_options: [{status:"waiting D6"},{status:"done"},{status:"in progress"}],
+      statusError: false,
+      status_options: ["waiting D6", "done", "in progress"],
       finish_date: null,
+
       action: null,
+      actionError: false,
+      materials: null,
     };
   },
   name: "UpdateModification",
@@ -130,8 +229,12 @@ export default {
   mounted() {
     this.getModificationDetails();
   },
-  
+
   methods: {
+    goBack() {
+      this.$router.go(-1);
+    },
+
     getModificationDetails() {
       this.$emit("displayNoneSpinner", false);
       Modifications.getModificationDetails(this.id)
@@ -151,6 +254,8 @@ export default {
           // status_options: null,
           this.finish_date = response.data.details.finish_date;
           this.action = response.data.details.action;
+          this.cost = response.data.details.cost;
+          this.materials = response.data.details.materials;
         })
         .catch((error) => {
           console.log(error);
@@ -159,7 +264,189 @@ export default {
           this.$emit("displayNoneSpinner", true);
         });
     },
-    updateModification() {},
+    updateModification() {
+      this.subcontractorError = false;
+      this.request_dateError = false;
+      this.requesterError = false;
+      this.statusError = false;
+      this.projectError = false;
+      this.actionError = false;
+      if (!this.subcontractor) {
+        this.subcontractorError = true;
+      }
+
+      if (!this.project) {
+        this.projectError = true;
+      }
+      if (!this.status) {
+        this.statusError = true;
+      }
+      if (!this.action) {
+        this.actionError = true;
+      }
+      if (!this.request_date) {
+        this.request_dateError = true;
+      }
+      if (!this.requester) {
+        this.requesterError = true;
+      }
+      if (
+        this.requester &&
+        this.subcontractor &&
+        this.action &&
+        this.request_date &&
+        this.project &&
+        this.status
+      ) {
+        this.$emit("displayNoneSpinner", false);
+        let data = {
+          id:this.id,
+          site_code: this.site_code,
+          site_name: this.site_name,
+          subcontractor: this.subcontractor,
+          requester: this.requester,
+          request_date: this.request_date,
+          finish_date: this.finish_date,
+          cost: this.cost,
+          project: this.project,
+          status: this.status,
+          action: this.action,
+          materials: this.materials,
+        };
+        console.log(data);
+        Modifications.updateModification(data)
+          .then((response) => {
+            console.log(response);
+           
+            this.$toast.add({
+              severity: "success",
+              summary: "Success Message",
+              detail: "Updated Successfully",
+              life: 3000,
+            });
+          })
+          .catch((error) => {
+            console.log(error);
+            if (error.response.status == 422) {
+              let errors = error.response.data.errors;
+
+              if (errors.siteCode) {
+                errors.siteCode.forEach((element) => {
+                  this.$toast.add({
+                    severity: "error",
+                    summary: "Failed",
+                    detail: element,
+                    life: 3000,
+                  });
+                });
+              }
+              if (errors.siteName) {
+                errors.siteName.forEach((element) => {
+                  this.$toast.add({
+                    severity: "error",
+                    summary: "Failed",
+                    detail: element,
+                    life: 3000,
+                  });
+                });
+              }
+              if (errors.subcontractor) {
+                errors.subcontractor.forEach((element) => {
+                  this.$toast.add({
+                    severity: "error",
+                    summary: "Failed",
+                    detail: element,
+                    life: 3000,
+                  });
+                });
+              }
+              if (errors.project) {
+                errors.project.forEach((element) => {
+                  this.$toast.add({
+                    severity: "error",
+                    summary: "Failed",
+                    detail: element,
+                    life: 3000,
+                  });
+                });
+              }
+              if (errors.status) {
+                errors.status.forEach((element) => {
+                  this.$toast.add({
+                    severity: "error",
+                    summary: "Failed",
+                    detail: element,
+                    life: 3000,
+                  });
+                });
+              }
+              if (errors.requester) {
+                errors.requester.forEach((element) => {
+                  this.$toast.add({
+                    severity: "error",
+                    summary: "Failed",
+                    detail: element,
+                    life: 3000,
+                  });
+                });
+              }
+              if (errors.request_date) {
+                errors.request_date.forEach((element) => {
+                  this.$toast.add({
+                    severity: "error",
+                    summary: "Failed",
+                    detail: element,
+                    life: 3000,
+                  });
+                });
+              }
+              if (errors.finish_date) {
+                errors.finish_date.forEach((element) => {
+                  this.$toast.add({
+                    severity: "error",
+                    summary: "Failed",
+                    detail: element,
+                    life: 3000,
+                  });
+                });
+              }
+              if (errors.cost) {
+                errors.cost.forEach((element) => {
+                  this.$toast.add({
+                    severity: "error",
+                    summary: "Failed",
+                    detail: element,
+                    life: 3000,
+                  });
+                });
+              }
+              if (errors.materials) {
+                errors.materials.forEach((element) => {
+                  this.$toast.add({
+                    severity: "error",
+                    summary: "Failed",
+                    detail: element,
+                    life: 3000,
+                  });
+                });
+              }
+              if (errors.action) {
+                errors.action.forEach((element) => {
+                  this.$toast.add({
+                    severity: "error",
+                    summary: "Failed",
+                    detail: element,
+                    life: 3000,
+                  });
+                });
+              }
+            }
+          })
+          .finally(() => {
+            this.$emit("displayNoneSpinner", true);
+          });
+      }
+    },
   },
 };
 </script>
@@ -178,8 +465,7 @@ export default {
     z-index: 2;
     background-color: rgba($color: gray, $alpha: 1);
   }
-}
-::v-deep(.p-calendar) {
+
   .p-button {
     background-color: #79589f !important;
     border-color: #79589f !important;
@@ -190,7 +476,26 @@ export default {
   .p-inputtext:focus {
     box-shadow: 0px 0px 3px 2px #79589f !important;
   }
+
+  .p-inputtextarea {
+    resize: none;
+    width: 100%;
+  }
 }
+
+// $dp__border_radius: 30px !default;
+
+.form-select option:hover {
+  background-color: #79589f !important;
+}
+.dp__theme_light {
+  --dp-text-color: #79589f;
+
+  --dp-icon-color: #79589f;
+
+  --dp-border-color: #79589f;
+}
+
 .form {
   margin-top: 50px;
   width: 100%;

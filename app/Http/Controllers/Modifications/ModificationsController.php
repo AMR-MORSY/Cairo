@@ -121,17 +121,17 @@ class ModificationsController extends Controller
     {
         $ruls = [
             "id" => ['required', "exists:modifications,id"],
-            "modification.*.site_code" => "required|exists:modifications,site_code",
-            "modification.*.site_name" => "required|exists:modifications,site_name",
-            "modification.*.requester" => "required|exists:modifications,requester",
-            "modification.*.subcontractor" => "required|exists:modifications,subcontractor",
-            "modification.*.request_date" => "required|date",
-            "modification.*.finish_date" => "nullable|date",
-            "modification.*.status" => "required|exists:modifications,status",
-            "modification.*.project" => "required|exists:modifications,project",
-            "modification.*.cost" => "nullable|numeric",
-            "modification.*.action" => "required|string",
-            "modification.*.materials" => "nullable|string",
+            "site_code" => "required|exists:modifications,site_code",
+            "site_name" => "required|exists:modifications,site_name",
+            "requester" => "required|exists:modifications,requester",
+            "subcontractor" => "required|exists:modifications,subcontractor",
+            "request_date" => "required|date",
+            "finish_date" => "nullable|date",
+            "status" => "required|exists:modifications,status",
+            "project" => "required|exists:modifications,project",
+            "cost" => "nullable|numeric",
+            "action" => "required|string",
+            "materials" => "nullable|string",
         ];
         $validator = Validator::make($request->all(), $ruls);
         if ($validator->fails()) {
@@ -154,8 +154,17 @@ class ModificationsController extends Controller
             $modification->requester=$validated["requester"];
             $modification->subcontractor=$validated["subcontractor"];
             $modification->status=$validated["status"];
-            $modification->request_date=$validated["request_date"];
-            $modification->finish_date=$validated["finish_date"];
+            $modification->request_date=$this->dateFormat($validated["request_date"]) ;
+            if(isset($validated["finish_date"])&&!empty($validated["finish_date"]))
+            {
+                $modification->finish_date=$this->dateFormat( $validated["finish_date"]);
+
+            }
+            else{
+                $modification->finish_date=null;
+
+            }
+            
             $modification->cost=$validated["cost"];
             $modification->project=$validated["project"];
             $modification->action=$validated["action"];
@@ -231,8 +240,8 @@ class ModificationsController extends Controller
         // //     $data
         // // );
         $ruls=[
-            "siteCode"=>"required|exists:sites,site_code",
-            "siteName"=>"required|exists:sites,site_name",
+            "site_code"=>"required|exists:sites,site_code",
+            "site_name"=>"required|exists:sites,site_name",
             "subcontractor"=>"required|exists:modifications,subcontractor",
             "requester"=>"required|exists:modifications,requester",
             "project"=>"required|exists:modifications,project",
@@ -263,13 +272,13 @@ class ModificationsController extends Controller
         } else {
             $validated = $validator->validated();
              Modification::create([
-                "site_code"=>$validated["siteCode"],
-            "site_name"=>$validated["siteName"],
+                "site_code"=>$validated["site_code"],
+            "site_name"=>$validated["site_name"],
             "cost"=>$validated["cost"],
-            "status"=>$validated["status"]['status'],
-            "project"=>$validated["project"]["project"],
-            "subcontractor"=>$validated["subcontractor"]['subcontractor'],
-            "requester"=>$validated["requester"]['requester'],
+            "status"=>$validated["status"],
+            "project"=>$validated["project"],
+            "subcontractor"=>$validated["subcontractor"],
+            "requester"=>$validated["requester"],
             "action"=>$validated["action"],
             "materials"=>$validated["materials"],
             "request_date"=>$this->dateFormat(  $validated["request_date"]) ,
@@ -277,9 +286,44 @@ class ModificationsController extends Controller
     
         ]);
             return response()->json([
-                "message"=>$validated
+                "message"=>"Inserted Successfully"
 
             ],200);
         }
+    }
+
+    public function deleteModification(Request $request)
+    {
+        $ruls=[
+            "id"=>"required|exists:modifications,id",
+            
+    
+        ];
+        $validator = Validator::make($request->all(), $ruls);
+
+        if ($validator->fails()) {
+            return response()->json(
+                [
+                    "errors" => $validator->getMessageBag()->toArray(),
+
+                ],
+                422
+            );
+            $this->throwValidationException(
+
+
+                $validator
+
+            );
+        } else {
+            $validated = $validator->validated();
+            $modification=Modification::find($validated['id']);
+            $modification->delete();
+            return response()->json([
+                "message"=>"Deleted Successfully"
+
+            ],200);
+        }
+
     }
 }

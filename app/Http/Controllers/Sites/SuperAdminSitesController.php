@@ -81,6 +81,49 @@ class SuperAdminSitesController extends Controller
     }
     public function siteCreate(Request $request)
     {
+
+        $ruls=[
+           "site_code"=>["required","unique:sites,site_code","regex:/^([0-9a-zA-Z]{4,6}(up|UP))|([0-9a-zA-Z]{4,6}(ca|CA))|([0-9a-zA-Z]{4,6}(de|DE))$/"],
+           "site_name"=>["required", "regex:/^([0-9a-zA-Z_-]|\s){2,60}$/"],
+           " BSC"=>["nullable", "regex:/^([0-9a-zA-Z_-]|\s){3,50}$/"],
+            "RNC"=>["nullable", "regex:/^([0-9a-zA-Z_-]|\s){3,50}$/"],
+            "office"=>["nullable", "string"],
+            "severity"=>['nullable','exists:sites,severity'],
+            "category"=>['nullable','exists:sites,category'],
+            "type"=>['nullable','exists:sites,type'],
+            "sharing"=>['nullable','exists:sites,sharing'],
+            "oz"=>['nullable','exists:sites,oz'],
+            "host"=>['nullable','exists:sites,host'],
+            "gest"=>['nullable','exists:sites,gest'],
+            "2G_cells"=> ["nullable", "regex:/^(100)|[1-9]\d?$/"],
+            "3G_cells"=> ["nullable", "regex:/^(100)|[1-9]\d?$/"],
+            "4G_cells"=> ["nullable", "regex:/^(100)|[1-9]\d?$/"],
+        ];
+        $validator = Validator::make($request->all(), $ruls);
+        
+        if ($validator->fails()) {
+            return response()->json(
+                [
+                    "errors" => $validator->getMessageBag()->toArray(),
+
+                ],
+                422
+            );
+            $this->throwValidationException(
+
+
+                $validator
+
+            );
+        } else {
+            $validated = $validator->validated();
+            Site::create($validated);
+            return response()->json([
+                "message"=>"inserted Successfully"
+
+            ],200);
+
+        }
         
         
     }

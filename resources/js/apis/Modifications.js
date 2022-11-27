@@ -23,6 +23,16 @@ export default {
     {
         return allInstances.Api.get(`/modifications/details/${id}`)
 
+    },
+    updateModification(data)
+    {
+        return allInstances.Api.post("/modifications/update",data);
+
+    },
+    deleteModification(data)
+    {
+        return allInstances.Api.post("/modifications/delete",data);
+
     }
     
 };

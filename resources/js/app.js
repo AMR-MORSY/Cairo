@@ -44,6 +44,9 @@ import Calendar from 'primevue/calendar';
 import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import Divider from 'primevue/divider';
+import ConfirmationService from 'primevue/confirmationservice';
+import ConfirmDialog from 'primevue/confirmdialog';
+
 
 
 
@@ -62,9 +65,11 @@ createApp(app)
 .use(PrimeVue)
 .use(ToastService)
 .use(DialogService)
+.use(ConfirmationService)
 .directive('tooltip', Tooltip)
 
 .component('Datepicker', Datepicker)
+.component('ConfirmDialog', ConfirmDialog)
 .component("Toast",Toast)
 .component("SpinnerPage",SpinnerPage)
 .component("Fieldset",Fieldset)
