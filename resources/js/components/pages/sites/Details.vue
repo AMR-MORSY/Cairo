@@ -197,10 +197,10 @@
                   <Button label="Modifications" @click="gotToSiteModifications" class="p-button-raised p-button-warning" />
                 </div>
                 <div class="col-6 col-md-4">
-                  <Button label="NUR" class="p-button-raised p-button-secondary" />
+                  <Button label="NUR" @click="getSiteNUR" class="p-button-raised p-button-secondary" />
                 </div>
                 <div class="col-6 col-md-4">
-                  <Button label="Update" class="p-button-raised p-button-help" />
+                  <Button label="Update" @click="goToSiteUpdate" class="p-button-raised p-button-help" />
                 </div>
                
               </div>
@@ -276,10 +276,15 @@
       <div class="col-md-1"></div>
     </div>
   </div>
+   <DynamicDialog />
+   <ConfirmDialog :breakpoints="{'960px': '75vw', '640px': '100vw'}" :style="{width: '50vw'}"></ConfirmDialog>
+
 </template>
 
 <script>
 import Sites from "../../../apis/Sites";
+import siteNURTable from "../NUR/siteNURTable.vue";
+import NUR from "../../../apis/NUR";
 export default {
   data() {
     return {
@@ -302,11 +307,18 @@ export default {
       cascades: null,
       indirectCascades: null,
       selectedSite: null,
+      NUR2G:null,
+      NUR3G:null,
+      NUR4G:null,
     };
   },
   props:["site_code"],
   emits:["displayNoneSpinner"],
   name: "Details",
+  components:{
+    siteNURTable,
+
+  },
   watch:{
     site_code(){
       this.getSiteDetails();
@@ -333,6 +345,86 @@ export default {
     this.getSiteDetails();
   },
   methods: {
+    getSiteNUR()
+  {
+    this.$emit("displayNoneSpinner", false);
+    let data={
+      site_code:this.site_code,
+    }
+    NUR.getSiteNUR(data).then((response)=>{
+      console.log(response)
+
+      this.NUR2G=response.data.NUR2G;
+      this.NUR3G=response.data.NUR3G;
+      this.NUR4G=response.data.NUR4G;
+
+      if(this.NUR2G.length==0&&this.NUR3G.length==0&&this.NUR4G.length==0)
+      {
+         this.$confirm.require({
+                message: 'This site did not make NUR',
+                header: 'Confirmation',
+                icon: 'pi pi-exclamation-triangle',
+                position:"top",
+                rejectIcon:""
+               
+               
+         });
+
+      }
+      else{
+        this.$dialog.open(siteNURTable, {
+        props: {
+          header: this.siteName,
+          style: {
+            width: "75vw",
+          },
+          breakpoints: {
+            "960px": "75vw",
+            "640px": "90vw",
+          },
+          //   modal: true,
+        },
+        // templates: {
+        //   footer: () => {
+        //     return [
+        //       h(Button, {
+        //         label: "No",
+        //         icon: "pi pi-times",
+        //         onClick: () => dialogRef.close({ buttonType: "No" }),
+        //         class: "p-button-text",
+        //       }),
+        //       h(Button, {
+        //         label: "Yes",
+        //         icon: "pi pi-check",
+        //         onClick: () => dialogRef.close({ buttonType: "Yes" }),
+        //         autofocus: true,
+        //       }),
+        //     ];
+        //   },
+        // },
+        data: {
+          NUR3G: this.NUR3G,
+          NUR2G: this.NUR2G,
+          NUR4G: this.NUR4G,
+        },
+      });
+    
+
+
+      }
+
+
+
+    }).catch((error)=>{
+      console.log(error)
+
+    }).finally(()=>{
+      this.$emit("displayNoneSpinner", true);
+    });
+
+
+     
+  },
     getSiteDetails() {
           this.$emit("displayNoneSpinner", false);
       Sites.getSiteDetails(this.site_code)
@@ -369,6 +461,10 @@ export default {
     {
        this.$router.push(`/modifications/sitemodifications/${this.siteCode}/${this.siteName}`);
 
+
+    },
+    goToSiteUpdate(){
+       this.$router.push(`/sites/update/${this.siteCode}`);
 
     },
 
@@ -412,5 +508,8 @@ export default {
 }
 .buttons{
    padding: 1rem 0;
+}
+.display-none{
+  display:none;
 }
 </style>

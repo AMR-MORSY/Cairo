@@ -28,11 +28,14 @@ import NUR from "../components/pages/NUR/NUR.vue";
 import energy from "../components/pages/energySheet/energy.vue";
 import sites from "../components/pages/sites/sites.vue";
 import users from "../components/pages/User/users.vue";
+import siteUpdate from "../components/pages/sites/siteUpdate.vue";
+import energyStatestics from "../components/pages/energySheet/energyStatestics.vue";
  
 const routes = [
     { path: "/energy/sheet", component: Sheet },
     { path: "/energy", component: energy },
     { path: "/energy/index", component: energyIndex },
+    { path: "/energy/statestics/:week_month/:week/:month/:year", component: energyStatestics,props:true },
     { path: "/dashboard", component: dashboard },
     {path:"/modifications/index/:columnName/:columnValue",component:modificationsIndex,props:true},
     {path:"/modifications/new/:site_code/:site_name",component:NewModification,props:true},
@@ -42,6 +45,7 @@ const routes = [
     { path: "/sites/cascades", component: cascades },
     { path: "/sites/storeSites", component: newSitesInsert },
     { path: "/sites/storeSite", component: newSiteInsert },
+    { path: "/sites/update/:siteCode", component: siteUpdate,props:true },
     { path: "/sites/nodals", component: nodals },
     {path:"/sites/cascades/update/:site_code",component:CascadesUpdate,props:true},
     { path: "/modifications", component: modifications },

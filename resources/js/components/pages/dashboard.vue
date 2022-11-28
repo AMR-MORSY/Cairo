@@ -84,16 +84,19 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
+  border:solid 2px var(--purple-500);
   span {
     text-align: center;
     font-size: 5rem;
     z-index: 1;
-    color: gray;
+    
+      color: var(--purple-500);
   }
   p {
     text-align: center;
     font-size: 2rem;
-    color: gray;
+    color: var(--purple-500);
   }
 }
 

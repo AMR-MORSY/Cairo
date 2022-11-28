@@ -1,5 +1,5 @@
 <template>
-  <section id="site-modification">
+  <section id="site-modification" v-if="isModificationsFound">
     <div class="container mt-5">
       <Fieldset class="mt-5">
         <template #legend>{{ site_code }}-{{ site_name }} </template>
@@ -52,6 +52,35 @@
       </Fieldset>
     </div>
   </section>
+
+  <section v-else>
+    <transition name="fade-bounce" appear>
+      <div class="container">
+         <div class="errors card">
+        <p >
+          No Modifications
+        </p>
+        <div class="buttons">
+            <Button
+              label="New Modification"
+              @click="insertNewModification"
+              class="p-button-raised p-button-secondary"
+            />
+
+             <Button
+              label="Back"
+              @click="goBack"
+              class="p-button-raised p-button-danger"
+             
+            />
+
+        </div>
+      </div>
+
+      </div>
+     
+    </transition>
+  </section>
   <ConfirmDialog></ConfirmDialog>
 </template>
 
@@ -63,6 +92,7 @@ export default {
       modifications: null,
       selectedModification: null,
       isRowSelected: false,
+      isModificationsFound:false,
     };
   },
   name: "SiteModifications",
@@ -73,10 +103,11 @@ export default {
       this.getSiteModifications();
     },
   },
-  mounted() {
+  beforeMount(){
     this.getSiteModifications();
+   
   },
-  created() {
+  mounted() {
     this.columns = [
       { field: "subcontractor", header: "Subcontractor" },
       { field: "action", header: "Action" },
@@ -90,12 +121,23 @@ export default {
     ];
   },
   methods: {
+    goBack()
+    {
+      this.$router.go(-1);
+
+    },
     getSiteModifications() {
       this.$emit("displayNoneSpinner", false);
       Modifications.getSiteModifications(this.site_code)
         .then((response) => {
           console.log(response);
           this.modifications = response.data.modifications;
+          if(this.modifications.length>0)
+          {
+             this.isModificationsFound=true;
+
+          }
+         
         })
         .catch((error) => {
           console.log(error);
@@ -170,6 +212,55 @@ export default {
     .p-datatable-header {
       height: 50px;
     }
+  }
+}
+
+
+.errors {
+  margin-top: 4em;
+  padding: 3rem;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  p {
+    color: red;
+    text-align: center;
+  }
+  .buttons{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.fade-bounce-enter-active {
+  animation: woble 1s ease;
+}
+@keyframes woble {
+  0% {
+    opacity: 0;
+    transform: translateY(-300px);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(0px);
+  }
+  60% {
+    transform: translateY(16px);
+  }
+  70% {
+    transform: translateY(-16px);
+  }
+  80% {
+    transform: translateY(8px);
+  }
+  90% {
+    transform: translateY(-8px);
+  }
+  100% {
+    transform: translateY(0px);
   }
 }
 @media screen and (max-width: 576px) {

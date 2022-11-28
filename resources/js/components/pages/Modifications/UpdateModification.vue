@@ -207,6 +207,8 @@ export default {
         "Retrofitting",
         "Adding sec",
         "NTRA",
+        "Sharing",
+        "L2600"
       ],
       status: null,
       statusError: false,

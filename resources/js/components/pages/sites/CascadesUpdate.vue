@@ -9,41 +9,44 @@
           @move-to-target="getPickListDataDeleted"
           @move-to-source="getPickListDataDeleted"
         >
-          <template #sourceheader> Available </template>
-          <template #targetheader> Selected </template>
+          <template #sourceheader>
+            <div class="header">
+              <p>Cascades List</p>
+              <div class="header-details">
+                <p>Site Code</p>
+                <p>site Name</p>
+                <p>Cascades</p>
+              </div>
+            </div>
+          </template>
+          <template #targetheader>
+            <div class="header">
+              <p>Deleted List</p>
+              <div class="header-details">
+                <p>Site Code</p>
+                <p>site Name</p>
+                <p>Cascades</p>
+              </div>
+            </div>
+          </template>
           <template #item="slotProps">
             <div class="product-item">
-              <div class="product-list-detail">
-                <span class="product-category">{{
-                  slotProps.item.cascade_code
-                }}</span>
-                <span class="product-category">{{
-                  slotProps.item.cascade_name
-                }}</span>
-              </div>
-              <div class="product-list-action">
-                <h6 class="mb-2">{{ slotProps.item.countCascades }}</h6>
-              </div>
+              <p class="product-category">{{ slotProps.item.cascade_code }}</p>
+              <p class="product-category">{{ slotProps.item.cascade_name }}</p>
+
+              <p class="mb-2">{{ slotProps.item.countCascades }}</p>
             </div>
           </template>
         </PickList>
       </div>
       <div class="col-4 mt-4">
         <div class="p-inputgroup">
-          <InputText placeholder="Site Code" v-model="search" />
-          <Button @click="submitSearch" class="p-button-info">
-            <!-- <i class="pi pi-search"></i> -->
-            <ProgressSpinner
-              style="width: 20px; height: 20px"
-              strokeWidth="5"
-              fill="var(--surface-ground)"
-              animationDuration="2s"
-            />
-          </Button>
+          <InputText v-model="search" placeholder="Site Code......." />
+          <Button icon="pi pi-search" @click.prevent="submitSearch" type="button" class="p-button-warning" />
         </div>
       </div>
       <div class="col-4 mt-2"></div>
-      <div class="col-4 mt-4">
+      <div class="col-4 mt-4 mb-4">
         <Button
           label="Save"
           :disabled="isDisabled"
@@ -90,6 +93,7 @@ export default {
       this.getSiteDetails();
     },
   },
+  emits:["displayNoneSpinner"],
   mounted() {
     this.getSiteDetails();
   },
@@ -132,7 +136,6 @@ export default {
           siteCode: this.siteCode,
         };
       }
-      
 
       console.log(data);
       Sites.updateCascades(data)
@@ -193,6 +196,7 @@ export default {
         });
     },
     submitSearch() {
+      this.$emit("displayNoneSpinner", false);
       Sites.getSiteDetails(this.search)
         .then((response) => {
           console.log(response);
@@ -261,7 +265,7 @@ export default {
           }
         })
         .finally(() => {
-          //   this.$emit("displayNoneSpinner", true);
+            this.$emit("displayNoneSpinner", true);
         });
     },
 
@@ -286,39 +290,41 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+:deep(.p-picklist) {
+  .p-picklist-buttons button {
+    background-color: var(--purple-500);
+    border-color: var(--purple-500);
+  }
+}
+.header {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  .header-details {
+    width: 100%;
+    align-items: center;
+    display: flex;
+    justify-content: space-around;
+  }
+}
+.p-button {
+  background-color: var(--purple-500);
+  border-color: var(--purple-500);
+}
 .product-item {
   display: flex;
   align-items: center;
-  padding: 0.5rem;
+  justify-content: space-around;
+  // padding: 0.5rem;
   width: 100%;
-
-  img {
-    width: 75px;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
-    margin-right: 1rem;
+  p {
+    text-align: start;
   }
-
-  .product-list-detail {
-    flex: 1 1 0;
-  }
-
-  .product-list-action {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-  }
-
-  .product-category-icon {
-    vertical-align: middle;
-    margin-right: 0.5rem;
-    font-size: 0.875rem;
-  }
-
-  .product-category {
-    vertical-align: middle;
-    line-height: 1;
-    font-size: 0.875rem;
-  }
+}
+.p-button-warning{
+  color: white !important;
 }
 
 @media screen and (max-width: 576px) {

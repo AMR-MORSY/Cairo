@@ -26,9 +26,9 @@ export default {
     {
       return allInstances.Api.get(`/sites/search/${data}`)
     },
-    getSiteDetails(id)
+    getSiteDetails(siteCode)
     {
-      return allInstances.Api.get(`/sites/details/${id}`)
+      return allInstances.Api.get(`/sites/details/${siteCode}`)
     },
     updateCascades(data)
     {
@@ -37,6 +37,12 @@ export default {
     createNewSite(data)
     {
       return allInstances.Api.post("/sites/create",data)
+
+    },
+    updateSite(data)
+    {
+      return allInstances.Api.post("/sites/update",data)
+
 
     }
 };

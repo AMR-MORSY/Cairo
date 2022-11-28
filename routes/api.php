@@ -48,7 +48,8 @@ Route::prefix("energysheet")->middleware(['auth:sanctum',"role:admin|super-admin
 Route::prefix("energysheet")->middleware(['auth:sanctum'])->group(function(){
 
     Route::post("/alarms",[EnergyStatesticsController::class,"siteAlarms"]);
-    Route::post("/statestics",[EnergyStatesticsController::class,"statestics"]);
+ 
+    Route::get('/statestics/{week_month}/{week}/{month}/{year}',[EnergyStatesticsController::class,"statestics"])->name("energy_statestics");
 
 });
 
@@ -72,6 +73,7 @@ Route::prefix('sites')->middleware(['auth:sanctum',"role:super-admin"])->group(f
     Route::post('/cascades',[CascadesController::class,"importCascades"])->name("import_cascades");
     Route::post('/nodals',[NodalsController::class,"importNodals"])->name("import_nodals");
     Route::post('/updateCascades',[CascadesController::class,"updateCascades"])->name("updateCascades");
+    Route::post('/update',[SuperAdminSitesController::class,"siteUpdate"])->name("siteUpdate");
     
 });
 Route::prefix('sites')->middleware(['auth:sanctum',])->group(function(){

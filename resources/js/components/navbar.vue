@@ -3,13 +3,11 @@
     <a class="navbar-brand font-weight-bolder">CairoSouth</a>
     <div class="form-group">
       <form class="form-inline ml-5" @submit.prevent="submitSearch">
-        <input
-          class="mr-sm-2 search form-control"
-          type="text"
-          aria-label="Search"
-          v-model="search"
-        />
-        <button type="submit" class="form-control searchBtn">Search</button>
+       
+        <div class="p-inputgroup">
+                    <InputText v-model="search" placeholder="Site Code/Name......."/>
+                    <Button icon="pi pi-search" type="submit" class="p-button-warning"/>
+                </div>
       </form>
     </div>
 
@@ -29,92 +27,27 @@
     >
       <ul class="navbar-nav">
         <li class="nav-item active">
-          <!-- <a class="nav-link"  Active >Home </a> -->
+     
           <router-link class="nav-link" to="/home" Active>Home</router-link>
         </li>
         <li class="nav-link" v-if="userName">
           {{ userName.name }}
         </li>
 
-        <!-- <li class="nav-item">
-          <div class="image_container">
-            <img class="w-100 h-100" />
-          </div>
-        </li> -->
-
+      
         <li class="nav-item">
           <p class="nav-link"></p>
         </li>
-        <li class="nav-item dropdown">
-         
-          <router-link to="/dashboard"   class="nav-link dropdown-toggle" v-if="isLogin">Dashboard</router-link>
-        
-        
-          <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-            <li class="nav-item">
-              <div class="test">
-                <a class="dropdown-item">Sites</a>
-                <div class="test2">
-                  <!-- <a class="dropdown-item ">All Sites</a> -->
-
-                  <!-- <a class="dropdown-item " >Create New</a> -->
-                  <router-link class="dropdown-item" to="/sites/store"
-                    >Create New</router-link
-                  >
-                  <router-link class="dropdown-item" to="/sites/cascades"
-                    >Cascades</router-link
-                  >
-                  <router-link class="dropdown-item" to="/sites/nodals"
-                    >Nodals</router-link
-                  >
-                </div>
-              </div>
-            </li>
-            <!-- <li><a class="dropdown-item">Modifications</a></li> -->
-            <router-link class="dropdown-item" to="/modifications"
-              >Modifications</router-link
-            >
-            <li class="nav-item">
-              <div class="test">
-                <router-link class="dropdown-item" to="/nur">NUR</router-link>
-                <div class="test2">
-                  <!-- <a class="dropdown-item">Show NUR</a> -->
-                  <router-link class="dropdown-item" to="/nur/2G"
-                    >2G</router-link
-                  >
-                  <router-link class="dropdown-item" to="/nur/3G"
-                    >3G</router-link
-                  >
-                  <router-link class="dropdown-item" to="/nur/4G"
-                    >4G</router-link
-                  >
-                </div>
-              </div>
-            </li>
-            <li class="nav-item">
-              <div class="test">
-                <router-link class="dropdown-item" to="/energysheet/energyIndex"
-                  >Energy Sheet</router-link
-                >
-                <div class="test2">
-                  <!-- <a class="dropdown-item " >Insert Sheet</a> -->
-                  <router-link to="/energysheet/sheet" class="dropdown-item"
-                    >Insert Sheet</router-link
-                  >
-                </div>
-              </div>
-            </li>
-            <li><a class="dropdown-item">Users</a></li>
-          </ul>
-        </li>
         <li class="nav-item">
-          <a class="nav-link" v-if="isLogin">Profile</a>
+         
+          <router-link to="/dashboard"   class="nav-link" v-if="isLogin">Dashboard</router-link>
+        
         </li>
         <li class="nav-item">
           <router-link v-if="!isLogin" class="nav-link" to="/user/login"
             >Login</router-link
           >
-          <!-- <a class="nav-link" >Login</a> -->
+    
         </li>
         <li class="nav-item">
           <a class="nav-link" v-if="isLogin" @click="logout">Logout</a>
@@ -123,7 +56,7 @@
           <router-link v-if="!isLogin" class="nav-link" to="/user/register"
             >Register</router-link
           >
-          <!-- <a class="nav-link" >Register</a> -->
+       
         </li>
       </ul>
     </div>
@@ -226,7 +159,7 @@ export default {
 .navbar {
   position: fixed;
   display: flex;
-  background-color: #79589f;
+  background-color: var(--purple-500) ;
   justify-content: space-around;
   z-index: 100;
   width: 100%;
@@ -359,6 +292,17 @@ export default {
       display: block;
     }
   }
+}
+.p-button-warning{
+  color: white !important;
+}
+.p-inputtext:focus{
+  box-shadow: none !important;
+  border:none !important;
+}
+.p-inputtext:hover{
+
+  border:none !important;
 }
 
 .offcanvas {

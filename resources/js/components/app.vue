@@ -1,14 +1,18 @@
-<template>
-  <navbar @displayNoneSpinner="displayTheSpinner" @displaySitesTable="displaySitesTable"></navbar>
-  <modal :visible="showSessionNotification">
+<template >
+  <navbar
+    @displayNoneSpinner="displayTheSpinner"
+    @displaySitesTable="displaySitesTable"
+  ></navbar>
+  <!-- <modal :visible="showSessionNotification">
     <template style="font-weight:900; color:red;" #body>{{ data }}</template>
     <template #footer>
       <button class="btn btn-primary" @click="refreshSession">Yes</button>
       <button class="btn btn-danger" @click="goToLogin">No</button>
     </template>
-  </modal>
+  </modal> -->
 
-    <DynamicDialog />
+  <DynamicDialog />
+  <ConfirmDialog></ConfirmDialog>
 
   <SpinnerPage :displayNone="displaySpinnerPage"></SpinnerPage>
 
@@ -20,19 +24,41 @@ import User from "../apis/User";
 import modal from "./helpers/modal.vue";
 import SitesTable from "../components/pages/sites/SitesTable.vue";
 export default {
-  components: { modal,SitesTable },
+  components: { modal, SitesTable },
   data() {
     return {
       showModal: false,
-      displaySpinnerPage:true,
+      displaySpinnerPage: true,
+
       data: "session will end after 2 minutes, renew session",
     };
   },
-  computed: {
-    showSessionNotification() {
-      return this.$store.state.sessionTimeOut;
+  watch: {
+    sessoinTimeOut(value) {
+      // this.showSessionTimeOutNotification();
+      console.log(value);
+      if (value) {
+        this.showSessionTimeOutNotification();
+      }
+    },
+  },
+  // created(){
+  //   this.$store.watch((state)=>{
+  //     return this.$store.state.sessionTimeOut;
+  //   },(newValue,oldValue)=>{
+  //     console.log(newValue);
+  //       console.log(oldValue);
+  //   })
 
-     
+  // },
+  computed: {
+  
+    sessoinTimeOut() {
+      if (this.$store.state.sessionTimeOut) {
+        return true;
+      } else {
+        return false;
+      }
     },
     sessionEnd() {
       if (this.$store.state.sessionEnd) {
@@ -43,47 +69,60 @@ export default {
   name: "app",
 
   methods: {
-    displaySitesTable(event)
-    {
-       this.$dialog.open(SitesTable, {
-              props: {
-                header: "Sites",
-                style: {
-                  width: "75vw",
-                },
-                breakpoints: {
-                  "960px": "75vw",
-                  "640px": "90vw",
-                },
-                //   modal: true,
-              },
-              // templates: {
-              //   footer: () => {
-              //     return [
-              //       h(Button, {
-              //         label: "No",
-              //         icon: "pi pi-times",
-              //         onClick: () => dialogRef.close({ buttonType: "No" }),
-              //         class: "p-button-text",
-              //       }),
-              //       h(Button, {
-              //         label: "Yes",
-              //         icon: "pi pi-check",
-              //         onClick: () => dialogRef.close({ buttonType: "Yes" }),
-              //         autofocus: true,
-              //       }),
-              //     ];
-              //   },
-              // },
-              data: {
-                sites: event,
-              },
-            });
-
+    showSessionTimeOutNotification() {
+      this.$confirm.require({
+        message: "Session will expire in 2 minutes.renew the session?",
+        header: "Confirmation",
+        icon: "pi pi-exclamation-triangle",
+        position: "top",
+        acceptClass: "p-button-help",
+        rejectClass: "p-button-danger",
+        accept: () => {
+          this.refreshSession();
+        },
+        reject: () => {
+          this.goToLogin();
+        },
+      });
     },
-    displayTheSpinner(event)
-    {
-      this.displaySpinnerPage=event;
+    displaySitesTable(event) {
+      this.$dialog.open(SitesTable, {
+        props: {
+          header: "Sites",
+          style: {
+            width: "75vw",
+          },
+          breakpoints: {
+            "960px": "75vw",
+            "640px": "90vw",
+          },
+          //   modal: true,
+        },
+        // templates: {
+        //   footer: () => {
+        //     return [
+        //       h(Button, {
+        //         label: "No",
+        //         icon: "pi pi-times",
+        //         onClick: () => dialogRef.close({ buttonType: "No" }),
+        //         class: "p-button-text",
+        //       }),
+        //       h(Button, {
+        //         label: "Yes",
+        //         icon: "pi pi-check",
+        //         onClick: () => dialogRef.close({ buttonType: "Yes" }),
+        //         autofocus: true,
+        //       }),
+        //     ];
+        //   },
+        // },
+        data: {
+          sites: event,
+        },
+      });
+    },
+    displayTheSpinner(event) {
+      this.displaySpinnerPage = event;
     },
     refreshSession() {
       User.refreshSession()
@@ -137,6 +176,7 @@ export default {
     }
   },
   mounted() {
+    this.sessoinTimeOut = this.$store.state.sessionTimeOut;
     if (this.sessionEnd) {
       sessionStorage.removeItem("Auth");
       sessionStorage.removeItem("userData");
@@ -151,7 +191,6 @@ export default {
 </script>
 
 <style lang="scss" >
-
 body {
   background-color: #dde0e3;
 }

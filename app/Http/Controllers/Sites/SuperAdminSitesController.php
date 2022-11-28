@@ -71,8 +71,66 @@ class SuperAdminSitesController extends Controller
         return new AllSitesExport();
     }
 
-    public function siteUpdate(Site $site)
+    public function siteUpdate(Request $request)
     {
+        $ruls=[
+            "site_code"=>["required","exists:sites,site_code"],
+            "site_name"=>["required","exists:sites,site_name"],
+            "BSC"=>["nullable", "regex:/^([0-9a-zA-Z_-]|\s){3,50}$/"],
+             "RNC"=>["nullable", "regex:/^([0-9a-zA-Z_-]|\s){3,50}$/"],
+             "office"=>["nullable", "string"],
+             "severity"=>['nullable',"regex:/^Golden|Bronze|Silver$/"],
+             "category"=>['nullable',"regex:/^Normal|BSC|NDL|LDN|VIP+NDL|VIP$/"],
+             "type"=>['nullable','regex:/^Shelter|Micro|Outdoor$/'],
+             "sharing"=>['nullable',"regex:/^Yes|No$/"],
+             "oz"=>['nullable','regex:/^Cairo South|Cairo East|Cairo North|Giza$/'],
+             "host"=>['nullable',"regex:/^VF|OG||ET||WE$/"],
+             "gest"=>['nullable',"regex:/^VF|OG||ET||WE$/"],
+             "2G_cells"=> ["nullable", "regex:/^(100)|[1-9]\d?$/"],
+             "3G_cells"=> ["nullable", "regex:/^(100)|[1-9]\d?$/"],
+             "4G_cells"=> ["nullable", "regex:/^(100)|[1-9]\d?$/"],
+         ];
+         $validator = Validator::make($request->all(), $ruls);
+         
+         if ($validator->fails()) {
+             return response()->json(
+                 [
+                     "errors" => $validator->getMessageBag()->toArray(),
+ 
+                 ],
+                 422
+             );
+             $this->throwValidationException(
+ 
+ 
+                 $validator
+ 
+             );
+         } else {
+             $validated = $validator->validated();
+             $site=Site::where("site_code",$validated['site_code'])->first();
+             $site['BSC']=$validated["BSC"];
+             $site['RNC']=$validated["RNC"];
+             $site['office']=$validated["office"];
+             $site['severity']=$validated["severity"];
+             $site['oz']=$validated["oz"];
+             $site['sharing']=$validated["sharing"];
+             $site['host']=$validated["host"];
+             $site['gest']=$validated["gest"];
+             $site['type']=$validated["type"];
+             $site['category']=$validated["category"];
+             $site["2G_cells"]=$validated["2G_cells"];
+             $site["3G_cells"]=$validated["3G_cells"];
+             $site["4G_cells"]=$validated["4G_cells"];
+           $site->save();
+           
+             return response()->json([
+                 "site"=>$site
+ 
+             ],200);
+ 
+         }
+         
 
     }
     public function siteDelete(Site $site)
@@ -88,13 +146,13 @@ class SuperAdminSitesController extends Controller
            " BSC"=>["nullable", "regex:/^([0-9a-zA-Z_-]|\s){3,50}$/"],
             "RNC"=>["nullable", "regex:/^([0-9a-zA-Z_-]|\s){3,50}$/"],
             "office"=>["nullable", "string"],
-            "severity"=>['nullable','exists:sites,severity'],
-            "category"=>['nullable','exists:sites,category'],
-            "type"=>['nullable','exists:sites,type'],
-            "sharing"=>['nullable','exists:sites,sharing'],
-            "oz"=>['nullable','exists:sites,oz'],
-            "host"=>['nullable','exists:sites,host'],
-            "gest"=>['nullable','exists:sites,gest'],
+            "severity"=>['nullable',"regex:/^Golden|Bronze|Silver$/"],
+            "category"=>['nullable',"regex:/^Normal|BSC|NDL|LDN|VIP+NDL|VIP$/"],
+            "type"=>['nullable','regex:/^Shelter|Micro|Outdoor$/'],
+            "sharing"=>['nullable',"regex:/^Yes|No$/"],
+            "oz"=>['nullable','regex:/^Cairo South|Cairo East|Cairo North|Giza$/'],
+            "host"=>['nullable',"regex:/^VF|OG||ET||WE$/"],
+            "gest"=>['nullable',"regex:/^VF|OG||ET||WE$/"],
             "2G_cells"=> ["nullable", "regex:/^(100)|[1-9]\d?$/"],
             "3G_cells"=> ["nullable", "regex:/^(100)|[1-9]\d?$/"],
             "4G_cells"=> ["nullable", "regex:/^(100)|[1-9]\d?$/"],

@@ -249,6 +249,13 @@ export default {
   },
   props: ["week_month", "week", "month", "year"],
   emits: ["displayNoneSpinner"],
+  watch:{
+    week(){
+      this.getNUR();
+
+    }
+
+  },
   components: {
     TopSites,
     siteNURTable,

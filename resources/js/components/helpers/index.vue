@@ -152,17 +152,11 @@ export default {
             `/nur/statestics/${this.week_month}/${this.week}/${this.month}/${this.year}`
           );
         } else {
-          this.showSpinner = true;
-          Energy.getEnergyStatestics(data)
-            .then((response) => {
-              console.log(response);
-            })
-            .catch((error) => {
-              console.log(error);
-            })
-            .finally(() => {
-              this.showSpinner = false;
-            });
+           this.$router.push(
+            `/energy/statestics/${this.week_month}/${this.week}/${this.month}/${this.year}`
+          );
+         
+          // 
         }
       }
     },

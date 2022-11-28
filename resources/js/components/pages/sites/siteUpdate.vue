@@ -5,8 +5,8 @@
         <Card>
           <template #content>
             <div class="form">
-              <form @submit.prevent="insertNewSite">
-                <div class="row  p-5">
+              <form @submit.prevent="updateSite">
+                <div class="row p-5">
                   <div class="col-12 col-sm-6 col-lg-3">
                     <label for="siteCode">Site Code:</label>
                     <input
@@ -34,7 +34,6 @@
                       id="BSC"
                       v-model="BSC"
                       class="form-control"
-                 
                     />
                   </div>
                   <div class="col-12 col-sm-6 col-lg-3">
@@ -44,7 +43,6 @@
                       id="RNC"
                       v-model="RNC"
                       class="form-control"
-                    
                     />
                   </div>
 
@@ -55,7 +53,6 @@
                       id="office"
                       v-model="office"
                       class="form-control"
-                   
                     />
                   </div>
                   <div class="col-12 col-sm-6 col-lg-3">
@@ -64,28 +61,22 @@
                       id="category"
                       v-model="category"
                       class="form-select"
-                   
                     >
-                    <option ></option>
+                      <option></option>
                       <option
-                        :value="category"
-                        v-for="category in categoryOptions"
-                        :key="category"
+                        :value="categ"
+                        v-for="categ in categoryOptions"
+                        :key="categ"
                       >
-                        {{ category }}
+                        {{ categ }}
                       </option>
                     </select>
                   </div>
 
                   <div class="col-12 col-sm-6 col-lg-3">
                     <label for="type">Type:</label>
-                    <select
-                      id="type"
-                      v-model="type"
-                      class="form-select"
-                 
-                    >
-                      <option ></option>
+                    <select id="type" v-model="type" class="form-select">
+                      <option></option>
                       <option
                         :value="type"
                         v-for="type in typeOptions"
@@ -101,9 +92,8 @@
                       id="severity"
                       v-model="severity"
                       class="form-select"
-                 
                     >
-                      <option ></option>
+                      <option></option>
                       <option
                         :value="severity"
                         v-for="severity in severityOptions"
@@ -116,7 +106,7 @@
                   <div class="col-12 col-sm-6 col-lg-3">
                     <label for="sharing">sharing:</label>
                     <select id="sharing" v-model="sharing" class="form-select">
-                        <option ></option>
+                      <option></option>
                       <option
                         :value="sharing"
                         v-for="sharing in sharingOptions"
@@ -128,8 +118,13 @@
                   </div>
                   <div class="col-12 col-sm-6 col-lg-3">
                     <label for="host">host:</label>
-                    <select id="host" v-model="host" class="form-select" :class="{'is-invalid':hostError}">
-                        <option ></option>
+                    <select
+                      id="host"
+                      v-model="host"
+                      class="form-select"
+                      :class="{ 'is-invalid': hostError }"
+                    >
+                      <option></option>
                       <option
                         :value="host"
                         v-for="host in hostOptions"
@@ -141,8 +136,13 @@
                   </div>
                   <div class="col-12 col-sm-6 col-lg-3">
                     <label for="gest">gest:</label>
-                    <select id="gest" v-model="gest" class="form-select" :class="{'is-invalid':gestError}">
-                        <option ></option>
+                    <select
+                      id="gest"
+                      v-model="gest"
+                      class="form-select"
+                      :class="{ 'is-invalid': gestError }"
+                    >
+                      <option></option>
                       <option
                         :value="gest"
                         v-for="gest in gestOptions"
@@ -155,7 +155,7 @@
                   <div class="col-12 col-sm-6 col-lg-3">
                     <label for="oz">Operation Zone:</label>
                     <select id="oz" v-model="oz" class="form-select">
-                        <option ></option>
+                      <option></option>
                       <option :value="oz" v-for="oz in ozOptions" :key="oz">
                         {{ oz }}
                       </option>
@@ -229,28 +229,28 @@ export default {
       site_name: null,
       siteNameError: false,
       BSC: null,
-   
+
       RNC: null,
-     
+
       office: null,
-     
+
       type: null,
-    
+
       typeOptions: ["Shelter", "Micro", "Outdoor"],
       category: null,
-     
-      categoryOptions: ["Normal", "BSC", "NDL", "LDN", "VIP+NDL", "VIP"],
+
+      categoryOptions: ["Normal", "BSC", "NDL", "LDN", "VIP + NDL", "VIP"],
       severity: null,
-    
+
       severityOptions: ["Bronze", "Silver", "Golden"],
       sharing: null,
-      sharingError:false,
+      sharingError: false,
       sharingOptions: ["Yes", "No"],
       host: null,
-      hostError:false,
+      hostError: false,
       hostOptions: ["VF", "OG", "ET", "WE"],
       gest: null,
-      gestError:false,
+      gestError: false,
       gestOptions: ["VF", "OG", "ET", "WE"],
       oz: null,
       ozOptions: ["Cairo South", "Cairo East", "Cairo North", "Giza"],
@@ -259,23 +259,60 @@ export default {
       cells4G: null,
     };
   },
-  name: "NewSiteInsert",
-
+  name: "siteUpdate",
+  props: ["siteCode"],
   emits: ["displayNoneSpinner"],
+  watch: {
+    siteCode() {
+      this.getSiteDetails();
+    },
+  },
 
-  mounted() {},
+  mounted() {
+    this.getSiteDetails();
+  },
 
   methods: {
     goBack() {
       this.$router.go(-1);
     },
-    insertNewSite() {
+    getSiteDetails() {
+      this.$emit("displayNoneSpinner", false);
+
+      Sites.getSiteDetails(this.siteCode)
+        .then((response) => {
+          console.log(response);
+          this.site_name = response.data.site.site_name;
+          this.site_code = response.data.site.site_code;
+          this.type = response.data.site.type;
+          this.severity = response.data.site.severity;
+          this.sharing = response.data.site.sharing;
+          this.host = response.data.site.host;
+          this.gest = response.data.site.gest;
+          this.cells2G = response.data.site["2G_cells"];
+          this.cells3G = response.data.site["3G_cells"];
+          this.cells4G = response.data.site["4G_cells"];
+          this.BSC = response.data.site.BSC;
+          this.RNC = response.data.site.RNC;
+          this.office = response.data.site.office;
+          this.oz = response.data.site.oz;
+          this.category = response.data.site.category;
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+        .finally(() => {
+          this.$emit("displayNoneSpinner", true);
+        });
+    },
+
+    updateSite() {
       this.siteCodeError = false;
       this.siteNameError = false;
-      this.sharingError=false;
-       this.hostError=false;
-       this.gestError=false;
-      
+      this.sharingError = false;
+      this.hostError = false;
+      this.gestError = false;
+
       if (!this.site_code) {
         this.siteCodeError = true;
       }
@@ -284,28 +321,17 @@ export default {
         this.siteNameError = true;
       }
 
-      if(this.sharing=="Yes"&&!this.host)
-      {
-        this.hostError=true;
-        this.sharingError=true;
-
+      if (this.sharing == "Yes" && !this.host) {
+        this.hostError = true;
+        this.sharingError = true;
       }
-       if(this.sharing=="Yes"&&!this.gest)
-      {
-        this.gestError=true;
-        this.sharingError=true;
-
+      if (this.sharing == "Yes" && !this.gest) {
+        this.gestError = true;
+        this.sharingError = true;
       }
-      
-      
-     
-      if (
-        this.site_code &&
-        this.site_name &&
-        !this.sharingError
-       
-      ) {
-         this.$emit("displayNoneSpinner", false);
+
+      if (this.site_code && this.site_name && !this.sharingError) {
+        this.$emit("displayNoneSpinner", false);
         let data = {
           site_code: this.site_code,
           site_name: this.site_name,
@@ -313,41 +339,42 @@ export default {
           RNC: this.RNC,
           office: this.office,
           severity: this.severity,
-          category:this.category,
+          category: this.category,
           type: this.type,
           sharing: this.sharing,
           oz: this.oz,
           host: this.host,
           gest: this.gest,
-          "2G_cells":this.cells2G,
-          "3G_cells":this.cells3G,
-          "4G_cells":this.cells4G,
+          "2G_cells": this.cells2G,
+          "3G_cells": this.cells3G,
+          "4G_cells": this.cells4G,
         };
         console.log(data);
-       Sites.createNewSite(data)
+        Sites.updateSite(data)
           .then((response) => {
             console.log(response);
-            this.site_code = null;
-            this.site_name = null;
-            this.BSC=null;
-            this.RNC=null;
-            this.office = null;
-            this.type = null;
-            this.severity = null;
-            this.category = null;
-            this.oz = null;
-            this.host = null;
-            this.gest = null;
-            this.sharing=null;
-            this.cells2G=null;
-            this.cells3G=null;
-            this.cells4G=null;
+
             this.$toast.add({
               severity: "success",
               summary: "Success Message",
-              detail: "inserted Successfully",
+              detail: "Updated Successfully",
               life: 3000,
             });
+            this.site_name = response.data.site.site_name;
+            this.site_code = response.data.site.site_code;
+            this.type = response.data.site.type;
+            this.severity = response.data.site.severity;
+            this.sharing = response.data.site.sharing;
+            this.host = response.data.site.host;
+            this.gest = response.data.site.gest;
+            this.cells2G = response.data.site["2G_cells"];
+            this.cells3G = response.data.site["3G_cells"];
+            this.cells4G = response.data.site["4G_cells"];
+            this.BSC = response.data.site.BSC;
+            this.RNC = response.data.site.RNC;
+            this.office = response.data.site.office;
+            this.oz = response.data.site.oz;
+            this.category = response.data.site.category;
           })
           .catch((error) => {
             console.log(error);
@@ -484,7 +511,7 @@ export default {
                   });
                 });
               }
-               if (errors["3G_cells"]) {
+              if (errors["3G_cells"]) {
                 errors["3G_cells"].forEach((element) => {
                   this.$toast.add({
                     severity: "error",
@@ -494,7 +521,7 @@ export default {
                   });
                 });
               }
-               if (errors["4G_cells"]) {
+              if (errors["4G_cells"]) {
                 errors["4G_cells"].forEach((element) => {
                   this.$toast.add({
                     severity: "error",
@@ -516,31 +543,28 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.p-button.back,
+.p-button.back:hover {
+  background-color: var(--pink-500);
+  border-color: var(--pink-500);
+}
+.p-button.insert,
+.p-button.insert:hover {
+  background-color: var(--teal-400);
+  border-color: var(--teal-400);
+}
 
+.p-inputtext {
+  border-color: #79589f;
+}
+.p-inputtext:focus {
+  box-shadow: 0px 0px 3px 2px #79589f !important;
+}
 
-  .p-button.back,
-  .p-button.back:hover {
-    background-color: var(--pink-500);
-    border-color: var(--pink-500);
-  }
-  .p-button.insert,
-  .p-button.insert:hover {
-    background-color: var(--teal-400);
-    border-color: var(--teal-400);
-  }
-
-  .p-inputtext {
-    border-color: #79589f;
-  }
-  .p-inputtext:focus {
-    box-shadow: 0px 0px 3px 2px #79589f !important;
-  }
-
-  .p-inputtextarea {
-    resize: none;
-    width: 100%;
-  }
-
+.p-inputtextarea {
+  resize: none;
+  width: 100%;
+}
 
 // $dp__border_radius: 30px !default;
 
@@ -556,7 +580,6 @@ export default {
 }
 
 .form {
- 
   width: 100%;
   border: 1px solid black;
   border-radius: 5px;

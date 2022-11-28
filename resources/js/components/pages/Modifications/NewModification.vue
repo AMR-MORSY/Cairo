@@ -87,6 +87,8 @@
                     placeholder="Request Date"
                     required
                     id="request"
+                  :autoPosition="false"
+              
                   />
                 </div>
                 <div class="col-12 col-sm-6 col-lg-3">
@@ -96,6 +98,7 @@
                     v-model="finish_date"
                     placeholder="Finish Date:"
                     id="finish"
+                       :autoPosition="false"
                   />
                 </div>
 
@@ -177,6 +180,8 @@ export default {
         "TELE-TECH",
         "SAG",
         "LM",
+        "HAS",
+        "Red Tech"
       ],
       request_date: null,
       request_dateError: false,
@@ -203,6 +208,8 @@ export default {
         "Retrofitting",
         "Adding sec",
         "NTRA",
+        "Sharing",
+        "L2600"
       ],
       status: null,
       statusError: false,

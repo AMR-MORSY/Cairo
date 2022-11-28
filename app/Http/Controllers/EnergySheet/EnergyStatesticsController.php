@@ -14,21 +14,26 @@ use App\Services\EnergyAlarms\MonthlyStatestics;
 
 class EnergyStatesticsController extends Controller
 {
-    public function statestics(Request $request)
+    public function statestics($week_month,$week,$month,$year)
     {
-       
-        if($request->input('week'))
+        $data=[
+            "week_month"=>$week_month,
+            "week"=>$week,
+            "month"=>$month,
+            "year"=>$year
+        ];
+        if($week!=0)
         {
             
-            $validator=Validator::make($request->all(),["month"=>"nullable","week"=>["required",'regex:/^(week)$/'],"year" => ['required', 'regex:/^2[0-9]{3}$/'],"week_month"=>['required','regex:/^(?:[1-9]|[1-3][0-9]|4[0-8])$/']]);
+            $validator=Validator::make($data,["month"=>"nullable","week"=>["required",'regex:/^(week)$/'],"year" => ['required', 'regex:/^2[0-9]{3}$/'],"week_month"=>['required','regex:/^(?:[1-9]|[1-3][0-9]|4[0-8])$/']]);
            
         }
-         if($request->input('month'))
+        else if($month!=0)
         {
-            $validator=Validator::make($request->all(),["week"=>"nullable","month"=>["required",'regex:/^(month)$/'],"year" => ['required', 'regex:/^2[0-9]{3}$/'],"week_month"=>['required','regex:/^[1-9]|1[0-2]$/']]);
+            $validator=Validator::make($data,["week"=>"nullable","month"=>["required",'regex:/^(month)$/'],"year" => ['required', 'regex:/^2[0-9]{3}$/'],"week_month"=>['required','regex:/^[1-9]|1[0-2]$/']]);
             
         }
-        else if(!$request->input('week') && !$request->input('month'))
+        else if($week==0 && $month==0)
         {
             return response()->json([
                 'period_error' => "Please select week or month",
@@ -43,8 +48,7 @@ class EnergyStatesticsController extends Controller
         }
         else{
             $validated=$validator->validated();
-
-            if(isset($validated['month']))
+            if($validated['month']=="month")
             {
                 $monthlyAlarms=$this->getMonthlyAlarms($validated['week_month'],$validated['year']);
                 if($monthlyAlarms['error'])
@@ -68,10 +72,9 @@ class EnergyStatesticsController extends Controller
                   
                 }
 
-
             }
-            else{
 
+            else{
                 $weeklyAlarms=$this->getWeeklyAlarms($validated['week_month'],$validated['year']);
                 if($weeklyAlarms['error'])
                 {
@@ -94,9 +97,11 @@ class EnergyStatesticsController extends Controller
                   
                 }
                  
-
             }
         }
+       
+       
+       
     }
 
     private function getWeeklyAlarms($week,$year)
