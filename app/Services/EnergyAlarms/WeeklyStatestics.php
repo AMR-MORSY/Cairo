@@ -58,4 +58,10 @@ class WeeklyStatestics
         $zonesDownSitesAfterPowerAlarm = $powerAlarmsStatestics->zonesDownSitesAfterPowerAlarm($this->powerAlarms->groupBy("operational_zone")->keys());
         return   $zonesDownSitesAfterPowerAlarm;
     }
+
+    // public function cairoSouthPower_DownAnalysis()
+    // {
+
+
+    // }
 }

@@ -151,7 +151,7 @@ class EnergyStatesticsController extends Controller
             $data['zonesHighiestPowerAlarmDuration']=$zonesHighiestPowerAlarmDuration;
             $data['zonesPowerDurationLessThanHour']=$zonesPowerDurationLessThanHour;
             $data['zonesSitesPowerAlarmsMoreThan2Times']=$zonesSitesPowerAlarmsMoreThan;
-            // $data['zonesDownSitesAfterPowerAlarm']=$zonesDownSitesAfterPowerAlarm;
+            $data['zonesDownSitesAfterPowerAlarm']=$zonesDownSitesAfterPowerAlarm;
 
             $notFound['error']=false;
             $notFound['statestics']=$data;

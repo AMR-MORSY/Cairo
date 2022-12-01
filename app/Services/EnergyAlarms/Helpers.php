@@ -35,28 +35,29 @@ class Helpers
         }
         return $oz;
     }
-    public function zonesSitesPowerAlarmsMoreThan($zones,$times)
+    public function zonesSitesPowerAlarmsMoreThan($zones, $times)
     {
         $oz = [];
-        
+
         foreach ($zones as $zone) {
-            $sites=[];
+            $sites = [];
             $siteCodes = $this->powerAlarmsCollection->where("operational_zone", $zone)->groupBy("site_code");
-            foreach($siteCodes as $key=> $codes)
-            {
+            foreach ($siteCodes as $key => $codes) {
                 $subs["siteName"] =  $codes->first()->site_name;
                 $subs["siteCode"] =  $codes->first()->site_code;
                 $subs["count"] =  $codes->count();
-                array_push($sites,$subs);
-
-
+                array_push($sites, $subs);
             }
-            $oz[$zone] = collect($sites)->where("count",">",$times);
-
-            
+            $oz[$zone] = collect($sites)->where("count", ">", $times);
         }
         return $oz;
+    }
 
+    private function convertMinutesToHours($minutes)
+    {
+        $quotient = (int)($minutes / 60);
+        $remainder = $minutes % 60;
+        return " $quotient:$remainder";
     }
 
     public function zonesHighiestAlarmDuration($zones)
@@ -73,10 +74,10 @@ class Helpers
                 $siteCode = $siteCode->first();
                 $subs["siteName"] =  $siteCode->site_name;
                 $subs["siteCode"] =  $siteCode->site_code;
-                $subs["duration"] =  $siteCode->duration;
+                $subs["duration"] = $this->convertMinutesToHours( $siteCode->duration);
                 array_push($sites, $subs);
             }
-            $oz[$zone] = collect($sites)->sortByDesc('duration')->take(5);
+            $oz[$zone] = collect($sites)->sortByDesc('duration')->take(10);
         }
 
 
@@ -111,33 +112,48 @@ class Helpers
         // $oz = [];
 
         // foreach ($zones as $zone) {
-            $sites = [];
-            $siteCodes = $this->powerAlarmsCollection->where("operational_zone", "Cairo South")->groupBy("site_code");
-            $downAlarms=$this->downAlarmsCollection->where("operational_zone","Cairo South");
-            foreach ($siteCodes as $key=> $codes) {
-                foreach($codes as $code)
+        $sites = [];
+        $siteCodes = $this->powerAlarmsCollection->where("operational_zone", "Cairo South")->groupBy("site_code");
+        $downAlarms = $this->downAlarmsCollection->where("operational_zone", "Cairo South");
+        foreach ($siteCodes as $key => $codes) {
+            foreach ($codes as $code) {
+                $downAlarm = $downAlarms->where("site_code", $code->site_code)->where("alarm_name", "NodeB Unavailable")->whereStrict("start_date", $code->start_date)->where("start_time", ">=", $code->start_time)->where("end_time", "<=", $code->end_time)->first();
+                if($downAlarm)
                 {
-                    $downSites = $downAlarms->where("site_code", $code->site_code)->where("alarm_name","NodeB Unavailable")->whereStrict("start_date", $code->start_date)->where("start_time",">=",$code->start_time)->where("end_time","<=",$code->end_time);
-                    
-                    if (count($downSites) > 0) {
-                        foreach($downSites as $site)
-                        {
-                            $sub["siteCode"] =$site->site_code;
-                            $sub["siteName"] =$site->site_name;
-                             $sub['duration'] = $code->duration;
-                            array_push($sites, $sub);
-    
-                        }
-                       
-                      
-                    }
+                    $alarm["site_name"]=$downAlarm->site_name;
+                    $alarm["site_code"]=$downAlarm->site_code;
+                    $alarm["downAlarm_start_date"]=$downAlarm->start_date;
+                    $alarm["powerAlarm_start_date"]=$code->start_date;
+                    $alarm["downAlarm_id"]=$downAlarm->id;
+                    $alarm['durationBeforDown']=intdiv((strtotime($downAlarm->start_time)-strtotime($code->start_time)),60);
+                    $alarm["downAlarmDuration"]=intdiv((strtotime($downAlarm->end_time)-strtotime($downAlarm->start_time)),60);
+                    array_push($sites,$alarm);
 
                 }
-                // $downSite = $this->downAlarmsCollection->where("site_code", $code->site_code)->where("start_date", $code->start_date)->where("start_time", "<=", $code->start_time);
-                // $downSites=$this->downAlarmsCollection->where("operational_zone", $zone)->where("site_code", $code);
-               
+                else{
+                    $downAlarm = $downAlarms->where("site_code", $code->site_code)->where("alarm_name", "OML Fault")->whereStrict("start_date", $code->start_date)->where("start_time", ">=", $code->start_time)->where("end_time", "<=", $code->end_time)->first();
+                    if($downAlarm){
+                        $alarm["site_name"]=$downAlarm->site_name;
+                        $alarm["site_code"]=$downAlarm->site_code;
+                        $alarm["downAlarm_start_date"]=$downAlarm->start_date;
+                        $alarm["powerAlarm_start_date"]=$code->start_date;
+                        $alarm["downAlarm_id"]=$downAlarm->id;
+                        $alarm['durationBeforDown']=intdiv((strtotime($downAlarm->start_time)-strtotime($code->start_time)),60);
+                        $alarm["downAlarmDuration"]=intdiv((strtotime($downAlarm->end_time)-strtotime($downAlarm->start_time)),60);
+                        array_push($sites,$alarm);
+    
+
+                    }
+                  
+                }
+
+                
             }
-            $oz["Cairo East"] = $sites;
+            // $downSite = $this->downAlarmsCollection->where("site_code", $code->site_code)->where("start_date", $code->start_date)->where("start_time", "<=", $code->start_time);
+            // $downSites=$this->downAlarmsCollection->where("operational_zone", $zone)->where("site_code", $code);
+
+        }
+        $oz["Cairo South"] = $sites;
         // }
         return $oz;
     }
