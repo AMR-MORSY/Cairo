@@ -136,13 +136,14 @@ class EnergyStatesticsController extends Controller
         }
         else
         {
-            $statestics=new WeeklyStatestics($powerAlarms,$genAlrms,$HT,$downAlarms);
+            $statestics=new WeeklyStatestics($powerAlarms,$genAlrms,$HT,$downAlarms,$week);
             $zonesPowerAlarmsCount=$statestics->zonesPowerAlarmsCount();
             $zonesSitesReportedPowerAlarms=$statestics->zonesSitesReportedPowerAlarms();
             $zonesHighiestPowerAlarmDuration=$statestics->zonesHighiestPowerAlarmDuration();
             $zonesPowerDurationLessThanHour=$statestics->zonesPowerDurationLessThanHour();
             $zonesSitesPowerAlarmsMoreThan=$statestics->zonesSitesPowerAlarmsMoreThan();
             $zonesDownSitesAfterPowerAlarm=$statestics->zonesDownSitesAfterPowerAlarm();
+            $zonesSitesDownWithoutPowerAlarms=$statestics->sitesDownWithoutPowerAlarms();
 
             $data=[];
             $data['zonesPowerAlarmsCount']=$zonesPowerAlarmsCount;
@@ -152,6 +153,7 @@ class EnergyStatesticsController extends Controller
             $data['zonesPowerDurationLessThanHour']=$zonesPowerDurationLessThanHour;
             $data['zonesSitesPowerAlarmsMoreThan2Times']=$zonesSitesPowerAlarmsMoreThan;
             $data['zonesDownSitesAfterPowerAlarm']=$zonesDownSitesAfterPowerAlarm;
+            $data['zonesSitesDownWithoutPowerAlarms']= $zonesSitesDownWithoutPowerAlarms;
 
             $notFound['error']=false;
             $notFound['statestics']=$data;

@@ -8,13 +8,14 @@ class WeeklyStatestics
 {
 
 
-    protected $powerAlarms, $genAlarms, $HT, $downAlarms;
-    public function __construct($powerAlarms, $genAlarms, $HT, $downAlarms)
+    protected $powerAlarms, $genAlarms, $HT, $downAlarms,$week;
+    public function __construct($powerAlarms, $genAlarms, $HT, $downAlarms,$week)
     {
         $this->powerAlarms = $powerAlarms;
         $this->genAlarms = $genAlarms;
         $this->HT = $HT;
         $this->downAlarms = $downAlarms;
+        $this->week=$week;
     }
 
     public function zonesPowerAlarmsCount()
@@ -59,9 +60,11 @@ class WeeklyStatestics
         return   $zonesDownSitesAfterPowerAlarm;
     }
 
-    // public function cairoSouthPower_DownAnalysis()
-    // {
+   public function sitesDownWithoutPowerAlarms()
+   {
+    $powerAlarmsStatestics = new Helpers($this->powerAlarms, $this->downAlarms,$this->week);
+    $zonessitesDownWithoutPowerAlarms = $powerAlarmsStatestics->sitesDownWithoutPowerAlarms($this->powerAlarms->groupBy("operational_zone")->keys());
+    return  $zonessitesDownWithoutPowerAlarms;
 
-
-    // }
+   }
 }

@@ -2,18 +2,23 @@
 
 namespace App\Services\EnergyAlarms;
 
+use Carbon\Carbon;
+use App\Models\NUR\NUR2G;
+use App\Models\NUR\NUR3G;
+use Illuminate\Support\Carbon as SupportCarbon;
 use Illuminate\Support\Collection;
 
 
 class Helpers
 {
 
-    protected $powerAlarmsCollection, $downAlarmsCollection;
+    protected $powerAlarmsCollection, $downAlarmsCollection,$week;
 
-    public function __construct($powerAlarms, $downAlarms = null)
+    public function __construct($powerAlarms, $downAlarms = null,$week=null)
     {
         $this->powerAlarmsCollection = $powerAlarms;
         $this->downAlarmsCollection = $downAlarms;
+        $this->week=$week;
     }
 
     public function zonesAlarmsCount($zones)
@@ -154,7 +159,106 @@ class Helpers
 
         }
         $oz["Cairo South"] = $sites;
-        // }
+
         return $oz;
+    }
+
+    public function sitesDownWithoutPowerAlarms()
+    {
+        $siteCodes = $this->downAlarmsCollection->where("operational_zone", "Cairo South")->groupBy("site_code");
+        $powerAlarms = $this->powerAlarmsCollection->where("operational_zone", "Cairo South");
+        $sites = [];
+        foreach ($siteCodes as $key => $codes) {
+            foreach ($codes as $code) {
+                $powerAlarm = $powerAlarms->where("site_code", $code->site_code)->whereStrict("start_date", $code->start_date)->where("start_time", "<=", $code->start_time)->where("end_time", ">=", $code->end_time)->first();
+                if(!isset($powerAlarm))
+                {
+                    $alarm["site_name"]=$code->site_name;
+                    $alarm["site_code"]=$code->site_code;
+                    $alarm["downAlarm_start_date"]=$code->start_date;
+                    $alarm["downAlarm_id"]=$code->id;
+                    $alarm["downAlarmName"]=$code->alarm_name;
+                    $alarm["downAlarmDuration"]=intdiv((strtotime($code->end_time)-strtotime($code->start_time)),60);
+                    array_push($sites,$alarm);
+
+                }
+            }
+        }
+        
+        if(count($sites)>0)
+        {
+            $sitoz=collect($sites);
+            $newSiteCodes=$sitoz->groupBy("site_code");
+            $newSites=[];
+            foreach($newSiteCodes as $key=>$new_codes)
+            {
+               
+                $NUR2G=[];
+                $NUR3G=[];
+                $newalarm["site_name"]=$new_codes->first()["site_name"];
+                $newalarm["site_code"]=$key;
+                $newalarm["count_down_alarms"]=$new_codes->count();
+                $newalarm["max_down_duration"]=$new_codes->max('downAlarmDuration');
+                $newalarm["min_down_duration"]=$new_codes->min('downAlarmDuration');
+            
+                foreach($new_codes as $code)
+                {
+                   
+                   
+                    if($code["downAlarmName"]=="OML Fault")
+                    {
+                        $nurs=NUR2G::where("problem_site_code",$code["site_code"])->where("week",$this->week)->get();
+                        if(count ($nurs)>0)
+                        {
+                            foreach($nurs as $nur)
+                            {
+                                $begin= Carbon::parse($nur["begin"]);
+                                $newBegin="$begin->year-$begin->month-$begin->day";
+                                if($newBegin==$code["downAlarm_start_date"]);
+                                array_push($NUR2G,$nur);
+                            }
+                          
+                        }
+                    }
+                    if($code["downAlarmName"]=="NodeB Unavailable")
+                    {
+                        $nurs=NUR3G::where("problem_site_code",$code["site_code"])->where("week",$this->week)->get();
+                        if(count ($nurs)>0)
+                        {
+                            foreach($nurs as $nur)
+                            {
+                                $begin= Carbon::parse($nur["begin"]);
+                                $newBegin="$begin->year-$begin->month-$begin->day";
+                                if($newBegin==$code["downAlarm_start_date"]);
+                                array_push($NUR3G,$nur);
+                            }
+                          
+                        }
+                        
+                          
+                        
+                    }
+    
+                }
+                $newalarm["NUR2G"]=$NUR2G;
+                $newalarm["NUR3G"]=$NUR3G;
+    
+                array_push($newSites,$newalarm);
+            }
+            $oz["Cairo South"] = $newSites;
+          
+            return $oz;
+    
+
+        }
+        else{
+            $oz["Cairo South"] = $sites;
+          
+            return $oz;
+    
+
+        }
+       
+
     }
 }
