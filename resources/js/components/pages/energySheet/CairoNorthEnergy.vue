@@ -2,7 +2,10 @@
   <div class="container mt-5">
     <Card>
          <template #title>
-        Cairo North
+             <div class="d-flex justify-content-center align-items-center">
+          <p style="text-align: center">Cairo North</p>
+        </div>
+     
       </template>
       <template #content>
          <div class="row mt-5">
@@ -24,6 +27,26 @@
             </template>
           </TopSites>
         </div>
+         <div class="col-12 col-md-6 mt-2">
+          <TopSites :zoneAlarms="cairoNorthSitesReportedHTAlarmsDetails" @siteNUR="getSiteNUR">
+            <template #header> Sites Reported HT Alarms </template>
+            <template #columns>
+              <Column field="siteName" header="Name"></Column>
+              <Column field="count" header="Count" sortable></Column>
+              <Column field="highest_duration" header="Highest Dur" sortable=""></Column>
+            </template>
+          </TopSites>
+        </div>
+         <div class="col-12 col-md-6 mt-2">
+          <TopSites :zoneAlarms="cairoNorthSitesReportedGenAlarmsDetails" @siteNUR="getSiteNUR">
+            <template #header> Sites Reported Gen Alarms </template>
+            <template #columns>
+              <Column field="siteName" header="Name"></Column>
+              <Column field="count" header="Count" sortable></Column>
+              <Column field="highest_duration" header="Highest Dur" sortable=""></Column>
+            </template>
+          </TopSites>
+        </div>
       </div>
 
       </template>
@@ -42,7 +65,7 @@ export default {
     TopSites,
 
   },
-  props: ["cairoNorthHieghestPowerAlarmDur","cairoNorthSitesPowerAlarmMoreThan2Times"],
+  props: ["cairoNorthHieghestPowerAlarmDur","cairoNorthSitesPowerAlarmMoreThan2Times","cairoNorthSitesReportedHTAlarmsDetails","cairoNorthSitesReportedGenAlarmsDetails"],
   methods:{
     getSiteNUR()
     {

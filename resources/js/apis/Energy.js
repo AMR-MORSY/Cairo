@@ -5,7 +5,7 @@ export default {
     submitEnergySheet(sheet) {
      
 
-        return allInstances.Api.post("/energysheet/index", sheet);
+        return allInstances.uploadApi.post("/energysheet/index", sheet);
     },
     getEnergySheetIndex() {
        

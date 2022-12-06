@@ -143,9 +143,19 @@ class EnergyStatesticsController extends Controller
             $zonesPowerDurationLessThanHour=$statestics->zonesPowerDurationLessThanHour();
             $zonesSitesPowerAlarmsMoreThan=$statestics->zonesSitesPowerAlarmsMoreThan();
             $zonesDownSitesAfterPowerAlarm=$statestics->zonesDownSitesAfterPowerAlarm();
-            $zonesSitesDownWithoutPowerAlarms=$statestics->sitesDownWithoutPowerAlarms();
+            // $zonesSitesDownWithoutPowerAlarms=$statestics->sitesDownWithoutPowerAlarms();
 
-            $data=[];
+
+            $zonesHTAlarmsCount=$statestics->zonesHTAlarmsCount();
+            $zonesSitesReportedHTAlarms=$statestics->zonesSitesReportedHTAlarms();
+            $zonesSitesReportedHTAlarmsDetails=$statestics->zonesSitesReportedHTAlarmsDetails();
+
+
+            $zonesGenAlarmsCount=$statestics->zonesGenAlarmsCount();
+            $zonesSitesReportedGenAlarms=$statestics->zonesSitesReportedGenAlarms();
+            $zonesSitesReportedGenAlarmsDetails=$statestics->zonesSitesReportedGenAlarmsDetails();
+
+            $data["period"]="Week $week";
             $data['zonesPowerAlarmsCount']=$zonesPowerAlarmsCount;
             $data['zonesSitesReportedPowerAlarms']=$zonesSitesReportedPowerAlarms;
             $data['zonesSitesReportedPowerAlarms']=$zonesSitesReportedPowerAlarms;
@@ -153,7 +163,15 @@ class EnergyStatesticsController extends Controller
             $data['zonesPowerDurationLessThanHour']=$zonesPowerDurationLessThanHour;
             $data['zonesSitesPowerAlarmsMoreThan2Times']=$zonesSitesPowerAlarmsMoreThan;
             $data['zonesDownSitesAfterPowerAlarm']=$zonesDownSitesAfterPowerAlarm;
-            $data['zonesSitesDownWithoutPowerAlarms']= $zonesSitesDownWithoutPowerAlarms;
+            // $data['zonesSitesDownWithoutPowerAlarms']= $zonesSitesDownWithoutPowerAlarms;
+
+            $data["zonesHTAlarmsCount"]=$zonesHTAlarmsCount;
+            $data['zonesSitesReportedHTAlarms']=$zonesSitesReportedHTAlarms;
+            $data['zonesSitesReportedHTAlarmsDetails']=$zonesSitesReportedHTAlarmsDetails;
+
+            $data["zonesGenAlarmsCount"]=$zonesGenAlarmsCount;
+            $data['zonesSitesReportedGenAlarms']= $zonesSitesReportedGenAlarms;
+            $data['zonesSitesReportedGenAlarmsDetails']=$zonesSitesReportedGenAlarmsDetails;
 
             $notFound['error']=false;
             $notFound['statestics']=$data;

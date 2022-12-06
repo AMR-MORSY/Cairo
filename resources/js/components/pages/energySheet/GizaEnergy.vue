@@ -2,7 +2,10 @@
   <div class="container mt-5">
     <Card>
          <template #title>
-      Giza
+                     <div class="d-flex justify-content-center align-items-center">
+          <p style="text-align: center">Giza</p>
+                     </div>
+
       </template>
       <template #content>
          <div class="row mt-5">
@@ -24,6 +27,26 @@
             </template>
           </TopSites>
         </div>
+         <div class="col-12 col-md-6 mt-2">
+          <TopSites :zoneAlarms="gizaSitesReportedHTAlarmsDetails" @siteNUR="getSiteNUR">
+            <template #header> Sites Reported HT Alarms </template>
+            <template #columns>
+              <Column field="siteName" header="Name"></Column>
+              <Column field="count" header="Count" sortable></Column>
+              <Column field="highest_duration" header="Highest Dur" sortable=""></Column>
+            </template>
+          </TopSites>
+        </div>
+         <div class="col-12 col-md-6 mt-2">
+          <TopSites :zoneAlarms="gizaSitesReportedGenAlarmsDetails" @siteNUR="getSiteNUR">
+            <template #header> Sites Reported Gen Alarms </template>
+            <template #columns>
+              <Column field="siteName" header="Name"></Column>
+              <Column field="count" header="Count" sortable></Column>
+              <Column field="highest_duration" header="Highest Dur" sortable=""></Column>
+            </template>
+          </TopSites>
+        </div>
       </div>
 
       </template>
@@ -42,7 +65,7 @@ export default {
     TopSites,
 
   },
-  props: ["gizaHieghestPowerAlarmDur","gizaSitesPowerAlarmMoreThan2Times"],
+  props: ["gizaHieghestPowerAlarmDur","gizaSitesPowerAlarmMoreThan2Times","gizaSitesReportedHTAlarmsDetails","gizaSitesReportedGenAlarmsDetails"],
   methods:{
     getSiteNUR()
     {
