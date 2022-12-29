@@ -194,15 +194,26 @@
               </div>
               <div class="row mt-5 buttons">
                 <div class="col-6 col-md-4">
-                  <Button label="Modifications" @click="gotToSiteModifications" class="p-button-raised p-button-warning" />
+                  <Button
+                    label="Modifications"
+                    @click="gotToSiteModifications"
+                    class="p-button-raised p-button-warning"
+                  />
                 </div>
                 <div class="col-6 col-md-4">
-                  <Button label="NUR" @click="getSiteNUR" class="p-button-raised p-button-secondary" />
+                  <Button
+                    label="NUR"
+                    @click="getSiteNUR"
+                    class="p-button-raised p-button-secondary"
+                  />
                 </div>
                 <div class="col-6 col-md-4">
-                  <Button label="Update" @click="goToSiteUpdate" class="p-button-raised p-button-help" />
+                  <Button
+                    label="Update"
+                    @click="goToSiteUpdate"
+                    class="p-button-raised p-button-help"
+                  />
                 </div>
-               
               </div>
             </TabPanel>
             <TabPanel>
@@ -237,7 +248,11 @@
                 </div>
               </template>
 
-               <Button label="Update" @click="goToUpdateCascadesPage" class="p-button-rounded p-button-help" />
+              <Button
+                label="Update"
+                @click="goToUpdateCascadesPage"
+                class="p-button-rounded p-button-help"
+              />
             </TabPanel>
             <TabPanel>
               <template #header>
@@ -276,9 +291,15 @@
       <div class="col-md-1"></div>
     </div>
   </div>
-   <DynamicDialog />
-   <ConfirmDialog :breakpoints="{'960px': '75vw', '640px': '100vw'}" :style="{width: '50vw'}"></ConfirmDialog>
+  <!-- <DynamicDialog :key="details">
+  
+  </DynamicDialog> -->
 
+  <!-- <ConfirmDialog
+    :breakpoints="{ '960px': '75vw', '640px': '100vw' }"
+    :style="{ width: '50vw' }"
+   
+  ></ConfirmDialog> -->
 </template>
 
 <script>
@@ -288,7 +309,6 @@ import NUR from "../../../apis/NUR";
 export default {
   data() {
     return {
-  
       siteName: null,
       siteCode: null,
       cell2G: null,
@@ -307,24 +327,23 @@ export default {
       cascades: null,
       indirectCascades: null,
       selectedSite: null,
-      NUR2G:null,
-      NUR3G:null,
-      NUR4G:null,
+      NUR2G: [],
+      NUR3G: [],
+      NUR4G: [],
     };
   },
-  props:["site_code"],
-  emits:["displayNoneSpinner"],
+  props: ["site_code"],
+  emits: ["displayNoneSpinner"],
   name: "Details",
-  components:{
+  components: {
     siteNURTable,
-
   },
-  watch:{
-    site_code(){
+  watch: {
+    site_code() {
       this.getSiteDetails();
     },
   },
-  
+
   computed: {
     countCascades() {
       if (this.cascades == null || this.cascades.length == 0) {
@@ -345,88 +364,81 @@ export default {
     this.getSiteDetails();
   },
   methods: {
-    getSiteNUR()
-  {
-    this.$emit("displayNoneSpinner", false);
-    let data={
-      site_code:this.site_code,
-    }
-    NUR.getSiteNUR(data).then((response)=>{
-      console.log(response)
+    getSiteNUR() {
+      this.$emit("displayNoneSpinner", false);
+      let data = {
+        site_code: this.site_code,
+      };
+      NUR.getSiteNUR(data)
+        .then((response) => {
+          console.log(response);
 
-      this.NUR2G=response.data.NUR2G;
-      this.NUR3G=response.data.NUR3G;
-      this.NUR4G=response.data.NUR4G;
+          this.NUR2G = response.data.NUR2G;
+          this.NUR3G = response.data.NUR3G;
+          this.NUR4G = response.data.NUR4G;
 
-      if(this.NUR2G.length==0&&this.NUR3G.length==0&&this.NUR4G.length==0)
-      {
-         this.$confirm.require({
-                message: 'This site did not make NUR',
-                header: 'Confirmation',
-                icon: 'pi pi-exclamation-triangle',
-                position:"top",
-                rejectIcon:""
-               
-               
-         });
-
-      }
-      else{
-        this.$dialog.open(siteNURTable, {
-        props: {
-          header: this.siteName,
-          style: {
-            width: "75vw",
-          },
-          breakpoints: {
-            "960px": "75vw",
-            "640px": "90vw",
-          },
-          //   modal: true,
-        },
-        // templates: {
-        //   footer: () => {
-        //     return [
-        //       h(Button, {
-        //         label: "No",
-        //         icon: "pi pi-times",
-        //         onClick: () => dialogRef.close({ buttonType: "No" }),
-        //         class: "p-button-text",
-        //       }),
-        //       h(Button, {
-        //         label: "Yes",
-        //         icon: "pi pi-check",
-        //         onClick: () => dialogRef.close({ buttonType: "Yes" }),
-        //         autofocus: true,
-        //       }),
-        //     ];
-        //   },
-        // },
-        data: {
-          NUR3G: this.NUR3G,
-          NUR2G: this.NUR2G,
-          NUR4G: this.NUR4G,
-        },
-      });
-    
-
-
-      }
-
-
-
-    }).catch((error)=>{
-      console.log(error)
-
-    }).finally(()=>{
-      this.$emit("displayNoneSpinner", true);
-    });
-
-
-     
-  },
+          if (
+            this.NUR2G.length == 0 &&
+            this.NUR3G.length == 0 &&
+            this.NUR4G.length == 0
+          ) {
+            this.$confirm.require({
+              message: "This site did not make NUR",
+              header: "Confirmation",
+              icon: "pi pi-exclamation-triangle",
+              position: "top",
+              rejectIcon: "",
+            });
+          } else {
+            this.$dialog.open(siteNURTable, {
+              props: {
+                header: this.siteName,
+                style: {
+                  width: "75vw",
+                },
+                breakpoints: {
+                  "960px": "75vw",
+                  "640px": "90vw",
+                },
+                modal: true,
+              },
+              // templates: {
+              //   footer: () => {
+              //     return [
+              //       h(Button, {
+              //         label: "No",
+              //         icon: "pi pi-times",
+              //         onClick: () => dialogRef.close({ buttonType: "No" }),
+              //         class: "p-button-text",
+              //       }),
+              //       h(Button, {
+              //         label: "Yes",
+              //         icon: "pi pi-check",
+              //         onClick: () => dialogRef.close({ buttonType: "Yes" }),
+              //         autofocus: true,
+              //       }),
+              //     ];
+              //   },
+              // },
+              data: {
+                NUR3G: this.NUR3G,
+                NUR2G: this.NUR2G,
+                NUR4G: this.NUR4G,
+                site_code:this.siteCode,
+                site_name:this.siteName,
+              },
+            });
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+        .finally(() => {
+          this.$emit("displayNoneSpinner", true);
+        });
+    },
     getSiteDetails() {
-          this.$emit("displayNoneSpinner", false);
+      this.$emit("displayNoneSpinner", false);
       Sites.getSiteDetails(this.site_code)
         .then((response) => {
           console.log(response);
@@ -450,30 +462,26 @@ export default {
         })
         .catch((error) => {
           console.log(error);
-        }) .finally(() => {
-            this.$emit("displayNoneSpinner", true);
-          });
+        })
+        .finally(() => {
+          this.$emit("displayNoneSpinner", true);
+        });
     },
     onRowSelect() {
-       this.$router.push(`/sites/details/${this.selectedSite.cascade_code}`);
+      this.$router.push(`/sites/details/${this.selectedSite.cascade_code}`);
     },
-    gotToSiteModifications()
-    {
-       this.$router.push(`/modifications/sitemodifications/${this.siteCode}/${this.siteName}`);
-
-
+    gotToSiteModifications() {
+      this.$router.push(
+        `/modifications/sitemodifications/${this.siteCode}/${this.siteName}`
+      );
     },
-    goToSiteUpdate(){
-       this.$router.push(`/sites/update/${this.siteCode}`);
-
+    goToSiteUpdate() {
+      this.$router.push(`/sites/update/${this.siteCode}`);
     },
 
-    goToUpdateCascadesPage()
-    {
-        this.$router.push(`/sites/cascades/update/${this.siteCode}`);
-
-
-    }
+    goToUpdateCascadesPage() {
+      this.$router.push(`/sites/cascades/update/${this.siteCode}`);
+    },
   },
 };
 </script>
@@ -492,7 +500,7 @@ export default {
   .p-inputtext:focus {
     box-shadow: 0px 0px 3px 2px #79589f !important;
   }
-  .p-badge{
+  .p-badge {
     background-color: #79589f;
     margin-left: 5px;
   }
@@ -501,15 +509,16 @@ export default {
     color: #79589f;
   }
 }
-.site-details,.buttons{
+.site-details,
+.buttons {
   border: 1px solid #79589f;
   border-radius: 5px;
   padding: 3rem 0;
 }
-.buttons{
-   padding: 1rem 0;
+.buttons {
+  padding: 1rem 0;
 }
-.display-none{
-  display:none;
+.display-none {
+  display: none;
 }
 </style>

@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Sites;
 
 use App\Models\Sites\Site;
-use App\Imports\Sites\SitesImport;
 use Illuminate\Http\Request;
-use Maatwebsite\Excel\Excel;
+use App\Imports\Sites\SitesImport;
 
 use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\sites\AllSitesExport;
 use Illuminate\Support\Facades\Validator;
 
@@ -31,13 +31,19 @@ class SuperAdminSitesController extends Controller
 
             $import = new SitesImport;
 
+            try{
+                Excel::import($import,$validated['sites']);
+                return response()->json([
+                    "message" => "inserted Succesfully",
+                ], 200);
 
-            $import->import($validated['sites']);
-            if ($import->failures() ) {
+            }catch(\Maatwebsite\Excel\Validators\ValidationException $e){
+                $failures = $e->failures();
+              
                 $errors = [];
                 $error = [];
 
-                foreach ($import->failures() as $failure) {
+                foreach ($failures as $failure) {
                     $error['row'] = $failure->row(); // row that went wrong
                     $error['attribute'] = $failure->attribute(); // either heading key (if using heading row concern) or column index
                     $error['errors'] = $failure->errors(); // Actual error messages from Laravel validator
@@ -47,11 +53,30 @@ class SuperAdminSitesController extends Controller
                 return response()->json([
                     "sheet_errors" => $errors,
                 ], 422);
-            } else {
-                return response()->json([
-                    "message" => "inserted Succesfully",
-                ], 200);
+
             }
+
+
+            // $import->import($validated['sites']);
+            // if ($import->failures() ) {
+            //     $errors = [];
+            //     $error = [];
+
+            //     foreach ($import->failures() as $failure) {
+            //         $error['row'] = $failure->row(); // row that went wrong
+            //         $error['attribute'] = $failure->attribute(); // either heading key (if using heading row concern) or column index
+            //         $error['errors'] = $failure->errors(); // Actual error messages from Laravel validator
+            //         $error['values'] = $failure->values(); // The values of the row that has failed.
+            //         array_push($errors, $error);
+            //     }
+            //     return response()->json([
+            //         "sheet_errors" => $errors,
+            //     ], 422);
+            // } else {
+            //     return response()->json([
+            //         "message" => "inserted Succesfully",
+            //     ], 200);
+            // }
         } else {
             return response()->json([
                 "errors" => $validator->getMessageBag()->toArray(),

@@ -106,9 +106,13 @@ class CascadesController extends Controller
            
             $rules = [
 
-                "cascades.*.cascade_code" => ['required', "exists:sites,site_code"],
-                "cascades.*.cascade_name" => ['required', "exists:sites,site_name"],
-                "siteCode" => ["required", "exists:sites,site_code"],
+                // "cascades.*.cascade_code" => ['required', "exists:sites,site_code"],
+                // "cascades.*.cascade_name" => ['required', "exists:sites,site_name"],
+                // "siteCode" => ["required", "exists:sites,site_code"],
+
+                "cascades.*.cascade_code" => ['required'],
+                "cascades.*.cascade_name" => ['required'],
+                "siteCode" => ["required"],
     
             ];
     

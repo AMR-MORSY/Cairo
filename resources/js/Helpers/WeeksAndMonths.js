@@ -2,7 +2,7 @@ export default {
     period(period) {
         if (period == "week") {
             var weeks = [];
-            for (var i = 1; i <= 48; i++) {
+            for (var i = 1; i <= 52; i++) {
                 weeks.push(i);
             }
             let  data = {

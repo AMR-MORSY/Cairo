@@ -1,117 +1,134 @@
 <template>
-  <section id="cairo">
-    <div class="container mt-5">
-      <Card>
-        <template #title>
-          <div class="d-flex justify-content-center align-items-center">
-            <p style="text-align: center">{{ period }}</p>
-          </div>
-        </template>
-        <template #content>
-          <div class="row mt-5">
-            <div class="col-12 col-md-4">
-              <Card>
-                <template #title>
-                  <div class="d-flex justify-content-center align-items-center">
-                    <p style="text-align: center">Power Alarms</p>
-                  </div>
-                </template>
-                <template #content>
-                  <Chart
-                    type="bar"
-                    :data="zonesPowerAlrarmsCount"
-                    :options="lightOptions"
-                    :plugins="plugins"
-                  />
-                </template>
-              </Card>
+  <template v-if="notFoundErrors">
+    <transition name="fade-bounce">
+      <div class="errors card">
+        <p v-for="error in notFoundErrors" :key="error">
+          {{ error }}
+        </p>
+      </div>
+    </transition>
+  </template>
+  <template v-if="!notFoundErrors">
+    <section id="cairo">
+      <div class="container mt-5">
+        <Card>
+          <template #title>
+            <div class="d-flex justify-content-center align-items-center">
+              <p style="text-align: center">{{ period }}</p>
             </div>
-            <div class="col-12 col-md-4">
-              <Card>
-                <template #title>
-                  <div class="d-flex justify-content-center align-items-center">
-                    <p style="text-align: center">HT Alarms</p>
-                  </div>
-                </template>
-                <template #content>
-                  <Chart
-                    type="bar"
-                    :data="zonesHTAlrarmsCount"
-                    :options="lightOptions"
-                    :plugins="plugins"
-                  />
-                </template>
-              </Card>
+          </template>
+          <template #content>
+            <div class="row mt-5">
+              <div class="col-12 col-md-4">
+                <Card>
+                  <template #title>
+                    <div
+                      class="d-flex justify-content-center align-items-center"
+                    >
+                      <p style="text-align: center">Power Alarms</p>
+                    </div>
+                  </template>
+                  <template #content>
+                    <Chart
+                      type="bar"
+                      :data="zonesPowerAlrarmsCount"
+                      :options="lightOptions"
+                      :plugins="plugins"
+                    />
+                  </template>
+                </Card>
+              </div>
+              <div class="col-12 col-md-4">
+                <Card>
+                  <template #title>
+                    <div
+                      class="d-flex justify-content-center align-items-center"
+                    >
+                      <p style="text-align: center">HT Alarms</p>
+                    </div>
+                  </template>
+                  <template #content>
+                    <Chart
+                      type="bar"
+                      :data="zonesHTAlrarmsCount"
+                      :options="lightOptions"
+                      :plugins="plugins"
+                    />
+                  </template>
+                </Card>
+              </div>
+              <div class="col-12 col-md-4">
+                <Card>
+                  <template #title>
+                    <div
+                      class="d-flex justify-content-center align-items-center"
+                    >
+                      <p style="text-align: center">Gen Alarms</p>
+                    </div>
+                  </template>
+                  <template #content>
+                    <Chart
+                      type="bar"
+                      :data="zonesGenAlrarmsCount"
+                      :options="lightOptions"
+                      :plugins="plugins"
+                    />
+                  </template>
+                </Card>
+              </div>
             </div>
-            <div class="col-12 col-md-4">
-              <Card>
-                <template #title>
-                  <div class="d-flex justify-content-center align-items-center">
-                    <p style="text-align: center">Gen Alarms</p>
-                  </div>
-                </template>
-                <template #content>
-                  <Chart
-                    type="bar"
-                    :data="zonesGenAlrarmsCount"
-                    :options="lightOptions"
-                    :plugins="plugins"
-                  />
-                </template>
-              </Card>
-            </div>
-          </div>
-        </template>
-      </Card>
-    </div>
-  </section>
+          </template>
+        </Card>
+      </div>
+    </section>
 
-  <section id="zones">
-    <cairo-south-energy
-      :cairoSouthHieghestPowerAlarmDur="cairoSouthHieghestPowerAlarmDur"
-      :cairoSouthSitesPowerAlarmMoreThan2Times="
-        cairoSouthSitesPowerAlarmMoreThan2Times
-      "
-      :cairoSouthSitesReportedHTAlarmsDetails="
-        cairoSouthSitesReportedHTAlarmsDetails
-      "
-      :cairoSouthSitesReportedGenAlarmsDetails="
-        cairoSouthSitesReportedGenAlarmsDetails
-      "
-    >
-    </cairo-south-energy>
-    <cairo-east-energy
-      :cairoEastHieghestPowerAlarmDur="cairoEastHieghestPowerAlarmDur"
-      :cairoEastSitesPowerAlarmMoreThan2Times="
-        cairoEastSitesPowerAlarmMoreThan2Times
-      "
-      :cairoEastSitesReportedHTAlarmsDetails="
-        cairoEastSitesReportedHTAlarmsDetails
-      "
-      :cairoEastSitesReportedGenAlarmsDetails="
-        cairoEastSitesReportedGenAlarmsDetails
-      "
-    ></cairo-east-energy>
-    <cairo-north-energy
-      :cairoNorthHieghestPowerAlarmDur="cairoNorthHieghestPowerAlarmDur"
-      :cairoNorthSitesPowerAlarmMoreThan2Times="
-        cairoNorthSitesPowerAlarmMoreThan2Times
-      "
-      :cairoNorthSitesReportedHTAlarmsDetails="
-        cairoNorthSitesReportedHTAlarmsDetails
-      "
-      :cairoNorthSitesReportedGenAlarmsDetails="
-        cairoNorthSitesReportedGenAlarmsDetails
-      "
-    >
-    </cairo-north-energy>
-    <giza-energy
-      :gizaHieghestPowerAlarmDur="gizaHieghestPowerAlarmDur"
-      :gizaSitesPowerAlarmMoreThan2Times="gizaSitesPowerAlarmMoreThan2Times"
-      :gizaSitesReportedHTAlarmsDetails="gizaSitesReportedHTAlarmsDetails"
-      :gizaSitesReportedGenAlarmsDetails="gizaSitesReportedGenAlarmsDetails"
-    ></giza-energy>
-  </section>
+    <section id="zones">
+      <cairo-south-energy
+        :cairoSouthHieghestPowerAlarmDur="cairoSouthHieghestPowerAlarmDur"
+        :cairoSouthSitesPowerAlarmMoreThan2Times="
+          cairoSouthSitesPowerAlarmMoreThan2Times
+        "
+        :cairoSouthSitesReportedHTAlarmsDetails="
+          cairoSouthSitesReportedHTAlarmsDetails
+        "
+        :cairoSouthSitesReportedGenAlarmsDetails="
+          cairoSouthSitesReportedGenAlarmsDetails
+        "
+      >
+      </cairo-south-energy>
+      <cairo-east-energy
+        :cairoEastHieghestPowerAlarmDur="cairoEastHieghestPowerAlarmDur"
+        :cairoEastSitesPowerAlarmMoreThan2Times="
+          cairoEastSitesPowerAlarmMoreThan2Times
+        "
+        :cairoEastSitesReportedHTAlarmsDetails="
+          cairoEastSitesReportedHTAlarmsDetails
+        "
+        :cairoEastSitesReportedGenAlarmsDetails="
+          cairoEastSitesReportedGenAlarmsDetails
+        "
+      ></cairo-east-energy>
+      <cairo-north-energy
+        :cairoNorthHieghestPowerAlarmDur="cairoNorthHieghestPowerAlarmDur"
+        :cairoNorthSitesPowerAlarmMoreThan2Times="
+          cairoNorthSitesPowerAlarmMoreThan2Times
+        "
+        :cairoNorthSitesReportedHTAlarmsDetails="
+          cairoNorthSitesReportedHTAlarmsDetails
+        "
+        :cairoNorthSitesReportedGenAlarmsDetails="
+          cairoNorthSitesReportedGenAlarmsDetails
+        "
+      >
+      </cairo-north-energy>
+      <giza-energy
+        :gizaHieghestPowerAlarmDur="gizaHieghestPowerAlarmDur"
+        :gizaSitesPowerAlarmMoreThan2Times="gizaSitesPowerAlarmMoreThan2Times"
+        :gizaSitesReportedHTAlarmsDetails="gizaSitesReportedHTAlarmsDetails"
+        :gizaSitesReportedGenAlarmsDetails="gizaSitesReportedGenAlarmsDetails"
+      ></giza-energy>
+    </section>
+  </template>
 </template>
 
 <script>
@@ -163,6 +180,7 @@ export default {
 
       zonesHTAlrarmsCount: null,
       zonesGenAlrarmsCount: null,
+      notFoundErrors: null,
     };
   },
   name: "energyStatestics",
@@ -185,7 +203,7 @@ export default {
   },
   methods: {
     getEnergyStatestics() {
-      this.$emit("displayNoneSpinner", false);
+      this.$store.dispatch("displaySpinnerPage", false);
       let data = {
         week_month: this.week_month,
         week: this.week,
@@ -322,10 +340,12 @@ export default {
           };
         })
         .catch((error) => {
-          console.log(error);
+          if (error.response.status == 404) {
+            this.notFoundErrors = error.response.data.errors;
+          }
         })
         .finally(() => {
-          this.$emit("displayNoneSpinner", true);
+          this.$store.dispatch("displaySpinnerPage", true);
         });
     },
   },
@@ -336,7 +356,44 @@ export default {
 #cairo {
   margin-top: 6em;
 }
-#zones{
+#zones {
   margin-bottom: 4em;
+}
+
+.errors {
+  padding: 3rem;
+  p {
+    color: red;
+    text-align: center;
+  }
+}
+
+.fade-bounce-enter-active {
+  animation: woble 1s ease;
+}
+@keyframes woble {
+  0% {
+    opacity: 0;
+    transform: translateY(-300px);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(0px);
+  }
+  60% {
+    transform: translateY(16px);
+  }
+  70% {
+    transform: translateY(-16px);
+  }
+  80% {
+    transform: translateY(8px);
+  }
+  90% {
+    transform: translateY(-8px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
 }
 </style>

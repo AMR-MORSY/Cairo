@@ -57,7 +57,7 @@
       </div>
     </div>
   </div>
-  <DynamicDialog />
+  <!-- <DynamicDialog :key="cascadesUpdate" /> -->
   <Toast />
 </template>
 
@@ -168,7 +168,7 @@ export default {
                   severity: "error",
                   summary: "Oops",
                   detail: element,
-                  life: 6000,
+                  life: 3000,
                 });
               });
             }
@@ -178,7 +178,7 @@ export default {
                   severity: "error",
                   summary: "Oops",
                   detail: element,
-                  life: 6000,
+                  life: 3000,
                 });
               });
             }
@@ -188,7 +188,7 @@ export default {
                   severity: "error",
                   summary: "Oops",
                   detail: element,
-                  life: 6000,
+                  life: 3000,
                 });
               });
             }

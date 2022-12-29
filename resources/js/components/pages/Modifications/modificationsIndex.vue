@@ -46,6 +46,10 @@
                 />
               </template>
             </DataTable>
+          <div class="my-3">
+              <button class="btn btn-secondary" style="margin-left:3rem;" @click="downloadModfications">Download</button>
+          </div>
+          
           </template>
 
           <template v-else>
@@ -121,6 +125,28 @@ export default {
             }
           }
         });
+    },
+
+    downloadModfications(){
+
+      let data={
+        column_name:this.columnName,
+        column_value:this.columnValue
+      }
+
+      Modifications.downloadModifications(data).then((response)=>{
+        console.log(response);
+          var fileUrl = window.URL.createObjectURL(new Blob([response.data]));
+          var fileLink = document.createElement("a");
+          fileLink.href = fileUrl;
+          fileLink.setAttribute("download", `${this.columnValue}Modifications.xlsx`);
+          document.body.appendChild(fileLink);
+          fileLink.click();
+
+      }).catch((error)=>{
+
+      })
+
     },
   },
 };

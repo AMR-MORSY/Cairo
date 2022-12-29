@@ -9,6 +9,8 @@ const store = createStore({
         sessionTimeOut:false,
         sessionEnd:false,
         NUR:null,
+        displaySpinnerPage:true,
+        siteAlarms:null,
         // modificationIndex:null,
 
     },
@@ -74,6 +76,16 @@ const store = createStore({
         {
             state.NUR=nur;
         },
+        DISPLAY_SPINNER(state,status)
+        {
+            state.displaySpinnerPage=status;
+
+        },
+        SITE_ALARMS(state,alarms)
+        {
+            state.siteAlarms=alarms;
+
+        },
         // STORE_MODIFICATIONS_INDEX(state,modificationIndex)
         // {
         //     state.modificationIndex=modificationIndex;
@@ -94,6 +106,14 @@ const store = createStore({
         },
         setNUR({commit},NUR){
             commit("SET_NUR",NUR);
+        },
+        displaySpinnerPage({commit},status){
+            commit("DISPLAY_SPINNER",status);
+
+        },
+        siteAlarms({commit},alarms){
+            commit("SITE_ALARMS",alarms);
+
         },
         // modificationIndex({commit},modificationIndex)
         // {

@@ -77,7 +77,7 @@
       </template>
     </Card>
   </div>
-  <DynamicDialog />
+  <!-- <DynamicDialog :key="cairoSouthNur" /> -->
 </template>
 
 <script>

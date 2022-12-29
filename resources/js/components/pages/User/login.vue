@@ -148,7 +148,7 @@ export default {
     };
   },
   name: "login",
-  emits: ["displayNoneSpinner"],
+
   computed: {
     isLogin() {
       return this.$store.state.isLogin;
@@ -174,7 +174,7 @@ export default {
         this.passwordError = "Password is required";
       }
       if (!this.passwordError && !this.emailError) {
-        this.$emit("displayNoneSpinner", false);
+        this.$store.dispatch("displaySpinnerPage",false);
         User.login(this.form)
           .then((response) => {
             this.$store.dispatch("changeLoginState", true);
@@ -210,7 +210,8 @@ export default {
             }
           })
           .finally(() => {
-            this.$emit("displayNoneSpinner", true);
+         
+              this.$store.dispatch("displaySpinnerPage",true);
           });
       }
     },

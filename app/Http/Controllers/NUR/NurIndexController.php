@@ -11,7 +11,7 @@ class NurIndexController extends Controller
     {
         $weeks = [];
         $years = [];
-        for ($i = 1; $i <= 48; $i++) {
+        for ($i = 1; $i <= 52; $i++) {
             array_push($weeks, $i);
         }
         for ($i = 2022; $i <= 2050; $i++) {

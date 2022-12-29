@@ -13,14 +13,15 @@ use App\Http\Controllers\NUR\NurIndexController;
 use App\Http\Controllers\Sites\NodalsController;
 use App\Http\Controllers\User\RegisterController;
 use App\Http\Controllers\Sites\CascadesController;
+use App\Http\Controllers\NUR\DownloadNURController;
+
 use App\Http\Controllers\EnergySheet\EnergyController;
-
+use App\Http\Controllers\EnergySheet\EnergySiteStatesticsController;
 use App\Http\Controllers\User\ResetPasswordController;
-
-use App\Http\Controllers\Modifications\ModificationsController;
-use App\Http\Controllers\EnergySheet\EnergyStatesticsController;
 use App\Http\Controllers\Sites\SuperAdminSitesController;
 use App\Http\Controllers\Sites\NormalUsersSitesController;
+use App\Http\Controllers\Modifications\ModificationsController;
+use App\Http\Controllers\EnergySheet\EnergyStatesticsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,6 +51,12 @@ Route::prefix("energysheet")->middleware(['auth:sanctum'])->group(function(){
     Route::post("/alarms",[EnergyStatesticsController::class,"siteAlarms"]);
  
     Route::get('/statestics/{week_month}/{week}/{month}/{year}',[EnergyStatesticsController::class,"statestics"])->name("energy_statestics");
+    Route::post("/sitePowerAlarms",[EnergySiteStatesticsController::class,"sitePowerAlarms"]);
+    Route::post("/siteHighTempAlarms",[EnergySiteStatesticsController::class,"siteHighTempAlarms"]);
+    Route::post("/siteGenAlarms",[EnergySiteStatesticsController::class,"siteGenAlarms"]);
+    Route::post("/downloadSitePowerAlarms",[EnergySiteStatesticsController::class,"downloadSitePowerAlarms"]);
+    Route::post("/downloadSiteHighTempAlarms",[EnergySiteStatesticsController::class,"downloadSiteHighTempAlarms"]);
+    Route::post("/downloadSiteGenAlarms",[EnergySiteStatesticsController::class,"downloadSiteGenAlarms"]);
 
 });
 
@@ -61,6 +68,7 @@ Route::prefix('modifications')->middleware(['auth:sanctum',"role:admin|super-adm
     Route::get("/details/{id}",[ModificationsController::class,"modificationDetails"])->name("details");
     Route::post("/new",[ModificationsController::class,"newModification"])->name("new_modification");
     Route::post("/delete",[ModificationsController::class,"deleteModification"])->name("delete_modification");
+    Route::post("/download",[ModificationsController::class,"download"])->name("download_modification");
 });
 
 
@@ -93,6 +101,10 @@ Route::prefix('Nur')->middleware(['auth:sanctum',"role:super-admin"])->group(fun
 Route::prefix('Nur')->middleware(['auth:sanctum',"role:admin|super-admin"])->group(function(){
     Route::post('/siteNUR',[ShowNURController::class,"SiteNUR"])->name("siteNUR");
     Route::get('/show/{week_month}/{week}/{month}/{year}',[ShowNURController::class,"show_nur"])->name("show_nur");
+    Route::post('/downloadNUR2G',[DownloadNURController::class,"NUR2G"])->name("site2GNUR");
+    Route::post('/downloadNUR3G',[DownloadNURController::class,"NUR3G"])->name("site3GNUR");
+    Route::post('/downloadNUR4G',[DownloadNURController::class,"NUR4G"])->name("site4GNUR");
+
 });
 
 Route::prefix("user")->group(function(){

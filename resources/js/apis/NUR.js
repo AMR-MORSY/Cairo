@@ -28,5 +28,17 @@ export default {
     {
         return allInstances.Api.post("/Nur/siteNUR", siteCode);
 
-    }
+    },
+    download2GNUR(data)
+    {
+        return allInstances.downloadApi.post("/Nur/downloadNUR2G", data)
+    },
+    download3GNUR(data)
+    {
+        return allInstances.downloadApi.post("/Nur/downloadNUR3G", data)
+    },
+    download4GNUR(data)
+    {
+        return allInstances.downloadApi.post("/Nur/downloadNUR4G", data)
+    },
 };

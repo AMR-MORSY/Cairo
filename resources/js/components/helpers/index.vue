@@ -161,7 +161,7 @@ export default {
       }
     },
     mountFormData() {
-      for (var i = 1; i <= 48; i++) {
+      for (var i = 1; i <= 52; i++) {
         this.periods.push(i);
       }
       for (var i = 2022; i <= 2050; i++) {

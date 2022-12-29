@@ -77,7 +77,7 @@ export default {
     
     };
   },
-  emits: ["displayNoneSpinner","displaySitesTable"],
+  emits: ["displaySitesTable"],
   name: "navbar",
   
   computed: {
@@ -93,7 +93,8 @@ export default {
   },
   methods: {
     submitSearch() {
-      this.$emit("displayNoneSpinner", false);
+      // this.$emit("displayNoneSpinner", false);
+          this.$store.dispatch("displaySpinnerPage",false);
       Sites.searchSites(this.search)
         .then((response) => {
           console.log(response);
@@ -122,11 +123,13 @@ export default {
           }
         })
         .finally(() => {
-          this.$emit("displayNoneSpinner", true);
+          // this.$emit("displayNoneSpinner", true);
+              this.$store.dispatch("displaySpinnerPage",true);
         });
     },
 
     logout() {
+          this.$store.dispatch("displaySpinnerPage",false);
       User.logout()
         .then((data) => {
           console.log(data);
@@ -145,6 +148,8 @@ export default {
           //   if (error.response.status == 401 || error.response.status == 403) {
           //     this.$router.push({ path: "/user/login" });
           //   }
+        }).finally(()=>{
+              this.$store.dispatch("displaySpinnerPage",true);
         });
     },
 

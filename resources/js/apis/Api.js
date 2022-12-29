@@ -38,6 +38,10 @@ let downloadApi = axios.create({
     baseURL: "/api",
 
     responseType: "blob",
+    headers: {
+        "Content-Type": "application/json",
+    },
+   
 });
 let uploadApi=axios.create({
     baseURL: "/api",

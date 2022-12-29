@@ -18,7 +18,7 @@ class NUR4GController extends Controller
     public function store(Request $request)
     {
 
-        $validator = Validator::make($request->all(), ["week" => ['required', 'regex:/^(?:[1-9]|[1-3][0-9]|4[0-8])$/'], "year" => ['required', 'regex:/^2[0-9]{3}$/'], "cells"=>['required',"regex:/^(\d|[1-9]\d{1,5})(\.\d{2})?$/"],"Nur4G_sheet" => 'required|mimes:csv,xlsx']);
+        $validator = Validator::make($request->all(), ["week" => ['required', 'regex:/^(?:[1-9]|[1-4][0-9]|5[0-2])$/'], "year" => ['required', 'regex:/^2[0-9]{3}$/'], "cells"=>['required',"regex:/^(\d|[1-9]\d{1,5})(\.\d{2})?$/"],"Nur4G_sheet" => 'required|mimes:csv,xlsx']);
         $validated = $validator->validated();
         if ($validated) {
             $nur=NUR4G::where('week',$validated['week'])->where('year',$validated['year'])->first();

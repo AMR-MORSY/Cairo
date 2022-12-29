@@ -10,8 +10,11 @@
       <template #content>
          <div class="row mt-5">
         <div class="col-12 col-md-6 mt-2">
-          <TopSites :zoneAlarms="cairoSouthHieghestPowerAlarmDur" @siteNUR="getSiteNUR">
-            <template #header> Hieghest Power Alarm Duration </template>
+          <TopSites :zoneAlarms="{
+                alarms: cairoSouthHieghestPowerAlarmDur,
+                alarmsName: 'hieghestPowerAlarmDur',
+              }"  @siteCode=" getSiteCode">
+            <template #header> Highest Power Alarm Duration </template>
             <template #columns>
               <Column field="siteName" header="Name"></Column>
               <Column field="duration" header="Duration" sortable></Column>
@@ -19,7 +22,10 @@
           </TopSites>
         </div>
         <div class="col-12 col-md-6 mt-2">
-          <TopSites :zoneAlarms="cairoSouthSitesPowerAlarmMoreThan2Times" @siteNUR="getSiteNUR">
+          <TopSites :zoneAlarms="{
+                alarms: cairoSouthSitesPowerAlarmMoreThan2Times,
+                alarmsName: 'sitesPowerAlarmMoreThan2Times',
+              }" @siteCode=" getSiteCode">
             <template #header> Power Alarms per Site </template>
             <template #columns>
               <Column field="siteName" header="Name"></Column>
@@ -28,7 +34,10 @@
           </TopSites>
         </div>
          <div class="col-12 col-md-6 mt-2">
-          <TopSites :zoneAlarms="cairoSouthSitesReportedHTAlarmsDetails" @siteNUR="getSiteNUR">
+          <TopSites :zoneAlarms="{
+                alarms: cairoSouthSitesReportedHTAlarmsDetails,
+                alarmsName: 'sitesReportedHTAlarmsDetails',
+              }"  @siteCode=" getSiteCode">
             <template #header> Sites Reported HT Alarms </template>
             <template #columns>
               <Column field="siteName" header="Name"></Column>
@@ -38,7 +47,10 @@
           </TopSites>
         </div>
           <div class="col-12 col-md-6 mt-2">
-          <TopSites :zoneAlarms="cairoSouthSitesReportedGenAlarmsDetails" @siteNUR="getSiteNUR">
+          <TopSites :zoneAlarms="{
+                alarms: cairoSouthSitesReportedGenAlarmsDetails,
+                alarmsName: 'sitesReportedGenAlarmsDetails',
+              }"  @siteCode=" getSiteCode">
             <template #header> Sites Reported Gen Alarms </template>
             <template #columns>
               <Column field="siteName" header="Name"></Column>
@@ -57,6 +69,7 @@
 
 <script>
 import TopSites from "../energySheet/TopSites.vue";
+import EnergyHelperFunctions from "./EnergyHelperFunctions";
 export default {
   data() {
     return {};
@@ -67,9 +80,24 @@ export default {
   },
   props: ["cairoSouthHieghestPowerAlarmDur","cairoSouthSitesPowerAlarmMoreThan2Times","cairoSouthSitesReportedHTAlarmsDetails","cairoSouthSitesReportedGenAlarmsDetails"],
   methods:{
-    getSiteNUR()
-    {
+    getSiteCode(event) {
+   
+      this.selectedSiteCode = event.siteCode;
+      this.alarmsName = event.alarmsName;
+    
+      if (
+        this.alarmsName == "hieghestPowerAlarmDur" ||
+        this.alarmsName == "sitesPowerAlarmMoreThan2Times"
+      ) {
+        EnergyHelperFunctions.getSitePowerAlarms(this.selectedSiteCode);
+         
 
+       
+      } else if (this.alarmsName == "sitesReportedHTAlarmsDetails") {
+        EnergyHelperFunctions.getSiteHighTempAlarms(this.selectedSiteCode);
+      } else if (this.alarmsName == "sitesReportedGenAlarmsDetails") {
+         EnergyHelperFunctions.getSiteGenAlarms(this.selectedSiteCode);
+      }
     },
 
   },

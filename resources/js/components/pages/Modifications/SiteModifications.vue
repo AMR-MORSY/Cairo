@@ -81,7 +81,7 @@
      
     </transition>
   </section>
-  <ConfirmDialog></ConfirmDialog>
+  <ConfirmDialog :key="modifications"></ConfirmDialog>
 </template>
 
 <script>
@@ -165,6 +165,7 @@ export default {
         header: "Confirmation",
         icon: "pi pi-exclamation-triangle",
         accept: () => {
+             this.$confirm.close();
           this.$emit("displayNoneSpinner", false);
           let data = {
             id: this.selectedModification.id,
@@ -172,11 +173,13 @@ export default {
 
           Modifications.deleteModification(data)
             .then((response) => {
+             
               this.getSiteModifications();
             })
             .catch((error) => {});
         },
         reject: () => {
+            this.$confirm.close();
           //callback to execute when user rejects the action
         },
       });

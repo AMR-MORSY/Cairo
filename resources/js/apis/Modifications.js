@@ -33,6 +33,11 @@ export default {
     {
         return allInstances.Api.post("/modifications/delete",data);
 
+    },
+    downloadModifications(data)
+    {
+        return allInstances.downloadApi.post("/modifications/download",data);
+
     }
     
 };

@@ -14,5 +14,26 @@ export default {
     getEnergyStatestics(data){
         return allInstances.Api.get(`/energysheet/statestics/${data.week_month}/${data.week}/${data.month}/${data.year}`);
     
+    },
+    getSitePowerAlarms(data){
+        return allInstances.Api.post("energysheet/sitePowerAlarms",data);
+    },
+    getSiteHighTempAlarms(data){
+        return allInstances.Api.post("energysheet/siteHighTempAlarms",data);
+    },
+    getSiteGenAlarms(data){
+        return allInstances.Api.post("energysheet/siteGenAlarms",data);
+    },
+    downloadSitePowerAlarms(data)
+    {
+        return allInstances.downloadApi.post("energysheet/downloadSitePowerAlarms",data);
+    },
+    downloadSiteHighTempAlarms(data)
+    {
+        return allInstances.downloadApi.post("energysheet/downloadSiteHighTempAlarms",data);
+    },
+    downloadSiteGenAlarms(data)
+    {
+        return allInstances.downloadApi.post("energysheet/downloadSiteGenAlarms",data);
     }
 };

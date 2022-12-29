@@ -185,7 +185,7 @@ export default {
       emailError: null,
     };
   },
-  emits: ["displayNoneSpinner"],
+
   computed: {
     isLogin() {
       return this.$store.state.isLogin;
@@ -229,7 +229,7 @@ export default {
         !this.nameError &&
         !this.emailError
       ) {
-        this.$emit("displayNoneSpinner", false);
+         this.$store.dispatch("displaySpinnerPage",false);
         User.register(this.form)
           .then(() => {
             this.$router.push({ path: "/user/login" });
@@ -270,7 +270,7 @@ export default {
             }
           })
           .finally(() => {
-            this.$emit("displayNoneSpinner", true);
+         this.$store.dispatch("displaySpinnerPage",true);
           });
       }
     },

@@ -1,6 +1,6 @@
 <template >
   <navbar
-    @displayNoneSpinner="displayTheSpinner"
+  
     @displaySitesTable="displaySitesTable"
   ></navbar>
   <!-- <modal :visible="showSessionNotification">
@@ -11,12 +11,12 @@
     </template>
   </modal> -->
 
-  <DynamicDialog />
-  <ConfirmDialog></ConfirmDialog>
+  <DynamicDialog key="dynamic" />
+  <ConfirmDialog key="confirm"></ConfirmDialog>
 
   <SpinnerPage :displayNone="displaySpinnerPage"></SpinnerPage>
 
-  <router-view @displayNoneSpinner="displayTheSpinner"></router-view>
+  <router-view></router-view>
 </template>
 
 <script>
@@ -28,7 +28,7 @@ export default {
   data() {
     return {
       showModal: false,
-      displaySpinnerPage: true,
+    
 
       data: "session will end after 2 minutes, renew session",
     };
@@ -37,7 +37,7 @@ export default {
     sessoinTimeOut(value) {
       // this.showSessionTimeOutNotification();
       console.log(value);
-      if (value) {
+      if (value==true) {
         this.showSessionTimeOutNotification();
       }
     },
@@ -52,6 +52,12 @@ export default {
 
   // },
   computed: {
+      displaySpinnerPage(){
+
+       return this.$store.state.displaySpinnerPage;
+      
+
+      },
   
     sessoinTimeOut() {
       if (this.$store.state.sessionTimeOut) {
@@ -78,9 +84,11 @@ export default {
         acceptClass: "p-button-help",
         rejectClass: "p-button-danger",
         accept: () => {
+                this.$confirm.close();
           this.refreshSession();
         },
         reject: () => {
+                this.$confirm.close();
           this.goToLogin();
         },
       });
@@ -176,7 +184,7 @@ export default {
     }
   },
   mounted() {
-    this.sessoinTimeOut = this.$store.state.sessionTimeOut;
+    // this.sessoinTimeOut = this.$store.state.sessionTimeOut;
     if (this.sessionEnd) {
       sessionStorage.removeItem("Auth");
       sessionStorage.removeItem("userData");

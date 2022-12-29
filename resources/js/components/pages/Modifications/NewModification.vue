@@ -156,7 +156,7 @@
       </div>
     </div>
   </div>
-  <Toast />
+  <Toast :key="newModification" />
 </template>
 
 <script>

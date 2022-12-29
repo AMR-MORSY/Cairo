@@ -25,12 +25,12 @@ class EnergyStatesticsController extends Controller
         if($week!=0)
         {
             
-            $validator=Validator::make($data,["month"=>"nullable","week"=>["required",'regex:/^(week)$/'],"year" => ['required', 'regex:/^2[0-9]{3}$/'],"week_month"=>['required','regex:/^(?:[1-9]|[1-3][0-9]|4[0-8])$/']]);
+            $validator=Validator::make($data,["month"=>"nullable","week"=>["required",'regex:/^(week)$/'],"year" => ['required', 'regex:/^2[0-9]{3}$/'],"week_month"=>['required','regex:/^(?:[1-9]|[1-4][0-9]|5[0-2])$/']]);
            
         }
         else if($month!=0)
         {
-            $validator=Validator::make($data,["week"=>"nullable","month"=>["required",'regex:/^(month)$/'],"year" => ['required', 'regex:/^2[0-9]{3}$/'],"week_month"=>['required','regex:/^[1-9]|1[0-2]$/']]);
+            $validator=Validator::make($data,["week"=>"nullable","month"=>["required",'regex:/^(month)$/'],"year" => ['required', 'regex:/^2[0-9]{3}$/'],"week_month"=>['required','regex:/^(?:[1-9]|[1-4][0-9]|5[0-2])$/']]);
             
         }
         else if($week==0 && $month==0)
@@ -79,7 +79,7 @@ class EnergyStatesticsController extends Controller
                 if($weeklyAlarms['error'])
                 {
                     return response()->json([
-                        "error"=>$weeklyAlarms['errors']
+                        "errors"=>$weeklyAlarms['errors']
     
                     ],404);
     
