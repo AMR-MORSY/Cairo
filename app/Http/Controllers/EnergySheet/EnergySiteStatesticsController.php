@@ -17,7 +17,7 @@ class EnergySiteStatesticsController extends Controller
     public function sitePowerAlarms(Request $request)
     {
         $ruls = [
-            "site_code" => "required|exists:power_alarms,site_code",
+            "site_code" => "required|exists:sites,site_code",
 
 
         ];
@@ -53,7 +53,7 @@ class EnergySiteStatesticsController extends Controller
     public function siteHighTempAlarms(Request $request)
     {
         $ruls = [
-            "site_code" => "required|exists:high_temp_alarms,site_code",
+            "site_code" => "required|exists:sites,site_code",
 
 
         ];
@@ -89,7 +89,7 @@ class EnergySiteStatesticsController extends Controller
     public function siteGenAlarms(Request $request)
     {
         $ruls = [
-            "site_code" => "required|exists:gen_down_alarms,site_code",
+            "site_code" => "required|exists:sites,site_code",
 
 
         ];
@@ -125,7 +125,7 @@ class EnergySiteStatesticsController extends Controller
     public function downloadSitePowerAlarms(Request $request)
     {
         $ruls = [
-            "siteCode" => "required|exists:power_alarms,site_code",
+            "siteCode" => "required|exists:sites,site_code",
 
 
         ];
@@ -157,7 +157,7 @@ class EnergySiteStatesticsController extends Controller
     public function downloadSiteHighTempAlarms(Request $request)
     {
         $ruls = [
-            "siteCode" => "required|exists:high_temp_alarms,site_code",
+            "siteCode" => "required|exists:sites,site_code",
 
 
         ];
@@ -188,7 +188,7 @@ class EnergySiteStatesticsController extends Controller
     public function downloadSiteGenAlarms(Request $request)
     {
         $ruls = [
-            "siteCode" => "required|exists:gen_down_alarms,site_code",
+            "siteCode" => "required|exists:sites,site_code",
 
 
         ];

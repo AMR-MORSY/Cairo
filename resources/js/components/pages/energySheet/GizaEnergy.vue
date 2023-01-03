@@ -59,6 +59,18 @@
             </template>
           </TopSites>
         </div>
+         <div class="col-12 mt-2">
+            <template v-if="countHTAlarms">
+              <Button
+                type="button"
+                class="p-button-help"
+                @click="downloadHTSites()"
+              >
+                <span class="material-symbols-sharp">download</span>
+                <span class="font-bold">HT Sites</span>
+              </Button>
+            </template>
+          </div>
       </div>
 
       </template>
@@ -70,15 +82,61 @@
 <script>
 import TopSites from "../energySheet/TopSites.vue";
 import EnergyHelperFunctions from "./EnergyHelperFunctions";
+import SiteAlarmsTable from "../energySheet/SiteAlarmsTable.vue";
 export default {
   data() {
-    return {};
+    return {
+       countHTAlarms:false,
+        selectedSiteCode: null,
+      alarmsName: null,
+    
+    };
   },
   components:{
     TopSites,
+        SiteAlarmsTable,
 
   },
-  props: ["gizaHieghestPowerAlarmDur","gizaSitesPowerAlarmMoreThan2Times","gizaSitesReportedHTAlarmsDetails","gizaSitesReportedGenAlarmsDetails"],
+  props: ["gizaHieghestPowerAlarmDur","gizaSitesPowerAlarmMoreThan2Times",
+  "gizaSitesReportedHTAlarmsDetails",
+  "gizaSitesReportedGenAlarmsDetails","period_No","period","zone"],
+  //  watch: {
+  //   siteAlarms(value) {
+  //     if (value) {
+  //       this.$dialog.open(SiteAlarmsTable, {
+  //         props: {
+  //           style: {
+  //             width: "75vw",
+  //           },
+  //           breakpoints: {
+  //             "960px": "75vw",
+  //             "640px": "90vw",
+  //           },
+  //           modal: true,
+  //         },
+
+  //         onClose: (options) => {
+  //           this.$store.dispatch("siteAlarms", null);
+  //         },
+  //       });
+  //     }
+  //   },
+  // },
+  //  computed: {
+  //   siteAlarms() {
+  //     if (this.$store.state.siteAlarms) {
+  //       return true;
+  //     } else {
+  //       return false;
+  //     }
+  //   },
+  // },
+  beforeUpdate(){
+    if(this.gizaSitesReportedHTAlarmsDetails!=null &&this.gizaSitesReportedHTAlarmsDetails.length>0)
+    this.countHTAlarms=true;
+
+  },
+
   methods:{
     getSiteCode(event) {
    
@@ -98,6 +156,10 @@ export default {
       } else if (this.alarmsName == "sitesReportedGenAlarmsDetails") {
          EnergyHelperFunctions.getSiteGenAlarms(this.selectedSiteCode);
       }
+    },
+       downloadHTSites() {
+      EnergyHelperFunctions.downloadZoneHTSites(this.zone,this.period,this.period_No);
+      
     },
 
   },

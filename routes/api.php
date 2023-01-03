@@ -16,12 +16,13 @@ use App\Http\Controllers\Sites\CascadesController;
 use App\Http\Controllers\NUR\DownloadNURController;
 
 use App\Http\Controllers\EnergySheet\EnergyController;
-use App\Http\Controllers\EnergySheet\EnergySiteStatesticsController;
 use App\Http\Controllers\User\ResetPasswordController;
 use App\Http\Controllers\Sites\SuperAdminSitesController;
 use App\Http\Controllers\Sites\NormalUsersSitesController;
 use App\Http\Controllers\Modifications\ModificationsController;
 use App\Http\Controllers\EnergySheet\EnergyStatesticsController;
+use App\Http\Controllers\EnergySheet\EnergySiteStatesticsController;
+use App\Http\Controllers\EnergySheet\EnergyZoneStatesticsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -57,6 +58,7 @@ Route::prefix("energysheet")->middleware(['auth:sanctum'])->group(function(){
     Route::post("/downloadSitePowerAlarms",[EnergySiteStatesticsController::class,"downloadSitePowerAlarms"]);
     Route::post("/downloadSiteHighTempAlarms",[EnergySiteStatesticsController::class,"downloadSiteHighTempAlarms"]);
     Route::post("/downloadSiteGenAlarms",[EnergySiteStatesticsController::class,"downloadSiteGenAlarms"]);
+    Route::post("/downloadZoneHTAlarms",[EnergyZoneStatesticsController::class,"downloadZoneHTAlarms"]);
 
 });
 

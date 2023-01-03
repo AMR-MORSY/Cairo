@@ -59,6 +59,18 @@
             </template>
           </TopSites>
         </div>
+         <div class="col-12 mt-2">
+            <template v-if="countHTAlarms">
+              <Button
+                type="button"
+                class="p-button-help"
+                @click="downloadHTSites()"
+              >
+                <span class="material-symbols-sharp">download</span>
+                <span class="font-bold">HT Sites</span>
+              </Button>
+            </template>
+          </div>
       </div>
 
       </template>
@@ -81,8 +93,9 @@ export default {
     return {
       selectedSiteCode: null,
       alarmsName: null,
-      selectedSite: null,
-      dialog:false,
+   
+     
+       countHTAlarms:false,
     
     };
   },
@@ -91,56 +104,53 @@ export default {
     SiteAlarmsTable,
 
   },
-   watch:{
-    siteAlarms(value){
-      if(value)
-      {
-        
-      //   this.$dialog.open(SiteAlarmsTable,{
-      //   props: {
-       
-      //     style: {
-      //       width: "75vw",
-      //     },
-      //     breakpoints: {
-      //       "960px": "75vw",
-      //       "640px": "90vw",
-      //     },
-      //       modal: true,
-      //   },
-      //   onClose:(options)=>{
-      //      this.$store.dispatch("siteAlarms",null);
-            
+  //  watch:{
+  //   siteAlarms(value){
+  //      if (value) {
+  //       this.$dialog.open(SiteAlarmsTable, {
+  //         props: {
+  //           style: {
+  //             width: "75vw",
+  //           },
+  //           breakpoints: {
+  //             "960px": "75vw",
+  //             "640px": "90vw",
+  //           },
+  //           modal: true,
+  //         },
 
-      //   },
-       
-      
-      // });
-     
+  //         onClose: (options) => {
+  //           this.$store.dispatch("siteAlarms", null);
+  //         },
+  //       });
+  //     }
 
-       }
+  //   },
 
-    },
+  // },
+  // computed:{
 
-  },
-  computed:{
+  //   siteAlarms(){
 
-    siteAlarms(){
+  //     if(this.$store.state.siteAlarms)
+  //     {
+  //       return true;
+  //     }
+  //     else{
+  //       return false;
+  //     }
 
-      if(this.$store.state.siteAlarms)
-      {
-        return true;
-      }
-      else{
-        return false;
-      }
-
-    },
+  //   },
 
 
+
+  // },
+   beforeUpdate(){
+    if(this.cairoNorthSitesReportedHTAlarmsDetails!=null &&this.cairoNorthSitesReportedHTAlarmsDetails.length>0)
+    this.countHTAlarms=true;
 
   },
-  props: ["cairoNorthHieghestPowerAlarmDur","cairoNorthSitesPowerAlarmMoreThan2Times","cairoNorthSitesReportedHTAlarmsDetails","cairoNorthSitesReportedGenAlarmsDetails"],
+  props: ["cairoNorthHieghestPowerAlarmDur","cairoNorthSitesPowerAlarmMoreThan2Times","cairoNorthSitesReportedHTAlarmsDetails","cairoNorthSitesReportedGenAlarmsDetails","period_No","period","zone"],
   methods:{
      getSiteCode(event) {
    
@@ -160,6 +170,10 @@ export default {
       } else if (this.alarmsName == "sitesReportedGenAlarmsDetails") {
          EnergyHelperFunctions.getSiteGenAlarms(this.selectedSiteCode);
       }
+    },
+     downloadHTSites() {
+      EnergyHelperFunctions.downloadZoneHTSites(this.zone,this.period,this.period_No);
+      
     },
    
   },

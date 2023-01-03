@@ -3,13 +3,7 @@
   
     @displaySitesTable="displaySitesTable"
   ></navbar>
-  <!-- <modal :visible="showSessionNotification">
-    <template style="font-weight:900; color:red;" #body>{{ data }}</template>
-    <template #footer>
-      <button class="btn btn-primary" @click="refreshSession">Yes</button>
-      <button class="btn btn-danger" @click="goToLogin">No</button>
-    </template>
-  </modal> -->
+ 
 
   <DynamicDialog key="dynamic" />
   <ConfirmDialog key="confirm"></ConfirmDialog>
@@ -35,22 +29,14 @@ export default {
   },
   watch: {
     sessoinTimeOut(value) {
-      // this.showSessionTimeOutNotification();
-      console.log(value);
+    
       if (value==true) {
         this.showSessionTimeOutNotification();
       }
     },
   },
-  // created(){
-  //   this.$store.watch((state)=>{
-  //     return this.$store.state.sessionTimeOut;
-  //   },(newValue,oldValue)=>{
-  //     console.log(newValue);
-  //       console.log(oldValue);
-  //   })
+ 
 
-  // },
   computed: {
       displaySpinnerPage(){
 
@@ -104,26 +90,9 @@ export default {
             "960px": "75vw",
             "640px": "90vw",
           },
-          //   modal: true,
+            modal: true,
         },
-        // templates: {
-        //   footer: () => {
-        //     return [
-        //       h(Button, {
-        //         label: "No",
-        //         icon: "pi pi-times",
-        //         onClick: () => dialogRef.close({ buttonType: "No" }),
-        //         class: "p-button-text",
-        //       }),
-        //       h(Button, {
-        //         label: "Yes",
-        //         icon: "pi pi-check",
-        //         onClick: () => dialogRef.close({ buttonType: "Yes" }),
-        //         autofocus: true,
-        //       }),
-        //     ];
-        //   },
-        // },
+       
         data: {
           sites: event,
         },
@@ -184,7 +153,7 @@ export default {
     }
   },
   mounted() {
-    // this.sessoinTimeOut = this.$store.state.sessionTimeOut;
+
     if (this.sessionEnd) {
       sessionStorage.removeItem("Auth");
       sessionStorage.removeItem("userData");

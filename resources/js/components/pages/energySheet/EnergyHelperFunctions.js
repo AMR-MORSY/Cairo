@@ -53,4 +53,21 @@ export default {
                 store.dispatch("displaySpinnerPage", true);
             });
     },
+    downloadZoneHTSites(zone ,period,period_No) {
+        console.log({zone,period});
+        let data={
+            period:period,
+            zone:zone,
+            period_No:period_No
+        };
+        Energy.downloadZoneHTAlarms(data).then((response)=>{
+            var fileUrl = window.URL.createObjectURL(new Blob([response.data]));
+            var fileLink = document.createElement("a");
+            fileLink.href = fileUrl;
+            fileLink.setAttribute("download", `${zone}HTAlarmsweek${period}.xlsx`);
+            document.body.appendChild(fileLink);
+            fileLink.click();
+          
+        })
+    },
 };

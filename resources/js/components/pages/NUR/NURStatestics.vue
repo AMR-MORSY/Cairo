@@ -144,12 +144,13 @@
       <div class="row mt-5">
         <div class="col-12 col-md-4"></div>
         <div class="col-12 col-md-4 mt-5">
-          <transition-group name="fade-bounce">
+          <transition-group name="fade-bounce" appear>
             <template v-if="weekErrors">
               <div class="errors card">
                 <p v-for="error in weekErrors" :key="error">
                   {{ error }}
                 </p>
+              
               </div>
             </template>
             <template v-if="yearErrors">
@@ -171,6 +172,9 @@
                 <p v-for="error in notFoundErrors" :key="error">
                   {{ error }}
                 </p>
+                  <div>
+                  <Button label="Back" class="p-button-danger" @click="this.$router.go(-1)" />
+                </div>
               </div>
             </template>
           </transition-group>
@@ -544,6 +548,10 @@ export default {
     color: red;
     text-align: center;
   }
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 
 .fade-bounce-enter-active {

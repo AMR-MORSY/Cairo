@@ -1,20 +1,32 @@
 <template>
+ 
   <template v-if="notFoundErrors">
-    <transition name="fade-bounce">
-      <div class="errors card">
-        <p v-for="error in notFoundErrors" :key="error">
-          {{ error }}
-        </p>
+    <div class="container mt-5">
+      <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+          <transition name="fade" appear>
+            <div class="errors card">
+              <p v-for="error in notFoundErrors" :key="error">
+                {{ error }}
+              </p>
+                <div>
+                  <Button label="Back" class="p-button-danger" @click="this.$router.go(-1)" />
+                </div>
+            </div>
+          </transition>
+        </div>
+        <div class="col-md-4"></div>
       </div>
-    </transition>
+    </div>
   </template>
-  <template v-if="!notFoundErrors">
+  <template v-else>
     <section id="cairo">
       <div class="container mt-5">
         <Card>
           <template #title>
             <div class="d-flex justify-content-center align-items-center">
-              <p style="text-align: center">{{ period }}</p>
+              <p style="text-align: center">Week{{ period }}</p>
             </div>
           </template>
           <template #content>
@@ -94,6 +106,9 @@
         :cairoSouthSitesReportedGenAlarmsDetails="
           cairoSouthSitesReportedGenAlarmsDetails
         "
+        :period="period"
+        :period_No="period_No"
+        zone="Cairo South"
       >
       </cairo-south-energy>
       <cairo-east-energy
@@ -107,6 +122,9 @@
         :cairoEastSitesReportedGenAlarmsDetails="
           cairoEastSitesReportedGenAlarmsDetails
         "
+         :period="period"
+           :period_No="period_No"
+          zone="Cairo East"
       ></cairo-east-energy>
       <cairo-north-energy
         :cairoNorthHieghestPowerAlarmDur="cairoNorthHieghestPowerAlarmDur"
@@ -119,6 +137,9 @@
         :cairoNorthSitesReportedGenAlarmsDetails="
           cairoNorthSitesReportedGenAlarmsDetails
         "
+         :period="period"
+           :period_No="period_No"
+          zone="Cairo North"
       >
       </cairo-north-energy>
       <giza-energy
@@ -126,6 +147,9 @@
         :gizaSitesPowerAlarmMoreThan2Times="gizaSitesPowerAlarmMoreThan2Times"
         :gizaSitesReportedHTAlarmsDetails="gizaSitesReportedHTAlarmsDetails"
         :gizaSitesReportedGenAlarmsDetails="gizaSitesReportedGenAlarmsDetails"
+         :period="period"
+           :period_No="period_No"
+          zone="Giza"
       ></giza-energy>
     </section>
   </template>
@@ -143,6 +167,7 @@ export default {
     return {
       alarms: null,
       period: null,
+      period_No:null,
       cairoEastHieghestPowerAlarmDur: null,
       cairoSouthHieghestPowerAlarmDur: null,
       cairoNorthHieghestPowerAlarmDur: null,
@@ -215,6 +240,7 @@ export default {
           console.log(response);
           this.alarms = response.data.Alarms;
           this.period = this.alarms.period;
+          this.period_No=this.alarms.period_No;
           ////////////sites with highest alarm duration////////
           this.cairoEastHieghestPowerAlarmDur = Object.values(
             this.alarms.zonesHighiestPowerAlarmDuration["Cairo East"]
@@ -366,12 +392,16 @@ export default {
     color: red;
     text-align: center;
   }
+   display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 
-.fade-bounce-enter-active {
-  animation: woble 1s ease;
+.fade-enter-active {
+  animation:woble 1s ease;
 }
-@keyframes woble {
+@keyframes woble{
   0% {
     opacity: 0;
     transform: translateY(-300px);

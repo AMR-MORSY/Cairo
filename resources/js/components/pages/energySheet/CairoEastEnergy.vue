@@ -78,19 +78,19 @@
               </template>
             </TopSites>
           </div>
+          <div class="col-12 mt-2">
+            <template v-if="countHTAlarms">
+              <Button
+                type="button"
+                class="p-button-help"
+                @click="downloadHTSites()"
+              >
+                <span class="material-symbols-sharp">download</span>
+                <span class="font-bold">HT Sites</span>
+              </Button>
+            </template>
+          </div>
         </div>
-      </template>
-      <template >
-        <Button
-          type="button"
-          class="p-button-help"
-          @click="
-            downloadHTSites( )
-          "
-        >
-          <span class="material-symbols-sharp">download</span>
-          <span class="font-bold">HT Sites</span>
-        </Button>
       </template>
     </Card>
   </div>
@@ -108,8 +108,9 @@ export default {
     return {
       selectedSiteCode: null,
       alarmsName: null,
-      selectedSite: null,
-      dialog: false,
+    
+     
+      countHTAlarms:false,
     };
   },
   components: {
@@ -147,12 +148,20 @@ export default {
       }
     },
   },
+  beforeUpdate(){
+    if(this.cairoEastSitesReportedHTAlarmsDetails!=null &&this.cairoEastSitesReportedHTAlarmsDetails.length>0)
+    this.countHTAlarms=true;
+
+  },
 
   props: [
     "cairoEastHieghestPowerAlarmDur",
     "cairoEastSitesPowerAlarmMoreThan2Times",
     "cairoEastSitesReportedHTAlarmsDetails",
     "cairoEastSitesReportedGenAlarmsDetails",
+    "period",
+    "zone",
+    "period_No"
   ],
   methods: {
     getSiteCode(event) {
@@ -170,8 +179,9 @@ export default {
         EnergyHelperFunctions.getSiteGenAlarms(this.selectedSiteCode);
       }
     },
-    downloadHTSites(){
-
+    downloadHTSites() {
+      EnergyHelperFunctions.downloadZoneHTSites(this.zone,this.period,this.period_No);
+      
     },
   },
 };

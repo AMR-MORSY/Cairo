@@ -35,5 +35,10 @@ export default {
     downloadSiteGenAlarms(data)
     {
         return allInstances.downloadApi.post("energysheet/downloadSiteGenAlarms",data);
+    },
+    downloadZoneHTAlarms(data)
+    {
+        return allInstances.downloadApi.post("energysheet/downloadZoneHTAlarms",data);
+
     }
 };

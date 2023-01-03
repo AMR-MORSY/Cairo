@@ -46,7 +46,7 @@ import '@vuepic/vue-datepicker/dist/main.css';
 import Divider from 'primevue/divider';
 import ConfirmationService from 'primevue/confirmationservice';
 import ConfirmDialog from 'primevue/confirmdialog';
-
+import SpeedDial from 'primevue/speeddial';
 
 
 
@@ -95,9 +95,11 @@ createApp(app)
 .component("DataTable",DataTable)
 .component("Column",Column)
 .component("Chart",Chart)
+.component("SpeedDial",SpeedDial)
 .component("Button",Button)
 .component("navbar",navbar)
 .component("spinnerButton",spinnerButton)
 .component("helperTable",helperTable)
+
 .mount("#app");
 

@@ -13,11 +13,13 @@
       :rows="5"
       selectionMode="single"
     >
-      <Column field="site_code" header="Site Code"></Column>
+    
       <Column field="site_name" header="Site Name"></Column>
       <Column field="alarm_name" header="Alarm Name"></Column>
       <Column field="start_date" header="Start Date" sortable></Column>
+        <Column field="start_time" header="Start Time"></Column>
       <Column field="end_date" header="End Date"></Column>
+        <Column field="end_time" header="End Time"></Column>
       <Column field="duration" header="Duration min" sortable></Column>
       <Column field="week" header="Week" sortable></Column>
       <Column field="year" header="Year" sortable></Column>
@@ -47,7 +49,7 @@ import Energy from "../../../apis/Energy";
 export default {
   data() {
     return {
-      // siteAlarms: this.$store.state.siteAlarms,
+    
       alarmsData: null,
       alarmName: null,
     };
@@ -56,36 +58,7 @@ export default {
   mounted() {
     this.mountTableData();
   },
-  //   watch: {
-  //     siteAlarms(value) {
-  //         console.log(value)
-  //       if (value != null) {
-  //         this.alarmsData=value.alarmData;
-  //         this.alarmName=value.alarmName;
-  //       }
-  //       else{
-  //        this.dialogRef.close();
-  //       }
-  //     },
-  //   },
-  //   computed: {
-  // siteAlarms() {
-  //     if(this.$store.state.siteAlarms!=null)
-  //     {
-  //           return this.$store.state.siteAlarms;
-  //     }
-  //     else
-  //     {
-  //         return null;
-  //     }
-  // },
-  // alarmName() {
-  //       if(this.$store.state.siteAlarms!=null)
-  //     {
-  //            return this.$store.state.siteAlarms.alarmName;
-  //     }
-  // },
-  //   },
+
   name: "SiteAlarmsTable",
   methods: {
     downloadSiteAlarms(siteCode, alarmName, siteName) {

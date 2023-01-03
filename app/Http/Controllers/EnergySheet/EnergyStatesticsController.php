@@ -155,7 +155,8 @@ class EnergyStatesticsController extends Controller
             $zonesSitesReportedGenAlarms=$statestics->zonesSitesReportedGenAlarms();
             $zonesSitesReportedGenAlarmsDetails=$statestics->zonesSitesReportedGenAlarmsDetails();
 
-            $data["period"]="Week $week";
+            $data["period"]="week";
+            $data["period_No"]=$week;
             $data['zonesPowerAlarmsCount']=$zonesPowerAlarmsCount;
             $data['zonesSitesReportedPowerAlarms']=$zonesSitesReportedPowerAlarms;
             $data['zonesSitesReportedPowerAlarms']=$zonesSitesReportedPowerAlarms;
@@ -221,34 +222,34 @@ class EnergyStatesticsController extends Controller
 
 
     }
-    public function siteAlarms(Request $request)
-    {
-        $validator = Validator::make($request->all(), ["siteCode" => ["required", "regex:/^([0-9a-zA-Z]{4,6}(up|UP))|([0-9a-zA-Z]{4,6}(ca|CA))|([0-9a-zA-Z]{4,6}(de|DE))$/"]]);
-        if ($validator->fails()) {
-            return response()->json(array(
+    // public function siteAlarms(Request $request)
+    // {
+    //     $validator = Validator::make($request->all(), ["siteCode" => ["required", "regex:/^([0-9a-zA-Z]{4,6}(up|UP))|([0-9a-zA-Z]{4,6}(ca|CA))|([0-9a-zA-Z]{4,6}(de|DE))$/"]]);
+    //     if ($validator->fails()) {
+    //         return response()->json(array(
 
-                'errors' => $validator->getMessageBag()->toArray()
-            ), 422);
+    //             'errors' => $validator->getMessageBag()->toArray()
+    //         ), 422);
 
 
-            $this->throwValidationException(
+    //         $this->throwValidationException(
 
-                $request,
-                $validator
+    //             $request,
+    //             $validator
 
-            );
-        } else {
-            $validated = $validator->validated();
-            $powerAlarms = PowerAlarm::where("site_code", $validated['siteCode'])->get();
-            $genAlrms=GenAlarm::where("site_code", $validated['siteCode'])->get();
-            $HT=HighTempAlarm::where("site_code", $validated['siteCode'])->get();
-            $downAlarms=DownAlarm::where("site_code", $validated['siteCode'])->get();
-            return response()->json([
-                "powerAlarms" => $powerAlarms,
-                "downAlarms"=>$downAlarms,
-                "HT"=>$HT,
-                "genAlarms"=>$genAlrms,
-            ], 200);
-        }
-    }
+    //         );
+    //     } else {
+    //         $validated = $validator->validated();
+    //         $powerAlarms = PowerAlarm::where("site_code", $validated['siteCode'])->get();
+    //         $genAlrms=GenAlarm::where("site_code", $validated['siteCode'])->get();
+    //         $HT=HighTempAlarm::where("site_code", $validated['siteCode'])->get();
+    //         $downAlarms=DownAlarm::where("site_code", $validated['siteCode'])->get();
+    //         return response()->json([
+    //             "powerAlarms" => $powerAlarms,
+    //             "downAlarms"=>$downAlarms,
+    //             "HT"=>$HT,
+    //             "genAlarms"=>$genAlrms,
+    //         ], 200);
+    //     }
+    // }
 }
