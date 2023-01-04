@@ -81,7 +81,7 @@
      
     </transition>
   </section>
-  <ConfirmDialog :key="modifications"></ConfirmDialog>
+  <!-- <ConfirmDialog :key="modifications"></ConfirmDialog> -->
 </template>
 
 <script>
@@ -127,7 +127,7 @@ export default {
 
     },
     getSiteModifications() {
-      this.$emit("displayNoneSpinner", false);
+     this.$store.dispatch("displaySpinnerPage", false);
       Modifications.getSiteModifications(this.site_code)
         .then((response) => {
           console.log(response);
@@ -143,7 +143,7 @@ export default {
           console.log(error);
         })
         .finally(() => {
-          this.$emit("displayNoneSpinner", true);
+          store.dispatch("displaySpinnerPage", true);
         });
     },
     onRowSelect() {
@@ -166,7 +166,7 @@ export default {
         icon: "pi pi-exclamation-triangle",
         accept: () => {
              this.$confirm.close();
-          this.$emit("displayNoneSpinner", false);
+          this.$store.dispatch("displaySpinnerPage", false);
           let data = {
             id: this.selectedModification.id,
           };

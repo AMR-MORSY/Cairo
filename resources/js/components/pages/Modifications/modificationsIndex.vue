@@ -15,7 +15,10 @@
               currentPageReportTemplate="Showing {first} to {last} of {totalRecords}"
               class="p-datatable-sm"
               stripedRows
+              @row-select="onRowSelect"
+              v-model:selection="selectedModification"
             >
+              <Column selectionMode="single"></Column>
               <Column field="site_code" header="Code"></Column>
               <Column field="site_name" header="Name"></Column>
               <Column field="subcontractor" header="Subcontractor"></Column>
@@ -46,10 +49,33 @@
                 />
               </template>
             </DataTable>
-          <div class="my-3">
-              <button class="btn btn-secondary" style="margin-left:3rem;" @click="downloadModfications">Download</button>
-          </div>
-          
+            <div class="buttons">
+              <div class="my-3">
+                <button
+                  class="btn btn-secondary"
+                  style="margin-left: 3rem"
+                  @click="downloadModfications"
+                >
+                  Download
+                </button>
+              </div>
+              <div class="my-3">
+                <Button
+                  label="Update"
+                  @click="gotToUpdateModification"
+                  class="p-button-raised p-button-warning"
+                  :disabled="!isRowSelected"
+                />
+              </div>
+              <div class="my-3">
+                <Button
+                  label="Delete"
+                  @click="deleteModification"
+                  class="p-button-raised p-button-danger"
+                  :disabled="!isRowSelected"
+                />
+              </div>
+            </div>
           </template>
 
           <template v-else>
@@ -70,6 +96,8 @@ export default {
   data() {
     return {
       modifications: null,
+      isRowSelected: false,
+      selectedModification: null,
     };
   },
   computed: {
@@ -90,6 +118,7 @@ export default {
   name: "modificationsIndex",
   methods: {
     getModificationsIndex() {
+      this.$store.dispatch("displaySpinnerPage", false);
       let data = {
         columnName: this.columnName,
         columnValue: this.columnValue,
@@ -124,42 +153,85 @@ export default {
               });
             }
           }
+        })
+        .finally(() => {
+          this.$store.dispatch("displaySpinnerPage", true);
         });
     },
 
-    downloadModfications(){
+    downloadModfications() {
+      let data = {
+        column_name: this.columnName,
+        column_value: this.columnValue,
+      };
 
-      let data={
-        column_name:this.columnName,
-        column_value:this.columnValue
-      }
-
-      Modifications.downloadModifications(data).then((response)=>{
-        console.log(response);
+      Modifications.downloadModifications(data)
+        .then((response) => {
+          console.log(response);
           var fileUrl = window.URL.createObjectURL(new Blob([response.data]));
           var fileLink = document.createElement("a");
           fileLink.href = fileUrl;
-          fileLink.setAttribute("download", `${this.columnValue}Modifications.xlsx`);
+          fileLink.setAttribute(
+            "download",
+            `${this.columnValue}Modifications.xlsx`
+          );
           document.body.appendChild(fileLink);
           fileLink.click();
+        })
+        .catch((error) => {});
+    },
+    onRowSelect() {
+      this.isRowSelected = true;
+    },
+    gotToUpdateModification() {
+      this.$router.push(
+        `/modifications/update/${this.selectedModification.id}`
+      );
+    },
 
-      }).catch((error)=>{
+    deleteModification() {
+      this.$confirm.require({
+        message: "Are you sure you want to proceed?",
+        header: "Confirmation",
+        icon: "pi pi-exclamation-triangle",
+        accept: () => {
+          this.$confirm.close();
+          this.isRowSelected = false;
+          this.$store.dispatch("displaySpinnerPage", false);
+          let data = {
+            id: this.selectedModification.id,
+          };
 
-      })
-
+          Modifications.deleteModification(data)
+            .then((response) => {
+              this.getModificationsIndex();
+            })
+            .catch((error) => {});
+        },
+        reject: () => {
+          this.$confirm.close();
+          this.isRowSelected = false;
+          //callback to execute when user rejects the action
+        },
+      });
     },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-.no-modification{
-  padding:4rem ;
+.no-modification {
+  padding: 4rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  p{
+  p {
     color: red;
   }
+}
+.buttons {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
 }
 </style>
