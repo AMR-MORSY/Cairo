@@ -1,55 +1,5 @@
 <template>
-  <main class="form-signin w-25 m-auto">
-    <!-- <form @submit.prevent="submitLoginForm"> -->
-    <!-- <img class="mb-4" alt="" width="72" height="57" />
-      <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
-
-      <div v-if="credentialsError">
-        {{ credentialsError }}
-      </div>
-
-      <div class="form-floating">
-        <input
-          type="email"
-          v-model="form.email"
-          class="form-control"
-          id="floatingInput"
-          placeholder="name@example.com"
-          :class="{ 'is-invalid': isEmailInvalid, 'is-valid': form.email }"
-        />
-        <label for="floatingInput">Email address</label>
-      </div>
-      <div v-if="emailError">
-        <p style="color: red">
-          {{ emailError }}
-        </p>
-      </div>
-      <div class="form-floating mt-1">
-        <input
-          type="password"
-          class="form-control"
-          id="password"
-          autocomplete="on"
-          placeholder="Password"
-          v-model="form.password"
-          :class="{ 'is-invalid': isPassInvalid, 'is-valid': form.password }"
-        />
-        <label for="password">Password</label>
-      </div>
-      <div v-if="passwordError">
-        <p style="color: red">
-          {{ passwordError }}
-        </p>
-      </div>
-
-      <div class="checkbox mb-3">
-        <router-link to="/user/resetPassword">Forgot Password?</router-link>
-      </div>
-      <button class="w-100 btn btn-lg btn-primary" type="submit">
-        Sign in
-      </button> -->
-    <!-- </form> -->
-  </main>
+  
 
   <div class="container mb-3">
     <div class="row">

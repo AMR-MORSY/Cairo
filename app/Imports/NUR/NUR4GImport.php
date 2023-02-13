@@ -36,7 +36,7 @@ class NUR4GImport implements ToModel,WithHeadingRow, WithValidation
             "*.Problem source site code" => ['string'],
             "*.Site Name (Node B)" => ['string'],
             "*.Problem source site name"=>['string'],
-            "*.No of cells"=>["required","regex:/^(100)|[1-9]\d?$/"],
+            "*.No of cells"=>["required","regex:/^(200)|[1-9]\d?$/"],
             '*.System'=>['string'],
             "*.Sub System"=>['string'],
             "*.Type"=>['required',"regex:/^Involuntary|Voluntary$/"],

@@ -143,7 +143,7 @@ export default {
           console.log(error);
         })
         .finally(() => {
-          store.dispatch("displaySpinnerPage", true);
+           this.$store.dispatch("displaySpinnerPage", true);
         });
     },
     onRowSelect() {

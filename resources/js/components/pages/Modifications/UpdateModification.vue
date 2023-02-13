@@ -239,7 +239,7 @@ export default {
     },
 
     getModificationDetails() {
-      this.$emit("displayNoneSpinner", false);
+      this.$store.dispatch("displaySpinnerPage", false);
       Modifications.getModificationDetails(this.id)
         .then((response) => {
           console.log(response);
@@ -264,7 +264,7 @@ export default {
           console.log(error);
         })
         .finally(() => {
-          this.$emit("displayNoneSpinner", true);
+             this.$store.dispatch("displaySpinnerPage", true);
         });
     },
     updateModification() {
@@ -301,7 +301,7 @@ export default {
         this.project &&
         this.status
       ) {
-        this.$emit("displayNoneSpinner", false);
+        this.$store.dispatch("displaySpinnerPage", false);
         let data = {
           id:this.id,
           site_code: this.site_code,
@@ -446,7 +446,7 @@ export default {
             }
           })
           .finally(() => {
-            this.$emit("displayNoneSpinner", true);
+          this.$store.dispatch("displaySpinnerPage", true);
           });
       }
     },

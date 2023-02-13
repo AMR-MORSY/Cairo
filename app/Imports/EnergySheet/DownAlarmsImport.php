@@ -26,7 +26,7 @@ class DownAlarmsImport implements ToModel ,WithHeadingRow ,WithBatchInserts ,Wit
     *
     * @return \Illuminate\Database\Eloquent\Model|null
     */
-
+    public $week, $year;
     public function __construct($week, $year)
     {
         $this->week = $week;

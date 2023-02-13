@@ -196,7 +196,7 @@ export default {
         });
     },
     submitSearch() {
-      this.$emit("displayNoneSpinner", false);
+      this.$store.dispatch("displaySpinnerPage", false);
       Sites.getSiteDetails(this.search)
         .then((response) => {
           console.log(response);
@@ -265,7 +265,7 @@ export default {
           }
         })
         .finally(() => {
-            this.$emit("displayNoneSpinner", true);
+          this.$store.dispatch("displaySpinnerPage", true);
         });
     },
 

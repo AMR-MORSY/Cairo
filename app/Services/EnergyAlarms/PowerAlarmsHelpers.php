@@ -10,13 +10,14 @@ use App\Models\NUR\NUR3G;
 class PowerAlarmsHelpers
 {
 
-    protected $powerAlarmsCollection, $downAlarmsCollection, $week;
+    protected $powerAlarmsCollection, $downAlarmsCollection, $week,$month;
 
-    public function __construct($powerAlarms=null, $downAlarms = null,$week = null)
+    public function __construct($powerAlarms=null, $downAlarms = null,$week = null,$month=null)
     {
         $this->powerAlarmsCollection = $powerAlarms;
         $this->downAlarmsCollection = $downAlarms;
         $this->week = $week;
+        $this->month=$month;
       
     }
 
@@ -190,34 +191,77 @@ class PowerAlarmsHelpers
                 foreach ($new_codes as $newCode) {
                   
                     if ($newCode["downAlarmName"] == "OML Fault") {
-                        $nurs = NUR2G::where("problem_site_code", $newCode["site_code"])->where("system","environmental")->where("sub_system","MAIN POWER")->where("week", $this->week)->get();
-                        if (count($nurs) > 0) {
-                            foreach ($nurs as $nur) {
-                                $begin = Carbon::parse($nur["begin"]);
-                                $newBegin = "$begin->year-$begin->month-$begin->day";
-                                if ($newBegin == $newCode["downAlarm_start_date"])
-                                {
-                                    array_push($NUR2G, $nur);
-
+                        if($this->week!=null)
+                        {
+                            $nurs = NUR2G::where("problem_site_code", $newCode["site_code"])->where("system","environmental")->where("sub_system","MAIN POWER")->where("week", $this->week)->get();
+                            if (count($nurs) > 0) {
+                                foreach ($nurs as $nur) {
+                                    $begin = Carbon::parse($nur["begin"]);
+                                    $newBegin = "$begin->year-$begin->month-$begin->day";
+                                    if ($newBegin == $newCode["downAlarm_start_date"])
+                                    {
+                                        array_push($NUR2G, $nur);
+    
+                                    }
+                                
                                 }
-                            
                             }
+
                         }
+                        else{
+                            $nurs = NUR2G::where("problem_site_code", $newCode["site_code"])->where("system","environmental")->where("sub_system","MAIN POWER")->where("month", $this->month)->get();
+                            if (count($nurs) > 0) {
+                                foreach ($nurs as $nur) {
+                                    $begin = Carbon::parse($nur["begin"]);
+                                    $newBegin = "$begin->year-$begin->month-$begin->day";
+                                    if ($newBegin == $newCode["downAlarm_start_date"])
+                                    {
+                                        array_push($NUR2G, $nur);
+    
+                                    }
+                                
+                                }
+                            }
+
+                        }
+                       
                     }
                     if ($newCode["downAlarmName"] == "NodeB Unavailable") {
-                        $nurs = NUR3G::where("problem_site_code", $newCode["site_code"])->where("system","environmental")->where("sub_system","MAIN POWER")->where("week", $this->week)->get();
-                        if (count($nurs) > 0) {
-                            foreach ($nurs as $nur) {
-                                $begin = Carbon::parse($nur["begin"]);
-                                $newBegin = "$begin->year-$begin->month-$begin->day";
-                                if ($newBegin == $newCode["downAlarm_start_date"])
-                                {
-                                    array_push($NUR3G, $nur);
-
+                        if($this->week!=null)
+                        {
+                            $nurs = NUR3G::where("problem_site_code", $newCode["site_code"])->where("system","environmental")->where("sub_system","MAIN POWER")->where("week", $this->week)->get();
+                            if (count($nurs) > 0) {
+                                foreach ($nurs as $nur) {
+                                    $begin = Carbon::parse($nur["begin"]);
+                                    $newBegin = "$begin->year-$begin->month-$begin->day";
+                                    if ($newBegin == $newCode["downAlarm_start_date"])
+                                    {
+                                        array_push($NUR3G, $nur);
+    
+                                    }
+                                   
                                 }
-                               
                             }
+
                         }
+                        else{
+                            $nurs = NUR3G::where("problem_site_code", $newCode["site_code"])->where("system","environmental")->where("sub_system","MAIN POWER")->where("month", $this->month)->get();
+                            if (count($nurs) > 0) {
+                                foreach ($nurs as $nur) {
+                                    $begin = Carbon::parse($nur["begin"]);
+                                    $newBegin = "$begin->year-$begin->month-$begin->day";
+                                    if ($newBegin == $newCode["downAlarm_start_date"])
+                                    {
+                                        array_push($NUR3G, $nur);
+    
+                                    }
+                                   
+                                }
+                            }
+
+
+                        }
+                      
                     }
                   
                 }

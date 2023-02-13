@@ -1,58 +1,5 @@
 <template>
-  <main class="form-signin w-25 m-auto">
-    <!-- <form @submit.prevent="submitRegisterForm">
-      <img class="mb-4" alt="" width="72" height="57" />
-      <h1 class="h3 mb-3 fw-normal">Please Register</h1>
-      <div class="form-floating">
-        <input
-          type="text"
-          class="form-control"
-          id="floatingUserName"
-          placeholder="name@example.com"
-          v-model="form.name"
-        />
-        <label for="floatingUserName">User Name</label>
-      </div>
-
-      <div class="form-floating mt-1">
-        <input
-          type="email"
-          class="form-control"
-          id="floatingInput"
-          placeholder="name@example.com"
-          v-model="form.email"
-        />
-        <label for="floatingInput">Email address</label>
-      </div>
-      <div class="form-floating mt-1">
-        <input
-          type="password"
-          class="form-control"
-          id="Password"
-          autocomplete="on"
-          placeholder="Password"
-          v-model="form.password"
-        />
-        <label for="Password">Password</label>
-      </div>
-      <div class="form-floating mt-1">
-        <input
-          type="password"
-          class="form-control"
-          id="floatingConfirmPassword"
-          placeholder="Password"
-          autocomplete="on"
-          v-model="form.password_confirmation"
-        />
-        <label for="floatingConfirmPassword">Confirm Password</label>
-      </div>
-
-      <button class="w-100 btn btn-lg btn-primary mt-1" type="submit">
-        Sign in
-      </button>
-    </form> -->
-  </main>
-
+ 
   <div class="container mb-3">
     <div class="row">
       <div class="col-12 col-lg-4"></div>

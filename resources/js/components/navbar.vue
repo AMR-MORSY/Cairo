@@ -93,7 +93,7 @@ export default {
   },
   methods: {
     submitSearch() {
-      // this.$emit("displayNoneSpinner", false);
+     
           this.$store.dispatch("displaySpinnerPage",false);
       Sites.searchSites(this.search)
         .then((response) => {

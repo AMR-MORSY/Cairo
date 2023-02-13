@@ -74,12 +74,7 @@ class HightempAlarmsImport implements ToModel ,WithHeadingRow ,WithBatchInserts 
             "*.Area" => ["required", "regex:/^[0-9a-zA-Z_-]{3,50}$/"],
             "*.Alarm Name" => ["required", "regex:/^(Shelter High Temperature)$/"],
             "*.Occurred On(Date)" => ["required", 'date'],
-            // "*.Cleared On(Date)" => ["required", "regex:/^([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))$/"],
-            // "*.Occurred On(Time)" => ["required", "regex:/^[012][0-3]:[0-5]\d:[0-5]\d$/"],
-            // "*.Cleared On(Time)" => ["required", "regex:/^[012][0-3]:[0-5]\d:[0-5]\d$/"],
-            // "*.Duration" => ["required", "regex:/^[0-9]{2,3}:[0-5]\d:[0-5]\d$/"],
-
-            // "*.Occurred On(Date)" => ["required"],
+           
             "*.Cleared On(Date)" => ["required","date"],
             "*.Occurred On(Time)" => ["required","date_format:H:i:s"],
             "*.Cleared On(Time)" => ["required","date_format:H:i:s"],

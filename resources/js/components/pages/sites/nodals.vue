@@ -215,19 +215,7 @@ export default {
           sites_sheet.value = "";
         });
     },
-    // downloadAll() {
-    //   Sites.downloadAll()
-    //     .then((response) => {
-      
-    //       var fileUrl = window.URL.createObjectURL(new Blob([response.data]));
-    //       var fileLink = document.createElement("a");
-    //       fileLink.href = fileUrl;
-    //       fileLink.setAttribute("download", "AllSites.xlsx");
-    //       document.body.appendChild(fileLink);
-    //       fileLink.click();
-    //     })
-    //     .catch();
-    // },
+  
   },
 };
 </script>

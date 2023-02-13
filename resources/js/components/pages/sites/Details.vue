@@ -22,7 +22,7 @@
                     />
                   </div>
                 </div>
-                <div class="col-4">
+                <div class="col-6 col-md-4">
                   <div class="form-group">
                     <h6>Site Name:</h6>
                     <InputText
@@ -34,7 +34,7 @@
                     />
                   </div>
                 </div>
-                <div class="col-4">
+                <div class="col-6 col-md-4">
                   <div class="form-group">
                     <h6>BSC</h6>
                     <InputText
@@ -46,7 +46,7 @@
                     />
                   </div>
                 </div>
-                <div class="col-4">
+                <div class="col-6 col-md-4">
                   <div class="form-group">
                     <h6>2G</h6>
                     <InputText
@@ -58,7 +58,7 @@
                     />
                   </div>
                 </div>
-                <div class="col-4">
+                <div class="col-6 col-md-4">
                   <div class="form-group">
                     <h6>3G</h6>
                     <InputText
@@ -70,7 +70,7 @@
                     />
                   </div>
                 </div>
-                <div class="col-4">
+                <div class="col-6 col-md-4">
                   <div class="form-group">
                     <h6>4G</h6>
                     <InputText
@@ -83,7 +83,7 @@
                   </div>
                 </div>
 
-                <div class="col-4">
+                <div class="col-6 col-md-4">
                   <div class="form-group">
                     <h6>RNC</h6>
                     <InputText
@@ -95,7 +95,7 @@
                     />
                   </div>
                 </div>
-                <div class="col-4">
+                <div class="col-6 col-md-4">
                   <div class="form-group">
                     <h6>OZ</h6>
                     <InputText
@@ -107,7 +107,7 @@
                     />
                   </div>
                 </div>
-                <div class="col-4">
+                <div class="col-6 col-md-4">
                   <div class="form-group">
                     <h6>Type</h6>
                     <InputText
@@ -119,7 +119,7 @@
                     />
                   </div>
                 </div>
-                <div class="col-4">
+                <div class="col-6 col-md-4">
                   <div class="form-group">
                     <h6>Category</h6>
                     <InputText
@@ -131,7 +131,7 @@
                     />
                   </div>
                 </div>
-                <div class="col-4">
+                <div class="col-6 col-md-4">
                   <div class="form-group">
                     <h6>Severity</h6>
                     <InputText
@@ -143,7 +143,7 @@
                     />
                   </div>
                 </div>
-                <div class="col-4">
+                <div class="col-6 col-md-4">
                   <div class="form-group">
                     <h6>Office</h6>
                     <InputText
@@ -155,7 +155,7 @@
                     />
                   </div>
                 </div>
-                <div class="col-4">
+                <div class="col-6 col-md-4">
                   <div class="form-group">
                     <h6>Sharing</h6>
                     <InputText
@@ -167,7 +167,7 @@
                     />
                   </div>
                 </div>
-                <div class="col-4">
+                <div class="col-6 col-md-4">
                   <div class="form-group">
                     <h6>Host</h6>
                     <InputText
@@ -179,7 +179,7 @@
                     />
                   </div>
                 </div>
-                <div class="col-4">
+                <div class="col-6 col-md-4">
                   <div class="form-group">
                     <h6>Gest</h6>
                     <InputText
@@ -187,6 +187,30 @@
                       class="p-inputtext-focuse"
                       id="siteCode"
                       v-model="gest"
+                      disabled
+                    />
+                  </div>
+                </div>
+                 <div class="col-6 col-md-4">
+                  <div class="form-group">
+                    <h6>Nodal Code</h6>
+                    <InputText
+                      type="text"
+                      class="p-inputtext-focuse"
+                      id="siteCode"
+                      v-model="nodalCode"
+                      disabled
+                    />
+                  </div>
+                </div>
+                 <div class="col-6 col-md-4">
+                  <div class="form-group">
+                    <h6>Nodal Name</h6>
+                    <InputText
+                      type="text"
+                      class="p-inputtext-focuse"
+                      id="siteCode"
+                      v-model="nodalName"
                       disabled
                     />
                   </div>
@@ -339,6 +363,8 @@ export default {
       cascades: null,
       indirectCascades: null,
       selectedSite: null,
+      nodalCode:null,
+      nodalName:null,
       data:null,
       NUR2G: [],
       NUR3G: [],
@@ -475,7 +501,7 @@ export default {
         });
     },
     getSiteDetails() {
-      this.$emit("displayNoneSpinner", false);
+       this.$store.dispatch("displaySpinnerPage",false);
       Sites.getSiteDetails(this.site_code)
         .then((response) => {
           console.log(response);
@@ -496,6 +522,8 @@ export default {
           this.category = response.data.site.category;
           this.cascades = response.data.cascades;
           this.indirectCascades = response.data.indirectCascades;
+          this.nodalCode=response.data.site.nodal_code;
+          this.nodalName=response.data.site.nodal_name
           this.data={
             site_code:this.siteCode,
           }
@@ -504,7 +532,7 @@ export default {
           console.log(error);
         })
         .finally(() => {
-          this.$emit("displayNoneSpinner", true);
+           this.$store.dispatch("displaySpinnerPage",true);
         });
     },
     openDialog(){

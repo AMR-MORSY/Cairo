@@ -305,7 +305,7 @@ export default {
         !this.sharingError
        
       ) {
-         this.$emit("displayNoneSpinner", false);
+         this.$store.dispatch("displaySpinnerPage",false);
         let data = {
           site_code: this.site_code,
           site_name: this.site_name,
@@ -507,7 +507,7 @@ export default {
             }
           })
           .finally(() => {
-            this.$emit("displayNoneSpinner", true);
+             this.$store.dispatch("displaySpinnerPage",true);
           });
       }
     },

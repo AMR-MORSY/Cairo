@@ -26,7 +26,7 @@
         <Card>
           <template #title>
             <div class="d-flex justify-content-center align-items-center">
-              <p style="text-align: center">Week{{ period }}</p>
+              <p style="text-align: center">{{ period }} {{period_No}}</p>
             </div>
           </template>
           <template #content>

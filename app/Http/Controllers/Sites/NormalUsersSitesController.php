@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Sites;
 use App\Models\Sites\Site;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Cascade;
 use App\Models\Nodal;
 use ArrayIterator;
 use Illuminate\Support\Facades\Validator;
@@ -90,7 +91,23 @@ class NormalUsersSitesController extends Controller
             $siteCode = $validated['site_code'];
 
             $site = Site::where("site_code", $siteCode)->first();
+          
             if ($site) {
+                $originalCascade=Cascade::where("cascade_code",$siteCode)->first();
+                if($originalCascade)
+                {
+                    $nodalCode=$originalCascade->nodal_code;
+                    $originalNodal=Site::where("site_code",$nodalCode)->first();
+                    $nodalName=$originalNodal->site_name;
+                    $site['nodal_code']=$nodalCode;
+                    $site['nodal_name']=$nodalName;
+    
+                }
+                else{
+                    $site['nodal_code']=null;
+                    $site['nodal_name']=null;
+    
+                }
                 if (isset($site->nodal->cascades)) {
                     $directCascades = $site->nodal->cascades;
                     $indirectCascades = [];
