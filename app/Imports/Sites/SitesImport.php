@@ -45,6 +45,7 @@ class SitesImport implements ToModel, WithHeadingRow, WithValidation ,WithBatchI
             "*.4G"=>["nullable","regex:/^(100)|[1-9]\d?$/"],
             "*.oz"=>["nullable","regex:/^Cairo South|Cairo East|Cairo North|GZ$/"],
             "*.zone"=>["nullable","regex:/^(Cairo)$/"],
+            "*.status"=>["required","regex:/^On Air|Off Air$/"],
             
         ];
     }
@@ -62,6 +63,7 @@ class SitesImport implements ToModel, WithHeadingRow, WithValidation ,WithBatchI
         "4G.regex"=>"Cells number from 1-100",
         "*oz.regex"=>"Operation Zone:(Cairo South|Cairo East|Cairo North|GZ)",
         "zone.regex"=>"Zone must be Cairo",
+        "status.regex"=>"status either on air or off air"
 
     ];
 }
@@ -83,7 +85,8 @@ class SitesImport implements ToModel, WithHeadingRow, WithValidation ,WithBatchI
             'zone'=>$row['zone'],
             "2G_cells"=>$row["2G"],
             "3G_cells"=>$row["3G"],
-            "4G_cells"=>$row["4G"]
+            "4G_cells"=>$row["4G"],
+            "status"=>$row["status"]
         ]);
     }
     public function batchSize(): int

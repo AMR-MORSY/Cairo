@@ -287,7 +287,7 @@ export default {
       return response;
     },
     getNUR() {
-      this.$emit("displayNoneSpinner", false);
+       this.$store.dispatch("displaySpinnerPage", false);
       let data = {
         week_month: this.week_month,
         week: this.week,
@@ -518,7 +518,7 @@ export default {
           }
         })
         .finally(() => {
-          this.$emit("displayNoneSpinner", true);
+        this.$store.dispatch("displaySpinnerPage", true);
         });
     },
   },

@@ -6,6 +6,7 @@ use App\Models\Sites\Site;
 use Illuminate\Http\Request;
 use App\Imports\Sites\SitesImport;
 
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\sites\AllSitesExport;
@@ -25,13 +26,27 @@ class SuperAdminSitesController extends Controller
    
     public function store(Request $request)
     {
+     
         $validator = Validator::make($request->all(), ['sites' => 'required|mimes:csv,xlsx'], ['sites.mimes' => "only csv,xlsx extensions"]);
-        $validated = $validator->validated();
-        if ($validated) {
+        if ($validator->fails()) {
+            return response()->json([
+                "errors" => $validator->getMessageBag()->toArray(),
+            ], 422);
+            $this->throwValidationException(
+
+                $request,
+                $validator
+
+            );
+        }
+        else{
+            $validated = $validator->validated();
+      
 
             $import = new SitesImport;
 
             try{
+                DB::table('sites')->truncate();
                 Excel::import($import,$validated['sites']);
                 return response()->json([
                     "message" => "inserted Succesfully",
@@ -56,43 +71,15 @@ class SuperAdminSitesController extends Controller
 
             }
 
-
-            // $import->import($validated['sites']);
-            // if ($import->failures() ) {
-            //     $errors = [];
-            //     $error = [];
-
-            //     foreach ($import->failures() as $failure) {
-            //         $error['row'] = $failure->row(); // row that went wrong
-            //         $error['attribute'] = $failure->attribute(); // either heading key (if using heading row concern) or column index
-            //         $error['errors'] = $failure->errors(); // Actual error messages from Laravel validator
-            //         $error['values'] = $failure->values(); // The values of the row that has failed.
-            //         array_push($errors, $error);
-            //     }
-            //     return response()->json([
-            //         "sheet_errors" => $errors,
-            //     ], 422);
-            // } else {
-            //     return response()->json([
-            //         "message" => "inserted Succesfully",
-            //     ], 200);
-            // }
-        } else {
-            return response()->json([
-                "errors" => $validator->getMessageBag()->toArray(),
-            ], 422);
-            $this->throwValidationException(
-
-                $request,
-                $validator
-
-            );
         }
+       
+
+
+       
     }
     public function export_all(Request $request)
     {
-        // $export=new AllSitesExport();
-        // $export->download('AllSites.xlsx');
+        
         return new AllSitesExport();
     }
 
@@ -114,6 +101,7 @@ class SuperAdminSitesController extends Controller
              "2G_cells"=> ["nullable", "regex:/^(100)|[1-9]\d?$/"],
              "3G_cells"=> ["nullable", "regex:/^(100)|[1-9]\d?$/"],
              "4G_cells"=> ["nullable", "regex:/^(100)|[1-9]\d?$/"],
+             "status"=>["required","regex:/^On Air|Off Air$/"],
          ];
          $validator = Validator::make($request->all(), $ruls);
          
@@ -147,6 +135,7 @@ class SuperAdminSitesController extends Controller
              $site["2G_cells"]=$validated["2G_cells"];
              $site["3G_cells"]=$validated["3G_cells"];
              $site["4G_cells"]=$validated["4G_cells"];
+             $site['status']=$validated["status"];
            $site->save();
            
              return response()->json([

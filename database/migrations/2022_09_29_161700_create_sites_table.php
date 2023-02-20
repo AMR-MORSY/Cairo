@@ -31,6 +31,7 @@ return new class extends Migration
             $table->integer("2G_cells")->nullable();
             $table->integer("3G_cells")->nullable();
             $table->integer("4G_cells")->nullable();
+            $table->enum("status",["On Air","Off Air"])->default("On Air");
             $table->timestamps();
         });
     }

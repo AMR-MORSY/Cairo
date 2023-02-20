@@ -161,6 +161,15 @@
                       </option>
                     </select>
                   </div>
+                   <div class="col-12 col-sm-6 col-lg-3">
+                    <label for="oz">Status:</label>
+                    <select id="oz" v-model="status" class="form-select">
+                      <option></option>
+                      <option :value="status" v-for="status in statusOptions" :key="status">
+                        {{ status }}
+                      </option>
+                    </select>
+                  </div>
                   <div class="col-12 col-sm-6 col-lg-3">
                     <label for="2G">2G Cells:</label>
                     <input
@@ -237,6 +246,8 @@ export default {
       type: null,
 
       typeOptions: ["Shelter", "Micro", "Outdoor"],
+      statusOptions:["On Air","Off Air"],
+      status:null,
       category: null,
 
       categoryOptions: ["Normal", "BSC", "NDL", "LDN", "VIP + NDL", "VIP"],
@@ -277,7 +288,7 @@ export default {
       this.$router.go(-1);
     },
     getSiteDetails() {
-      this.$emit("displayNoneSpinner", false);
+        this.$store.dispatch("displaySpinnerPage", false);
 
       Sites.getSiteDetails(this.siteCode)
         .then((response) => {
@@ -287,6 +298,7 @@ export default {
           this.type = response.data.site.type;
           this.severity = response.data.site.severity;
           this.sharing = response.data.site.sharing;
+          this.status=response.data.site.status;
           this.host = response.data.site.host;
           this.gest = response.data.site.gest;
           this.cells2G = response.data.site["2G_cells"];
@@ -302,7 +314,7 @@ export default {
           console.log(error);
         })
         .finally(() => {
-          this.$emit("displayNoneSpinner", true);
+          this.$store.dispatch("displaySpinnerPage", true);
         });
     },
 
@@ -348,6 +360,7 @@ export default {
           "2G_cells": this.cells2G,
           "3G_cells": this.cells3G,
           "4G_cells": this.cells4G,
+          status:this.status
         };
         console.log(data);
         Sites.updateSite(data)

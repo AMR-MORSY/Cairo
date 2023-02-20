@@ -215,6 +215,18 @@
                     />
                   </div>
                 </div>
+                <div class="col-6 col-md-4">
+                  <div class="form-group">
+                    <h6>Status</h6>
+                    <InputText
+                      type="text"
+                      class="p-inputtext-focuse"
+                      id="siteCode"
+                      v-model="status"
+                      disabled
+                    />
+                  </div>
+                </div>
               </div>
               <div class="row mt-5 px-5 buttons">
                 <div class="col-6 col-sm-4 col-md-4 my-3">
@@ -359,6 +371,7 @@ export default {
       sharing: null,
       host: null,
       severity: null,
+      status:null,
       gest: null,
       cascades: null,
       indirectCascades: null,
@@ -428,7 +441,7 @@ export default {
   },
   methods: {
     getSiteNUR() {
-      this.$emit("displayNoneSpinner", false);
+       this.$store.dispatch("displaySpinnerPage", false);
       let data = {
         site_code: this.site_code,
       };
@@ -497,7 +510,7 @@ export default {
           console.log(error);
         })
         .finally(() => {
-          this.$emit("displayNoneSpinner", true);
+         this.$store.dispatch("displaySpinnerPage", true);
         });
     },
     getSiteDetails() {
@@ -510,6 +523,7 @@ export default {
           this.type = response.data.site.type;
           this.severity = response.data.site.severity;
           this.sharing = response.data.site.sharing;
+          this.status=response.data.site.status;
           this.host = response.data.site.host;
           this.gest = response.data.site.gest;
           this.cell2G = response.data.site["2G_cells"];
