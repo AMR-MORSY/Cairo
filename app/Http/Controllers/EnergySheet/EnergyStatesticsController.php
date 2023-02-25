@@ -16,32 +16,18 @@ use App\Services\EnergyAlarms\WeekMonthFunctions;
 
 class EnergyStatesticsController extends Controller
 {
-    public function statestics($week_month,$week,$month,$year)
+    public function statestics($week,$year)
     {
         $data=[
-            "week_month"=>$week_month,
+           
             "week"=>$week,
-            "month"=>$month,
+          
             "year"=>$year
         ];
-        if($week!=0)
-        {
+     
             
-            $validator=Validator::make($data,["month"=>"nullable","week"=>["required",'regex:/^(week)$/'],"year" => ['required', 'regex:/^2[0-9]{3}$/'],"week_month"=>['required','regex:/^(?:[1-9]|[1-4][0-9]|5[0-2])$/']]);
-           
-        }
-        else if($month!=0)
-        {
-            $validator=Validator::make($data,["week"=>"nullable","month"=>["required",'regex:/^(month)$/'],"year" => ['required', 'regex:/^2[0-9]{3}$/'],"week_month"=>['required','regex:/^(?:[1-9]|[1-4][0-9]|5[0-2])$/']]);
-            
-        }
-        else if($week==0 && $month==0)
-        {
-            return response()->json([
-                'period_error' => "Please select week or month",
-            ],422);
-
-        }
+            $validator=Validator::make($data,["week"=>["required",'integer',"between:1,52"],"year" => ['required', 'regex:/^2[0-9]{3}$/']]);
+    
         if($validator->fails())
         {
             return response()->json([
@@ -50,33 +36,7 @@ class EnergyStatesticsController extends Controller
         }
         else{
             $validated=$validator->validated();
-            if($validated['month']=="month")
-            {
-                $monthlyAlarms=$this->getMonthlyAlarms($validated['week_month'],$validated['year']);
-                if($monthlyAlarms['error'])
-                {
-                    return response()->json([
-                        "error"=>$monthlyAlarms['errors']
-    
-                    ],404);
-    
-  
-                }
-                else
-                {
-                    return response()->json([
-
-                        "Alarms"=>$monthlyAlarms['statestics'],
-    
-                    ],200);
-    
-
-                  
-                }
-
-            }
-
-            else{
+         
                 $weeklyAlarms=$this->getWeeklyAlarms($validated['week_month'],$validated['year']);
                 if($weeklyAlarms['error'])
                 {
@@ -99,7 +59,7 @@ class EnergyStatesticsController extends Controller
                   
                 }
                  
-            }
+            
         }
        
        

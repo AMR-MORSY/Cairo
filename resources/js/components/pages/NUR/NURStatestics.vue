@@ -1,6 +1,13 @@
 <template>
   <div class="container mt-5" v-if="isNURAvailable">
-    <div class="row">
+    <div class="row ">
+      <div class="col"></div>
+      <div class="col-10 ">
+        <div class="title ">
+          <p>Week:{{week}}</p>
+        </div>
+      </div>
+      <div class="col"></div>
       <div class="col-12 col-md-6 col-lg-4 mt-5">
         <Card>
           <template #title>
@@ -116,6 +123,8 @@
       :cairoSouthGen="cairoSouthGen"
       :cairoSouthSubsystem="cairoSouthSubsystem"
       :cairoSouthAccessStatesitcs="cairoSouthAccessStatesitcs"
+      :week="week"
+      :year="year"
     />
     <CairoEast
       :cairoEastTopNUR="cairoEastTopNUR"
@@ -123,6 +132,8 @@
       :cairoEastGen="cairoEastGen"
       :cairoEastSubsystem="cairoEastSubsystem"
       :cairoEastAccessStatesitcs="cairoEastAccessStatesitcs"
+      :week="week"
+      :year="year"
     />
     <CairoNorth
       :cairoNorthTopNUR="cairoNorthTopNUR"
@@ -130,6 +141,8 @@
       :cairoNorthGen="cairoNorthGen"
       :cairoNorthSubsystem="cairoNorthSubsystem"
       :cairoNorthAccessStatesitcs="cairoNorthAccessStatesitcs"
+      :week="week"
+      :year="year"
     />
     <Giza
       :gizaTopNUR="gizaTopNUR"
@@ -137,6 +150,8 @@
       :gizaGen="gizaGen"
       :gizaSubsystem="gizaSubsystem"
       :gizaAccessStatesitcs="gizaAccessStatesitcs"
+      :week="week"
+      :year="year"
     />
   </div>
   <template v-else>
@@ -198,6 +213,7 @@ export default {
   data() {
     return {
       weekErrors: null,
+     
       monthErrors: null,
       yearErrors: null,
       notFoundErrors: null,
@@ -251,8 +267,8 @@ export default {
   beforeMount() {
     this.getNUR();
   },
-  props: ["week_month", "week", "month", "year"],
-  emits: ["displayNoneSpinner"],
+  props: [ "week", "year"],
+ 
   watch:{
     week(){
       this.getNUR();
@@ -289,9 +305,9 @@ export default {
     getNUR() {
        this.$store.dispatch("displaySpinnerPage", false);
       let data = {
-        week_month: this.week_month,
+      
         week: this.week,
-        month: this.month,
+      
         year: this.year,
       };
 
@@ -539,6 +555,15 @@ export default {
     right: 0;
     z-index: 1;
     background-color: rgba($color: #ffff, $alpha: 0.7);
+  }
+}
+.title{
+  margin-top: 50px;
+  width: 100%;
+  p{
+    width: 100%;
+    text-align: center;
+    font-weight: 500;
   }
 }
 

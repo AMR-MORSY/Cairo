@@ -116,6 +116,7 @@ export default {
     "cairoSouthGen",
     "cairoSouthRepeatedSites",
     "cairoSouthAccessStatesitcs",
+    "year"
   ],
   name: "CairoSouth",
 mounted() {

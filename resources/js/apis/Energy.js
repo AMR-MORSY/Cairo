@@ -12,7 +12,7 @@ export default {
         return allInstances.Api.get("/energysheet/index");
     },
     getEnergyStatestics(data){
-        return allInstances.Api.get(`/energysheet/statestics/${data.week_month}/${data.week}/${data.month}/${data.year}`);
+        return allInstances.Api.get(`/energysheet/statestics/${data.week}/${data.year}`);
     
     },
     getSitePowerAlarms(data){

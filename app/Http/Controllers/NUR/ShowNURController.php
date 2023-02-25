@@ -7,6 +7,7 @@ use App\Models\NUR\NUR3G;
 use App\Models\NUR\NUR4G;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Sites\Site;
 use Illuminate\Support\Facades\Validator;
 use App\Services\NUR\NURStatestics\WeeklyStatestics;
 use App\Services\NUR\NURStatestics\MonthlyStatestics;
@@ -17,32 +18,23 @@ class ShowNURController extends Controller
     {
         $this->middleware(["role:admin|super-admin"]);
     }
-    public function show_nur($week_month,$week,$month,$year)
+
+
+    public function show_nur($week,$year)
     {
         $data=[
-            "week_month"=>$week_month,
+           
             "week"=>$week,
-            "month"=>$month,
+            
             "year"=>$year
         ];
-        if($week!=0)
-        {
+      
             
-            $validator=Validator::make($data,["month"=>"nullable","week"=>["required",'regex:/^(week)$/'],"year" => ['required', 'regex:/^2[0-9]{3}$/'],"week_month"=>['required','regex:/^(?:[1-9]|[1-4][0-9]|5[0-8])$/']]);
+            $validator=Validator::make($data,["week"=>["required",'integer',"between:1,52"],"year" => ['required', 'regex:/^2[0-9]{3}$/']]);
            
-        }
-        else if($month!=0)
-        {
-            $validator=Validator::make($data,["week"=>"nullable","month"=>["required",'regex:/^(month)$/'],"year" => ['required', 'regex:/^2[0-9]{3}$/'],"week_month"=>['required','regex:/^[1-9]|1[0-2]$/']]);
-            
-        }
-        else if($week==0 && $month==0)
-        {
-            return response()->json([
-                'period_error' => "Please select week or month",
-            ],422);
-
-        }
+        
+      
+      
         if($validator->fails())
         {
             return response()->json([
@@ -52,31 +44,7 @@ class ShowNURController extends Controller
         else{
             $validated=$validator->validated();
 
-            if($validated['month']=="month")
-            {
-              $monthlyNUR= $this->getMonthlyNUR($validated['week_month'],$validated['year']);
-              if($monthlyNUR['error'])
-              {
-                return response()->json([
-                    "errors"=>$monthlyNUR['errors']
-
-                ],404);
-
-              }
-              else
-              {
-                return response()->json([
-                    "NUR"=>$monthlyNUR,
-
-                ],200);
-
-
-              }
-               
-
-            }
-            else{
-                $weeklyNUR= $this->getWeeklyNUR($validated['week_month'],$validated['year']);
+                $weeklyNUR= $this->getWeeklyNUR($validated['week'],$validated['year']);
                 if(isset($weeklyNUR['error']))
                 {
                     return response()->json([
@@ -91,6 +59,7 @@ class ShowNURController extends Controller
                     return response()->json([
 
                         "NUR"=>$weeklyNUR,
+                       
     
                     ],200);
     
@@ -102,7 +71,7 @@ class ShowNURController extends Controller
             
         
 
-            }
+            
           
 
         }
@@ -206,22 +175,90 @@ class ShowNURController extends Controller
             $site_2GNUR=NUR2G::where("problem_site_code",$validated["site_code"])->get();
             $site_3GNUR=NUR3G::where("problem_site_code",$validated["site_code"])->get();
             $site_4GNUR=NUR4G::where("problem_site_code",$validated["site_code"])->get();
-            // if(count($site_2GNUR)>0 && count($site_3GNUR)>0 && count($site_4GNUR)>0)
-            // {
+          
                 return response()->json([
                     "NUR2G"=>$site_2GNUR,
                     "NUR3G"=>$site_3GNUR,
                     "NUR4G"=>$site_4GNUR,
                 ],200);
-            // }
-            // else
-            // {
-            //     return response()->json([
-            //         'errors' => "No"
-            //     ],404);
-    
+         
+        }
 
-            // }
+    }
+    public function vipSitesWeeklyNUR($zone,$week,$year)
+    {
+        $data=[
+            "zone"=>$zone,
+            "week"=>$week,
+            "year"=>$year
+        ];
+        $validator=Validator::make($data,["week"=>["required",'integer',"between:1,52"],"zone" => ['required', 'regex:/^Cairo East|Cairo South|Cairo North|Giza$/'],"year" => ['required', 'regex:/^2[0-9]{3}$/']]);
+        if($validator->fails())
+        {
+            return response()->json([
+                'errors' => $validator->getMessageBag()->toArray()
+            ],422);
+
+        }
+        else
+        {
+            $validated=$validator->validated();
+            $vip_sites=Site::where("oz",$validated["zone"])->where("category","VIP")->orWhere("oz",$validated["zone"])->where("category","VIP + NDL")->get();
+            $vip_sites_codes=$vip_sites->groupBy("site_code")->keys();
+            $vip_sites_names=$vip_sites->groupBy("site_name")->keys();
+            $count_vip_codes=count($vip_sites_codes);
+            $sites=[];
+          
+
+            for($i=0;$i<$count_vip_codes;$i++)
+            {
+                $vip=[];
+                $NUR2G=NUR2G::where("problem_site_code",$vip_sites_codes[$i])->where("week",$week)->where("year",$validated["year"])->get();
+                $NUR3G=NUR3G::where("problem_site_code",$vip_sites_codes[$i])->where("week",$week)->where("year",$validated["year"])->get();
+                $NUR4G=NUR4G::where("problem_site_code",$vip_sites_codes[$i])->where("week",$week)->where("year",$validated["year"])->get();
+               
+                if(count($NUR2G)>0)
+                {
+                    $vip["site_name"]=$vip_sites_names[$i];
+                    $vip["site_code"]=$vip_sites_codes[$i];
+                    $vip["NUR_2G_count_tickets"]=$NUR2G->count();
+                    $vip["NUR_2G_sum_nur"]=number_format( $NUR2G-> sum("nur"), 2, '.', ',') ;
+                    $vip["NUR_2G_tickets"]=$NUR2G;
+
+                }
+                if(count($NUR3G)>0)
+                {
+                    $vip["site_name"]=$vip_sites_names[$i];
+                    $vip["site_code"]=$vip_sites_codes[$i];
+                    $vip["NUR_3G_count_tickets"]=$NUR3G->count();
+                    $vip["NUR_3G_sum_nur"] = number_format( $NUR3G-> sum("nur"), 2, '.', ',');
+                    $vip["NUR_3G_tickets"]=$NUR3G;
+
+                }
+                if(count($NUR4G)>0)
+                {
+                    $vip["site_name"]=$vip_sites_names[$i];
+                    $vip["site_code"]=$vip_sites_codes[$i];
+                    $vip["NUR_4G_count_tickets"]=$NUR4G->count();
+                    $vip["NUR_4G_sum_nur"]=number_format( $NUR4G-> sum("nur"), 2, '.', ',');
+                    $vip["NUR_4G_tickets"]=$NUR4G;
+
+                }
+                if(count($vip)>0)
+                {
+                    array_push($sites,$vip);
+
+                }
+               
+
+            }
+         
+               
+            
+            return response()->json([
+                "sites"=>$sites
+            ],200);
+
         }
 
     }

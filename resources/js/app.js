@@ -58,6 +58,9 @@ import SpeedDial from 'primevue/speeddial';
 
 
 
+
+
+
 createApp(app)
 .use(store)
 .use(router)
@@ -66,10 +69,12 @@ createApp(app)
 .use(ToastService)
 .use(DialogService)
 .use(ConfirmationService)
+
 .directive('tooltip', Tooltip)
 
 .component('Datepicker', Datepicker)
 .component('ConfirmDialog', ConfirmDialog)
+
 .component("Toast",Toast)
 .component("SpinnerPage",SpinnerPage)
 .component("Fieldset",Fieldset)
@@ -100,6 +105,6 @@ createApp(app)
 .component("navbar",navbar)
 .component("spinnerButton",spinnerButton)
 .component("helperTable",helperTable)
-
+// .component("downloadExcel", JsonExcel)
 .mount("#app");
 

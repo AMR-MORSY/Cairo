@@ -209,8 +209,8 @@ export default {
     };
   },
   name: "energyStatestics",
-  props: ["week_month", "week", "month", "year"],
-  emits: ["displayNoneSpinner"],
+  props: [ "week", "year"],
+ 
   components: {
     CairoEastEnergy,
     CairoNorthEnergy,
@@ -230,9 +230,9 @@ export default {
     getEnergyStatestics() {
       this.$store.dispatch("displaySpinnerPage", false);
       let data = {
-        week_month: this.week_month,
+        
         week: this.week,
-        month: this.month,
+       
         year: this.year,
       };
       Energy.getEnergyStatestics(data)

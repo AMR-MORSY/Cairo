@@ -74,19 +74,24 @@
             </TopSites>
           </div>
         </div>
+        <Button class="vip" @click="getVipSitesNUR">
+          <span>Vip Sites NUR</span>
+        </Button>
       </template>
     </Card>
   </div>
   <template>
-      <!-- <DynamicDialog :key="cairoEastNur" /> -->
+   
   </template>
-
 </template>
 
 <script>
 import TopSites from "./TopSites.vue";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import siteNURTable from "./siteNURTable.vue";
+
+import NUR from "../../../apis/NUR";
+import VipsOrNodals from "../NUR/VipsOrNodals.vue";
 
 export default {
   data() {
@@ -112,6 +117,7 @@ export default {
   components: {
     TopSites,
     siteNURTable,
+    VipsOrNodals,
   },
   props: [
     "cairoEastSubsystem",
@@ -119,6 +125,8 @@ export default {
     "cairoEastGen",
     "cairoEastRepeatedSites",
     "cairoEastAccessStatesitcs",
+    "week",
+    "year",
   ],
   name: "CairoEast",
   mounted() {
@@ -176,7 +184,6 @@ export default {
   },
   methods: {
     getSiteNUR(event) {
-      console.log(event.NUR3G);
       this.$dialog.open(siteNURTable, {
         props: {
           header: event.NUR3G[0].problem_site_name,
@@ -187,32 +194,52 @@ export default {
             "960px": "75vw",
             "640px": "90vw",
           },
-          //   modal: true,
+            modal: true,
         },
-        // templates: {
-        //   footer: () => {
-        //     return [
-        //       h(Button, {
-        //         label: "No",
-        //         icon: "pi pi-times",
-        //         onClick: () => dialogRef.close({ buttonType: "No" }),
-        //         class: "p-button-text",
-        //       }),
-        //       h(Button, {
-        //         label: "Yes",
-        //         icon: "pi pi-check",
-        //         onClick: () => dialogRef.close({ buttonType: "Yes" }),
-        //         autofocus: true,
-        //       }),
-        //     ];
-        //   },
-        // },
+      
         data: {
           NUR3G: event.NUR3G,
           NUR2G: event.NUR2G,
           NUR4G: event.NUR4G,
         },
       });
+    },
+
+    getVipSitesNUR() {
+      this.$store.dispatch("displaySpinnerPage", false);
+      let sites = [];
+
+      NUR.getVipSitesWeeklyNUR("Cairo East", this.week, this.year)
+        .then((response) => {
+          if (response.data.sites.length > 0) {
+            sites = response.data.sites;
+            this.$dialog.open(VipsOrNodals, {
+              props: {
+                style: {
+                  width: "75vw",
+                },
+                breakpoints: {
+                  "960px": "75vw",
+                  "640px": "90vw",
+                },
+                modal: true,
+              },
+
+              data: {
+                sites: sites,
+              },
+            });
+          } else {
+            this.$store.dispatch("dialogMessage", "Great !!! VIP sites did not make NUR this Week");
+            this.$store.dispatch("displayDialog", true);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+        .finally(() => {
+          this.$store.dispatch("displaySpinnerPage", true);
+        });
     },
 
     genStatestics(statestics) {
@@ -250,4 +277,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.p-button.vip {
+  background-color: var(--purple-700) !important;
+  background-size: 200% 100%;
+  background-position: right bottom;
+  transition: background-position 0.5s ease-out;
+  color: #fff;
+  border-color: var(--purple-700);
+}
+.p-button.vip:hover {
+  background-position: left bottom !important;
+  border-color: var(--purple-700) !important;
+}
 </style>

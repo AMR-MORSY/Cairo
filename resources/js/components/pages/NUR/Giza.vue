@@ -116,6 +116,7 @@ export default {
     "gizaGen",
     "gizaRepeatedSites",
     "gizaAccessStatesitcs",
+    "year"
   ],
   name: "CairoEast",
   mounted() {

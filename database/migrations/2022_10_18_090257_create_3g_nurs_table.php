@@ -29,7 +29,7 @@ return new class extends Migration
             $table->boolean("access");
             $table->boolean('Force_Majeure')->nullable();
             $table->string('Force_Majeure_type')->nullable();
-            $table->enum("technology", ['2G'])->default("2G");
+            $table->enum("technology", ['3G'])->default("3G");
             $table->string("gen_owner")->nullable();
             $table->string('Dur_Hr');
             $table->integer('Dur_min');

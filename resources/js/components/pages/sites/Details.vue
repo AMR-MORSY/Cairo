@@ -285,6 +285,7 @@
                   <Column selectionMode="single"></Column>
                   <Column field="cascade_code" header="Site Code"></Column>
                   <Column field="cascade_name" header="Site Name"></Column>
+                   <Column field="category" header="Site Category"></Column>
                   <Column field="countCascades" header="Cascades"></Column>
                 </DataTable>
               </template>
@@ -323,6 +324,7 @@
                   <Column selectionMode="single"></Column>
                   <Column field="cascade_code" header="Site Code"></Column>
                   <Column field="cascade_name" header="Site Name"></Column>
+                     <Column field="category" header="Site Category"></Column>
                 </DataTable>
               </template>
               <template v-else>
@@ -337,15 +339,7 @@
       <div class="col-md-1"></div>
     </div>
   </div>
-  <!-- <DynamicDialog :key="details">
-  
-  </DynamicDialog> -->
 
-  <!-- <ConfirmDialog
-    :breakpoints="{ '960px': '75vw', '640px': '100vw' }"
-    :style="{ width: '50vw' }"
-   
-  ></ConfirmDialog> -->
 </template>
 
 <script>
@@ -478,24 +472,7 @@ export default {
                 },
                 modal: true,
               },
-              // templates: {
-              //   footer: () => {
-              //     return [
-              //       h(Button, {
-              //         label: "No",
-              //         icon: "pi pi-times",
-              //         onClick: () => dialogRef.close({ buttonType: "No" }),
-              //         class: "p-button-text",
-              //       }),
-              //       h(Button, {
-              //         label: "Yes",
-              //         icon: "pi pi-check",
-              //         onClick: () => dialogRef.close({ buttonType: "Yes" }),
-              //         autofocus: true,
-              //       }),
-              //     ];
-              //   },
-              // },
+            
               data: {
                 NUR3G: this.NUR3G,
                 NUR2G: this.NUR2G,

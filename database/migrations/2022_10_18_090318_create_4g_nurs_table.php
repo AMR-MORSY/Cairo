@@ -28,7 +28,7 @@ return new class extends Migration
             $table->boolean("access");
             $table->boolean('Force_Majeure')->nullable();
             $table->string('Force_Majeure_type')->nullable();
-            $table->enum("technology", ['2G'])->default("2G");
+            $table->enum("technology", ['4G'])->default("4G");
             $table->string('Dur_Hr');
             $table->integer('Dur_min');
             $table->integer("week");

@@ -4,7 +4,7 @@
       <!-- <div class="col-12 col-lg-1"></div> -->
       <div class="col-12 col-lg-12">
         <div class="card mt-5">
-          <template v-if="modifications">
+          <template v-if="modifications.length>0">
             <DataTable
               :value="modifications"
               :paginator="true"
@@ -76,6 +76,15 @@
                 />
               </div>
             </div>
+              <download-excel
+            class="btn btn-default"
+            :data="downloadModifications"
+            
+            worksheet="My Worksheet"
+            name="Modifications.xls"
+          >
+            Download Excel 
+          </download-excel>
           </template>
 
           <template v-else>
@@ -83,6 +92,7 @@
               <p>No Modifications Available</p>
             </div>
           </template>
+        
         </div>
       </div>
       <!-- <div class="col-12 col-lg-1"></div> -->
@@ -95,7 +105,7 @@ import Modifications from "../../../apis/Modifications";
 export default {
   data() {
     return {
-      modifications: null,
+      modifications: [],
       isRowSelected: false,
       selectedModification: null,
     };
@@ -110,11 +120,17 @@ export default {
         }, 0);
       }
     },
+    downloadModifications()
+    {
+      return this.modifications;
+    
+    }
   },
   props: ["columnName", "columnValue"],
-  beforeMount() {
+ created() {
     this.getModificationsIndex();
   },
+ 
   name: "modificationsIndex",
   methods: {
     getModificationsIndex() {

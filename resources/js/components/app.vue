@@ -9,6 +9,7 @@
   <ConfirmDialog key="confirm"></ConfirmDialog>
 
   <SpinnerPage :displayNone="displaySpinnerPage"></SpinnerPage>
+  <DialogMessage :displayDialog="displayDialog" :dialogMessage="dialogMessage"/>
 
   <router-view></router-view>
 </template>
@@ -17,8 +18,10 @@
 import User from "../apis/User";
 import modal from "./helpers/modal.vue";
 import SitesTable from "../components/pages/sites/SitesTable.vue";
+import DialogMessage from "./DialogMessage.vue";
+import DialogMessageVue from './DialogMessage.vue';
 export default {
-  components: { modal, SitesTable },
+  components: { modal, SitesTable,DialogMessage },
   data() {
     return {
       showModal: false,
@@ -44,6 +47,15 @@ export default {
       
 
       },
+      displayDialog()
+      {
+        return this.$store.state.displayDialog;
+      },
+      dialogMessage()
+      {
+        return this.$store.state.dialogMessage;
+      },
+      
   
     sessoinTimeOut() {
       if (this.$store.state.sessionTimeOut) {

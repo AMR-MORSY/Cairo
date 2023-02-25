@@ -11,7 +11,8 @@ const store = createStore({
         NUR:null,
         displaySpinnerPage:true,
         siteAlarms:null,
-        // modificationIndex:null,
+        displayDialog:false,
+        dialogMessage:'',
 
     },
     getters: {},
@@ -86,10 +87,14 @@ const store = createStore({
             state.siteAlarms=alarms;
 
         },
-        // STORE_MODIFICATIONS_INDEX(state,modificationIndex)
-        // {
-        //     state.modificationIndex=modificationIndex;
-        // }
+        DISPLAY_DIALOG(state,status)
+        {
+            state.displayDialog=status
+        },
+        DIALOG_MESSAGE(state,message)
+        {
+            state.dialogMessage=message;
+        },
     },
     actions: {
         changeLoginState({ commit }, status) {
@@ -115,11 +120,14 @@ const store = createStore({
             commit("SITE_ALARMS",alarms);
 
         },
-        // modificationIndex({commit},modificationIndex)
-        // {
-        //     commit("STORE_MODIFICATIONS_INDEX",modificationIndex)
-
-        // }
+        displayDialog({commit},status)
+        {
+            commit("DISPLAY_DIALOG",status);
+        },
+        dialogMessage({commit},message)
+        {
+            commit("DIALOG_MESSAGE",message)
+        }
     },
 });
 export default store;

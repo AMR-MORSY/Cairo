@@ -21,7 +21,7 @@ export default {
     },
     getNur(data)
     {
-        return allInstances.Api.get(`/Nur/show/${data.week_month}/${data.week}/${data.month}/${data.year}`);
+        return allInstances.Api.get(`/Nur/show/${data.week}/${data.year}`);
 
     },
     getSiteNUR(siteCode)
@@ -41,4 +41,8 @@ export default {
     {
         return allInstances.downloadApi.post("/Nur/downloadNUR4G", data)
     },
+    getVipSitesWeeklyNUR(zone,week,year)
+    {
+        return allInstances.Api.get(`/Nur/vip/week/${zone}/${week}/${year}`);
+    }
 };

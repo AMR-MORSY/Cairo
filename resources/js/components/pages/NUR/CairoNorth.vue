@@ -111,7 +111,7 @@ export default {
     TopSites,
         siteNURTable,
   },
-  props: ["cairoNorthSubsystem", "cairoNorthTopNUR", "cairoNorthGen","cairoNorthRepeatedSites","cairoNorthAccessStatesitcs"],
+  props: ["cairoNorthSubsystem","year", "cairoNorthTopNUR", "cairoNorthGen","cairoNorthRepeatedSites","cairoNorthAccessStatesitcs"],
   name: "CairoNorth",
 mounted() {
   if(this.cairoNorthSubsystem)

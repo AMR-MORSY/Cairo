@@ -8,7 +8,7 @@
             {{ error }}
           </li>
         </ul>
-        <div class="col-12">
+        <!-- <div class="col-12">
             <div class="form-group">
             <input
               type="radio"
@@ -32,42 +32,34 @@
             <label for="month">Month</label>
           </div>
          
-        </div>
+        </div> -->
         <div class="col-6">
          
           <div class="form-group">
             <select
               name=""
-              v-model="week_month"
-              :class="{ 'is-invalid': week_monthError }"
+              v-model="week"
+              :class="{ 'is-invalid': weekError }"
               class="form-select"
              
             >
-              <template v-if="weeks">
-                 <option value="">--Select Week/Month--</option>
+            
+                 <option value="">--Select Week---</option>
                 <option v-for="period in periods" :key="period">
                   {{ period }}
                 </option>
-              </template>
-              <template v-if="months">
-                 <option value="">--Select Week/Month--</option>
-                <option
-                  v-for="period in periods"
-                  :value="period.num"
-                  :key="period.num"
-                >
-                  {{ period.char }}
-                </option>
-              </template>
+         
+             
             </select>
+                <div v-if="weekError">
+              <p style="color: red">{{ weekError }}</p>
+            </div>
           </div>
-          <div v-if="week_monthError">
-            <p style="color: red">{{ week_monthError }}</p>
-          </div>
+        
         </div>
         <div class="col-6">
           <div class="form-group">
-            <!-- <label for="year">Year</label> -->
+   
             <select
               name=""
               id="year"
@@ -102,9 +94,7 @@
 </template>
 
 <script>
-import Energy from "../../apis/Energy";
-import NUR from "../../apis/NUR";
-import WeeksAndMonths from "../../Helpers/WeeksAndMonths";
+
 
 export default {
   data() {
@@ -114,12 +104,11 @@ export default {
       year: "",
       yearError: null,
       periods: [],
-      week_month: "",
-      week_monthError: null,
-      week: "week",
-      month: 0,
-      weeks: true,
-      months: false,
+     
+      weekError: null,
+      week: "",
+     
+    
       notFoundErrors: null,
       NUR2G: null,
     };
@@ -129,31 +118,36 @@ export default {
 
   methods: {
     getNur() {
-      this.week_monthError = null;
+      this.weekError = null;
       this.yearError = null;
       this.notFoundErrors = null;
-      if (!this.week_month) {
-        this.week_monthError = "Please select a period";
+      this.showSpinner=true;
+      if (!this.week) {
+        this.weekError = "Please select a week";
+          this.showSpinner=false;
       }
       if (!this.year) {
         this.yearError = "Please select a year";
+           this.showSpinner=false;
       }
-      if (this.year && this.week_month) {
+      if (this.year && this.week) {
         let data = {
-          week_month: this.week_month,
+         
           week: this.week,
-          month: this.month,
+         
           year: this.year,
         };
         console.log(data);
 
         if (this.alarms == "NUR") {
+             this.showSpinner=false;
           this.$router.push(
-            `/nur/statestics/${this.week_month}/${this.week}/${this.month}/${this.year}`
+            `/nur/statestics/${this.week}/${this.year}`
           );
         } else {
+             this.showSpinner=false;
            this.$router.push(
-            `/energy/statestics/${this.week_month}/${this.week}/${this.month}/${this.year}`
+            `/energy/statestics/${this.week}/${this.year}`
           );
          
           // 
@@ -168,23 +162,7 @@ export default {
         this.years.push(i);
       }
     },
-    changePeriod(e) {
-      console.log(e.target.value);
-      let period = WeeksAndMonths.period(e.target.value);
-      if (period.periods == "week") {
-        this.periods = period.figures;
-        this.week = "week";
-        this.month = 0;
-        this.weeks = true;
-        this.months = false;
-      } else {
-        this.periods = period.figures;
-        this.week = 0;
-        this.month = "month";
-        this.weeks = false;
-        this.months = true;
-      }
-    },
+   
   },
   mounted() {
     this.mountFormData();

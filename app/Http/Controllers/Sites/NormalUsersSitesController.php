@@ -93,6 +93,7 @@ class NormalUsersSitesController extends Controller
             $site = Site::where("site_code", $siteCode)->first();
           
             if ($site) {
+                /////////////////////this part of code to git the Nodal that the site is cascaded on////
                 $originalCascade=Cascade::where("cascade_code",$siteCode)->first();
                 if($originalCascade)
                 {
@@ -108,6 +109,7 @@ class NormalUsersSitesController extends Controller
                     $site['nodal_name']=null;
     
                 }
+                //////////////////////////////////////////////////////////////////////////////
                 if (isset($site->nodal->cascades)) {
                     $directCascades = $site->nodal->cascades;
                     $indirectCascades = [];
@@ -123,6 +125,9 @@ class NormalUsersSitesController extends Controller
                         if (isset($nodal)) {
 
                             foreach ($nodal->cascades as $cascade) {
+                                $cascade_info=Site::where("site_code", $cascade["cascade_code"])->first();
+                                $cascade_category=$cascade_info->category;
+                                $cascade["category"]=$cascade_category;
                                 array_push($indirectCascades, $cascade);
                                 $indirectCascadesContainer->append($cascade);
                             }
@@ -136,6 +141,9 @@ class NormalUsersSitesController extends Controller
                     }
                     $newDirectCascades = [];
                     foreach ($directCascades as $cascade) {
+                        $cascade_info=Site::where("site_code", $cascade["cascade_code"])->first();
+                        $cascade_category=$cascade_info->category;
+                        $cascade["category"]=$cascade_category;
                         $nodal = Nodal::where("nodal_code", $cascade["cascade_code"])->first();
                         if (isset($nodal)) {
                             $CountCascades = $nodal->cascades->count();
