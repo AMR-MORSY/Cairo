@@ -1,10 +1,10 @@
 <template>
   <div class="container mt-5" v-if="isNURAvailable">
-    <div class="row ">
+    <div class="row">
       <div class="col"></div>
-      <div class="col-10 ">
-        <div class="title ">
-          <p>Week:{{week}}</p>
+      <div class="col-10">
+        <div class="title">
+          <p>Week:{{ week }}</p>
         </div>
       </div>
       <div class="col"></div>
@@ -115,6 +115,9 @@
           </template>
         </Card>
       </div>
+      <div class="col-12">
+        <button class="btn btn-danger" @click="getCairoMWWeeklyNUR">MW NUR</button>
+      </div>
     </div>
 
     <CairoSouth
@@ -165,7 +168,6 @@
                 <p v-for="error in weekErrors" :key="error">
                   {{ error }}
                 </p>
-              
               </div>
             </template>
             <template v-if="yearErrors">
@@ -187,8 +189,12 @@
                 <p v-for="error in notFoundErrors" :key="error">
                   {{ error }}
                 </p>
-                  <div>
-                  <Button label="Back" class="p-button-danger" @click="this.$router.go(-1)" />
+                <div>
+                  <Button
+                    label="Back"
+                    class="p-button-danger"
+                    @click="this.$router.go(-1)"
+                  />
                 </div>
               </div>
             </template>
@@ -209,11 +215,12 @@ import CairoSouth from "./CairoSouth.vue";
 import CairoEast from "./CairoEast.vue";
 import CairoNorth from "./CairoNorth.vue";
 import Giza from "./Giza.vue";
+import CairoTX from "./CairoTX.vue";
 export default {
   data() {
     return {
       weekErrors: null,
-     
+
       monthErrors: null,
       yearErrors: null,
       notFoundErrors: null,
@@ -267,14 +274,12 @@ export default {
   beforeMount() {
     this.getNUR();
   },
-  props: [ "week", "year"],
- 
-  watch:{
-    week(){
+  props: ["week", "year"],
+
+  watch: {
+    week() {
       this.getNUR();
-
-    }
-
+    },
   },
   components: {
     TopSites,
@@ -283,6 +288,7 @@ export default {
     CairoEast,
     CairoNorth,
     Giza,
+    CairoTX,
   },
 
   methods: {
@@ -303,11 +309,10 @@ export default {
       return response;
     },
     getNUR() {
-       this.$store.dispatch("displaySpinnerPage", false);
+      this.$store.dispatch("displaySpinnerPage", false);
       let data = {
-      
         week: this.week,
-      
+
         year: this.year,
       };
 
@@ -534,7 +539,43 @@ export default {
           }
         })
         .finally(() => {
-        this.$store.dispatch("displaySpinnerPage", true);
+          this.$store.dispatch("displaySpinnerPage", true);
+        });
+    },
+    getCairoMWWeeklyNUR() {
+      this.$store.dispatch("displaySpinnerPage", false);
+      NUR.getCairoMWWeeklyNUR(this.week, this.year)
+        .then((response) => {
+          console.log(response);
+         let siteData=[];
+         let sites=response.data.sites;
+         sites.forEach((site)=>{
+          siteData.push(site.site_data);
+         });
+          this.$dialog.open(CairoTX, {
+        props: {
+          style: {
+            width: "75vw",
+          },
+          breakpoints: {
+            "960px": "75vw",
+            "640px": "90vw",
+          },
+          modal: true,
+        },
+
+        data: {
+         sites:siteData,
+         tickets:response.data.tickets,
+         statestics:response.data.statestics,
+        },
+      });
+
+         
+        })
+        .catch((error) => {})
+        .finally(() => {
+          this.$store.dispatch("displaySpinnerPage", true);
         });
     },
   },
@@ -557,10 +598,10 @@ export default {
     background-color: rgba($color: #ffff, $alpha: 0.7);
   }
 }
-.title{
+.title {
   margin-top: 50px;
   width: 100%;
-  p{
+  p {
     width: 100%;
     text-align: center;
     font-weight: 500;

@@ -44,5 +44,13 @@ export default {
     getVipSitesWeeklyNUR(zone,week,year)
     {
         return allInstances.Api.get(`/Nur/vip/week/${zone}/${week}/${year}`);
+    },
+    getNodalSitesWeeklyNUR(zone,week,year)
+    {
+        return allInstances.Api.get(`/Nur/nodal/week/${zone}/${week}/${year}`);
+    },
+    getCairoMWWeeklyNUR(week,year)
+    {
+        return allInstances.Api.get(`/Nur/cairo/weekly/MWNUR/${week}/${year}`);
     }
 };

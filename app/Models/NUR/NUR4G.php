@@ -23,4 +23,10 @@ class NUR4G extends Model
             get: fn ($value) => strtoupper($value),
         );
     }
+    protected function solution(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => ucwords($value),
+        );
+    }
 }

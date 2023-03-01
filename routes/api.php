@@ -107,6 +107,8 @@ Route::prefix('Nur')->middleware(['auth:sanctum',"role:admin|super-admin"])->gro
     Route::post('/downloadNUR3G',[DownloadNURController::class,"NUR3G"])->name("site3GNUR");
     Route::post('/downloadNUR4G',[DownloadNURController::class,"NUR4G"])->name("site4GNUR");
     Route::get('/vip/week/{zone}/{week}/{year}',[ShowNURController::class,"vipSitesWeeklyNUR"]);
+    Route::get('/nodal/week/{zone}/{week}/{year}',[ShowNURController::class,"nodalSitesWeeklyNUR"]);
+    Route::get('/cairo/weekly/MWNUR/{week}/{year}',[ShowNURController::class,"cairoMWweeklyNUR"]);
 
 });
 

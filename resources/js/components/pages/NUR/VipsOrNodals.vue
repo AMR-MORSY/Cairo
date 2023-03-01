@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import VIPsORNodalsNURTicketsVue from "./VIPsORNodalsNURTickets.vue";
+import NURTicketsVue from "./NURTickets.vue";
 
 export default {
   data() {
@@ -45,7 +45,7 @@ export default {
   },
   name: "VipsOrNodals",
   components: {
-    VIPsORNodalsNURTicketsVue,
+    NURTicketsVue,
   },
   inject: ["dialogRef"],
   mounted() {

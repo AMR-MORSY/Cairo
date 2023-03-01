@@ -77,6 +77,9 @@
         <Button class="vip" @click="getVipSitesNUR">
           <span>Vip Sites NUR</span>
         </Button>
+         <Button class="vip" @click="getNodalSitesNUR">
+          <span>Nodal Sites NUR</span>
+        </Button>
       </template>
     </Card>
   </div>
@@ -231,6 +234,42 @@ export default {
             });
           } else {
             this.$store.dispatch("dialogMessage", "Great !!! VIP sites did not make NUR this Week");
+            this.$store.dispatch("displayDialog", true);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+        .finally(() => {
+          this.$store.dispatch("displaySpinnerPage", true);
+        });
+    },
+     getNodalSitesNUR() {
+      this.$store.dispatch("displaySpinnerPage", false);
+      let sites = [];
+
+      NUR.getNodalSitesWeeklyNUR("Cairo East", this.week, this.year)
+        .then((response) => {
+          if (response.data.sites.length > 0) {
+            sites = response.data.sites;
+            this.$dialog.open(VipsOrNodals, {
+              props: {
+                style: {
+                  width: "75vw",
+                },
+                breakpoints: {
+                  "960px": "75vw",
+                  "640px": "90vw",
+                },
+                modal: true,
+              },
+
+              data: {
+                sites: sites,
+              },
+            });
+          } else {
+            this.$store.dispatch("dialogMessage", "Great !!! Nodal sites did not make NUR this Week");
             this.$store.dispatch("displayDialog", true);
           }
         })
