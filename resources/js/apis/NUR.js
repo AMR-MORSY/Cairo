@@ -52,5 +52,11 @@ export default {
     getCairoMWWeeklyNUR(week,year)
     {
         return allInstances.Api.get(`/Nur/cairo/weekly/MWNUR/${week}/${year}`);
-    }
+    },
+    cairoNUR_CYearlyAnalysis(year)
+    {
+        return allInstances.Api.get(`/Nur/cairo/yearly/NUR_C/${year}`);
+    },
+
+    
 };

@@ -10,7 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Sites\Site;
 use Illuminate\Support\Facades\Validator;
 use App\Services\NUR\NURStatestics\WeeklyStatestics;
-use App\Services\NUR\NURStatestics\MonthlyStatestics;
+use App\Services\NUR\NURStatestics\YearlyStatestics;
 use stdClass;
 
 use function PHPUnit\Framework\isEmpty;
@@ -62,38 +62,46 @@ class ShowNURController extends Controller
         }
     }
 
-    public function getMonthlyNUR($month, $year)
+    public function cairoYearlyNUR_C($year)
     {
-        $total_month_tickets_2G = NUR2G::where('year', $year)->where('month', $month)->get();
-        $total_month_tickets_3G = NUR3G::where('year', $year)->where('month', $month)->get();
-        $total_month_tickets_4G = NUR4G::where('year', $year)->where('month', $month)->get();
+        $total_year_tickets_2G = NUR2G::where('year', $year)->get();
+        $total_year_tickets_3G = NUR3G::where('year', $year)->get();
+        $total_year_tickets_4G = NUR4G::where('year', $year)->get();
         $errors = [];
-        if (count($total_month_tickets_2G) <= 0) {
+        if (count($total_year_tickets_2G) <= 0) {
             array_push($errors, "2G NUR does not exist");
         }
-        if (count($total_month_tickets_3G) <= 0) {
+        if (count($total_year_tickets_3G) <= 0) {
             array_push($errors, "3G NUR does not exist");
         }
-        if (count($total_month_tickets_4G) <= 0) {
+        if (count($total_year_tickets_4G) <= 0) {
             array_push($errors, "4G NUR does not exist");
         }
         if (count($errors) > 0) {
-            $notFound["error"] = true;
-            $notFound["errors"] = $errors;
-            return $notFound;
+            return response()->json([
+                "errors"=>$errors
+            ],404);
+           
+          
         } else {
-            $statestics = new MonthlyStatestics($total_month_tickets_2G, $total_month_tickets_3G, $total_month_tickets_4G);
-            $NUR['NUR2G'] = $statestics->NUR2GStatestics();
-            $NUR['NUR3G'] = $statestics->NUR3GStatestics();
-            $NUR['NUR4G'] = $statestics->NUR4GStatestics();
-            return $NUR;
+           
+            $statestics = new YearlyStatestics($total_year_tickets_2G, $total_year_tickets_3G, $total_year_tickets_4G,$year);
+            $NUR_C_yearly=$statestics->cairoNUR_C();
+            return response()->json([
+                "NUR_C_yearly"=>$NUR_C_yearly
+            ],200);
+          
+           
         }
     }
-    public function getWeeklyNUR($week, $year)
+    private function getWeeklyNUR($week, $year)
     {
         $total_week_tickets_2G = NUR2G::where('year', $year)->where('week', $week)->get();
+        $network_2G_cells=NUR2G::where('year', $year)->where('week', $week)->first()->network_cells;
         $total_week_tickets_3G = NUR3G::where('year', $year)->where('week', $week)->get();
+        $network_3G_cells=NUR3G::where('year', $year)->where('week', $week)->first()->network_cells;
         $total_week_tickets_4G = NUR4G::where('year', $year)->where('week', $week)->get();
+        $network_4G_cells=NUR4G::where('year', $year)->where('week', $week)->first()->network_cells;
         $errors = [];
         if (count($total_week_tickets_2G) <= 0) {
             array_push($errors, "2G NUR does not exist");
@@ -109,10 +117,15 @@ class ShowNURController extends Controller
             $notFound["errors"] = $errors;
             return $notFound;
         } else {
-            $statestics = new WeeklyStatestics($total_week_tickets_2G, $total_week_tickets_3G, $total_week_tickets_4G);
+            $statestics = new WeeklyStatestics($total_week_tickets_2G, $total_week_tickets_3G, $total_week_tickets_4G,$network_2G_cells,$network_3G_cells,$network_4G_cells);
             $NUR['NUR2G'] = $statestics->NUR2GStatestics();
             $NUR['NUR3G'] = $statestics->NUR3GStatestics();
             $NUR['NUR4G'] = $statestics->NUR4GStatestics();
+            $NUR["zonesSubsystem"]=$statestics->zonesSubsystemNUR();
+            $NUR["zonesSubsystemCountTickts"]=$statestics->zonesSubsystemCountTickts();
+            $NUR["zonesResponseWithAccess"]=$statestics->zonesResponseWithAccess();
+            $NUR["zonesResponseWithoutAccess"]=$statestics->zonesResponseWithoutAccess();
+            $NUR["zonesGeneratorStatestics"]=$statestics->zonesGeneratorStatestics();
             $NUR["topRepeated"] = $statestics->zonesTopRepeated();
             $NUR["topNUR"] = $statestics->zonesTopNUR();
             $NUR['combined'] = $statestics->combinedNUR();
@@ -272,19 +285,19 @@ class ShowNURController extends Controller
         $NUR_2G_sum = $NUR2G_tickets->sum("nur");
         $NUR_3G_sum = $NUR3G_tickets->sum("nur");
         $NUR_4G_sum = $NUR4G_tickets->sum("nur");
-        $combined = ($NUR_2G_sum * $network_2g_cells + $NUR_3G_sum * $network_3g_cells + $NUR_4G_sum * $network_4g_cells) / ($network_4g_cells + $network_3g_cells + $network_2g_cells);
+        $combined = (($NUR_2G_sum * $network_2g_cells) + ($NUR_3G_sum * $network_3g_cells) + ($NUR_4G_sum * $network_4g_cells)) / ($network_4g_cells + $network_3g_cells + $network_2g_cells);
         $NUR_combined = number_format($combined, 2, '.', ',');
 
         $NUR_2G_voluntary = $NUR2G_tickets->where("type", "Voluntary")->sum("nur");
         $NUR_3G_voluntary = $NUR3G_tickets->where("type", "Voluntary")->sum("nur");
         $NUR_4G_voluntary = $NUR4G_tickets->where("type", "Voluntary")->sum("nur");
-        $combined = ($NUR_2G_voluntary * $network_2g_cells + $NUR_3G_voluntary * $network_3g_cells + $NUR_4G_voluntary * $network_4g_cells) / ($network_4g_cells + $network_3g_cells + $network_2g_cells);
+        $combined = (($NUR_2G_voluntary * $network_2g_cells) + ($NUR_3G_voluntary * $network_3g_cells) +($NUR_4G_voluntary * $network_4g_cells)) / ($network_4g_cells + $network_3g_cells + $network_2g_cells);
         $NUR_voluntary_combined = number_format($combined, 2, '.', ',');
 
         $NUR_2G_HDSL = $NUR2G_tickets->whereStrict("sub_system","HDSL")->sum("nur");
         $NUR_3G_HDSL = $NUR3G_tickets->whereStrict("sub_system","HDSL")->sum("nur");
         $NUR_4G_HDSL = $NUR4G_tickets->whereStrict("sub_system","HDSL")->sum("nur");
-        $combined = ($NUR_2G_HDSL * $network_2g_cells + $NUR_3G_HDSL * $network_3g_cells + $NUR_4G_HDSL * $network_4g_cells) / ($network_4g_cells + $network_3g_cells + $network_2g_cells);
+        $combined = (($NUR_2G_HDSL * $network_2g_cells) + ($NUR_3G_HDSL * $network_3g_cells) + ($NUR_4G_HDSL * $network_4g_cells)) / ($network_4g_cells + $network_3g_cells + $network_2g_cells);
         $NUR_HDSL_combined = number_format($combined, 2, '.', ',');
 
 
@@ -297,7 +310,7 @@ class ShowNURController extends Controller
         $NUR_2G_access = $NUR2G_tickets->where("access", 1)->sum("nur");
         $NUR_3G_access = $NUR3G_tickets->where("access", 1)->sum("nur");
         $NUR_4G_access = $NUR4G_tickets->where("access", 1)->sum("nur");
-        $combined = ($NUR_2G_access * $network_2g_cells + $NUR_3G_access * $network_3g_cells + $NUR_4G_access * $network_4g_cells) / ($network_4g_cells + $network_3g_cells + $network_2g_cells);
+        $combined = (($NUR_2G_access * $network_2g_cells) + ($NUR_3G_access * $network_3g_cells) +($NUR_4G_access * $network_4g_cells)) / ($network_4g_cells + $network_3g_cells + $network_2g_cells);
         $NUR_access_combined = number_format($combined, 2, '.', ',');
 
         $NUR_2G_without_access = $NUR2G_tickets->where("access", 0)->sum("nur");
@@ -371,7 +384,7 @@ class ShowNURController extends Controller
             // $site["tickets_3G"] = $NUR_3G;
             // $site["tickets_4G"] = $NUR_4G;
            
-            $combined = ($NUR_2G_sum * $network_2g_cells + $NUR_3G_sum * $network_3g_cells + $NUR_4G_sum * $network_4g_cells) / ($network_4g_cells + $network_3g_cells + $network_2g_cells);
+            $combined = (($NUR_2G_sum * $network_2g_cells) + ($NUR_3G_sum * $network_3g_cells) + ($NUR_4G_sum * $network_4g_cells)) / ($network_4g_cells + $network_3g_cells + $network_2g_cells);
           
             $site_information->NUR_C=number_format($combined, 2, '.', ',');
             $site["site_data"]=$site_information;

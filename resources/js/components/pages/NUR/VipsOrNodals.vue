@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import NURTicketsVue from "./NURTickets.vue";
+import NURTickets from "./NURTickets.vue";
 
 export default {
   data() {
@@ -45,7 +45,7 @@ export default {
   },
   name: "VipsOrNodals",
   components: {
-    NURTicketsVue,
+    NURTickets,
   },
   inject: ["dialogRef"],
   mounted() {
@@ -60,7 +60,7 @@ export default {
 
     onRowSelect() {
       console.log(this.selectedSite);
-      this.$dialog.open(VIPsORNodalsNURTicketsVue, {
+      this.$dialog.open(NURTickets, {
         props: {
           style: {
             width: "75vw",

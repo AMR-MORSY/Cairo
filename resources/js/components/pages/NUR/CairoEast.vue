@@ -16,7 +16,19 @@
                 </p>
               </template>
               <template #content>
-                <Chart type="doughnut" :data="subsystem" :plugins="plugins" />
+                <DataTable
+                  :value="subsystem"
+                  responsiveLayout="scroll"
+                  class="p-datatable-sm"
+                  stripedRows
+                  :paginator="true"
+                  :rows="5"
+                >
+                  <Column selectionMode="single"></Column>
+                  <Column field="subsystem" header="Subsystem"></Column>
+                  <Column field="value" header="NUR_C" sortable></Column>
+                </DataTable>
+                <!-- <Chart type="doughnut" :data="subsystem" :plugins="plugins"  :options="lightOptions" /> -->
               </template>
             </Card>
           </div>
@@ -26,12 +38,55 @@
                 <p style="font-size: 16px; pading: 0; text-align: center">
                   Generator Statestics
                 </p>
+                <div class="row">
+                  <div class="col-3">
+                    <img
+                      src="../../logos/Orange_logo.svg"
+                      class="w-75"
+                      alt=""
+                      v-tooltip.right="'Get Tickets'"
+                      style="cursor: pointer"
+                      @click="getORGGenTickets"
+                    />
+                  </div>
+                  <div class="col-3">
+                    <img
+                      src="../../logos/Etisalat_eand_Logo_AR.svg"
+                      class="w-100"
+                      alt=""
+                      v-tooltip.right="'Get Tickets'"
+                      style="cursor: pointer"
+                      @click="getETGenTickets"
+                    />
+                  </div>
+                  <div class="col-3">
+                    <img
+                      src="../../logos/Vodafone_2017_logo.svg"
+                      class="w-100"
+                      alt=""
+                      v-tooltip.right="'Get Tickets'"
+                      style="cursor: pointer"
+                      @click="getVFGenTickets"
+                    />
+                  </div>
+                  <div class="col-3">
+                    <img
+                      src="../../logos/rent-sign-svgrepo-com.svg"
+                      class="w-75"
+                      alt=""
+                      v-tooltip.right="'Get Tickets'"
+                      style="cursor: pointer"
+                      @click="getRentedGenTickets"
+                    />
+                  </div>
+                </div>
               </template>
               <template #content>
                 <Chart
                   type="bar"
                   :data="generatorStatestics"
                   :plugins="plugins"
+                  :options="lightOptions"
                 />
               </template>
             </Card>
@@ -77,22 +132,20 @@
         <Button class="vip" @click="getVipSitesNUR">
           <span>Vip Sites NUR</span>
         </Button>
-         <Button class="vip" @click="getNodalSitesNUR">
+        <Button class="vip" @click="getNodalSitesNUR">
           <span>Nodal Sites NUR</span>
         </Button>
       </template>
     </Card>
   </div>
-  <template>
-   
-  </template>
+  <template> </template>
 </template>
 
 <script>
 import TopSites from "./TopSites.vue";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import siteNURTable from "./siteNURTable.vue";
-
+import NURTickets from "./NURTickets.vue";
 import NUR from "../../../apis/NUR";
 import VipsOrNodals from "../NUR/VipsOrNodals.vue";
 
@@ -106,11 +159,12 @@ export default {
         plugins: {
           legend: {
             labels: {
-              color: "#495057",
+              color: "red",
             },
           },
           datalabels: {
             anchor: "end",
+            color: "red",
           },
         },
       },
@@ -121,6 +175,7 @@ export default {
     TopSites,
     siteNURTable,
     VipsOrNodals,
+    NURTickets
   },
   props: [
     "cairoEastSubsystem",
@@ -133,31 +188,7 @@ export default {
   ],
   name: "CairoEast",
   mounted() {
-    if (this.cairoEastSubsystem) {
-      this.subsystem = {
-        labels: Object.keys(this.cairoEastSubsystem),
-        datasets: [
-          {
-            data: Object.values(this.cairoEastSubsystem),
-
-            backgroundColor: [
-              "#7F00FF",
-              "#C3B1E1",
-              "#E0B0FF",
-              "#5D3FD3",
-              "#CF9FFF",
-              "#BF40BF",
-              "#CCCCFF",
-              "#BDB5D5",
-              "#E6E6FA",
-              "#AA98A9",
-              "#953553",
-              "#800080",
-            ],
-          },
-        ],
-      };
-    }
+    this.mountSubsystemTable();
 
     if (this.cairoEastGen) {
       this.genStatestics(this.cairoEastGen);
@@ -186,6 +217,103 @@ export default {
     }
   },
   methods: {
+    getORGGenTickets() {
+      if (this.cairoEastGen["ORG"].tickets.length > 0) {
+        this.$dialog.open(NURTickets, {
+          props: {
+            style: {
+              width: "75vw",
+            },
+            breakpoints: {
+              "960px": "75vw",
+              "640px": "90vw",
+            },
+            modal: true,
+          },
+
+          data: {
+            allTickets: this.cairoEastGen["ORG"].tickets,
+          },
+        });
+      }
+    },
+    getETGenTickets() {
+      if (this.cairoEastGen["ET"].tickets.length > 0) {
+        this.$dialog.open(NURTickets, {
+          props: {
+            style: {
+              width: "75vw",
+            },
+            breakpoints: {
+              "960px": "75vw",
+              "640px": "90vw",
+            },
+            modal: true,
+          },
+
+          data: {
+            allTickets: this.cairoEastGen["ET"].tickets,
+          },
+        });
+      }
+    },
+    getVFGenTickets() {
+      if (this.cairoEastGen["VF"].tickets.length > 0) {
+        this.$dialog.open(NURTickets, {
+          props: {
+            style: {
+              width: "75vw",
+            },
+            breakpoints: {
+              "960px": "75vw",
+              "640px": "90vw",
+            },
+            modal: true,
+          },
+
+          data: {
+            allTickets: this.cairoEastGen["VF"].tickets,
+          },
+        });
+      }
+    },
+    getRentedGenTickets() {
+      if (this.cairoEastGen["Rented"].tickets.length > 0) {
+        this.$dialog.open(NURTickets, {
+          props: {
+            style: {
+              width: "75vw",
+            },
+            breakpoints: {
+              "960px": "75vw",
+              "640px": "90vw",
+            },
+            modal: true,
+          },
+
+          data: {
+            allTickets: this.cairoEastGen["Rented"].tickets,
+          },
+        });
+      }
+    },
+    mountSubsystemTable() {
+      if (this.cairoEastSubsystem) {
+        let subssytems = Object.keys(this.cairoEastSubsystem);
+        let values = Object.values(this.cairoEastSubsystem);
+        let subssytemsLength = subssytems.length;
+        let tableData = [];
+        for (var i = 0; i < subssytemsLength; i++) {
+          var subsystemObj = {
+            subsystem: subssytems[i],
+            value: values[i],
+          };
+          tableData.push(subsystemObj);
+        }
+        this.subsystem = tableData;
+      }
+    },
+
     getSiteNUR(event) {
       this.$dialog.open(siteNURTable, {
         props: {
@@ -197,9 +325,9 @@ export default {
             "960px": "75vw",
             "640px": "90vw",
           },
-            modal: true,
+          modal: true,
         },
-      
+
         data: {
           NUR3G: event.NUR3G,
           NUR2G: event.NUR2G,
@@ -233,7 +361,10 @@ export default {
               },
             });
           } else {
-            this.$store.dispatch("dialogMessage", "Great !!! VIP sites did not make NUR this Week");
+            this.$store.dispatch(
+              "dialogMessage",
+              "Great !!! VIP sites did not make NUR this Week"
+            );
             this.$store.dispatch("displayDialog", true);
           }
         })
@@ -244,7 +375,7 @@ export default {
           this.$store.dispatch("displaySpinnerPage", true);
         });
     },
-     getNodalSitesNUR() {
+    getNodalSitesNUR() {
       this.$store.dispatch("displaySpinnerPage", false);
       let sites = [];
 
@@ -269,7 +400,10 @@ export default {
               },
             });
           } else {
-            this.$store.dispatch("dialogMessage", "Great !!! Nodal sites did not make NUR this Week");
+            this.$store.dispatch(
+              "dialogMessage",
+              "Great !!! Nodal sites did not make NUR this Week"
+            );
             this.$store.dispatch("displayDialog", true);
           }
         })

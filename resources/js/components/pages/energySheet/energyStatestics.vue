@@ -1,32 +1,11 @@
 <template>
- 
-  <template v-if="notFoundErrors">
-    <div class="container mt-5">
-      <div class="row">
-        <div class="col-md-4"></div>
-        <div class="col-md-4">
-          <transition name="fade" appear>
-            <div class="errors card">
-              <p v-for="error in notFoundErrors" :key="error">
-                {{ error }}
-              </p>
-                <div>
-                  <Button label="Back" class="p-button-danger" @click="this.$router.go(-1)" />
-                </div>
-            </div>
-          </transition>
-        </div>
-        <div class="col-md-4"></div>
-      </div>
-    </div>
-  </template>
-  <template v-else>
+  <div id="cairo-and-zones" v-if="isAlarmsAvailable">
     <section id="cairo">
       <div class="container mt-5">
         <Card>
           <template #title>
             <div class="d-flex justify-content-center align-items-center">
-              <p style="text-align: center">{{ period }} {{period_No}}</p>
+              <p style="text-align: center">{{ period }} {{ period_No }}</p>
             </div>
           </template>
           <template #content>
@@ -93,7 +72,6 @@
         </Card>
       </div>
     </section>
-
     <section id="zones">
       <cairo-south-energy
         :cairoSouthHieghestPowerAlarmDur="cairoSouthHieghestPowerAlarmDur"
@@ -122,9 +100,9 @@
         :cairoEastSitesReportedGenAlarmsDetails="
           cairoEastSitesReportedGenAlarmsDetails
         "
-         :period="period"
-           :period_No="period_No"
-          zone="Cairo East"
+        :period="period"
+        :period_No="period_No"
+        zone="Cairo East"
       ></cairo-east-energy>
       <cairo-north-energy
         :cairoNorthHieghestPowerAlarmDur="cairoNorthHieghestPowerAlarmDur"
@@ -137,9 +115,9 @@
         :cairoNorthSitesReportedGenAlarmsDetails="
           cairoNorthSitesReportedGenAlarmsDetails
         "
-         :period="period"
-           :period_No="period_No"
-          zone="Cairo North"
+        :period="period"
+        :period_No="period_No"
+        zone="Cairo North"
       >
       </cairo-north-energy>
       <giza-energy
@@ -147,12 +125,37 @@
         :gizaSitesPowerAlarmMoreThan2Times="gizaSitesPowerAlarmMoreThan2Times"
         :gizaSitesReportedHTAlarmsDetails="gizaSitesReportedHTAlarmsDetails"
         :gizaSitesReportedGenAlarmsDetails="gizaSitesReportedGenAlarmsDetails"
-         :period="period"
-           :period_No="period_No"
-          zone="Giza"
+        :period="period"
+        :period_No="period_No"
+        zone="Giza"
       ></giza-energy>
     </section>
-  </template>
+  </div>
+
+  <div v-if="!isAlarmsAvailable">
+    <div class="container mt-5">
+      <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+          <transition name="fade" v-if="notFoundErrors" appear>
+            <div class="errors card">
+              <p v-for="error in notFoundErrors" :key="error">
+                {{ error }}
+              </p>
+              <div>
+                <Button
+                  label="Back"
+                  class="p-button-danger"
+                  @click="this.$router.go(-1)"
+                />
+              </div>
+            </div>
+          </transition>
+        </div>
+        <div class="col-md-4"></div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -165,9 +168,10 @@ import ChartDataLabels from "chartjs-plugin-datalabels";
 export default {
   data() {
     return {
+      isAlarmsAvailable: false,
       alarms: null,
       period: null,
-      period_No:null,
+      period_No: null,
       cairoEastHieghestPowerAlarmDur: null,
       cairoSouthHieghestPowerAlarmDur: null,
       cairoNorthHieghestPowerAlarmDur: null,
@@ -209,8 +213,8 @@ export default {
     };
   },
   name: "energyStatestics",
-  props: [ "week", "year"],
- 
+  props: ["week", "year"],
+
   components: {
     CairoEastEnergy,
     CairoNorthEnergy,
@@ -230,80 +234,108 @@ export default {
     getEnergyStatestics() {
       this.$store.dispatch("displaySpinnerPage", false);
       let data = {
-        
         week: this.week,
-       
+
         year: this.year,
       };
       Energy.getEnergyStatestics(data)
         .then((response) => {
           console.log(response);
+          this.isAlarmsAvailable = true;
           this.alarms = response.data.Alarms;
           this.period = this.alarms.period;
-          this.period_No=this.alarms.period_No;
+          this.period_No = this.alarms.period_No;
           ////////////sites with highest alarm duration////////
-          this.cairoEastHieghestPowerAlarmDur = Object.values(
-            this.alarms.zonesHighiestPowerAlarmDuration["Cairo East"]
-          );
-          this.cairoSouthHieghestPowerAlarmDur = Object.values(
-            this.alarms.zonesHighiestPowerAlarmDuration["Cairo South"]
-          );
-          this.cairoNorthHieghestPowerAlarmDur = Object.values(
-            this.alarms.zonesHighiestPowerAlarmDuration["Cairo North"]
-          );
-          this.gizaHieghestPowerAlarmDur = Object.values(
-            this.alarms.zonesHighiestPowerAlarmDuration["Giza"]
-          );
+          if (this.alarms.zonesHighiestPowerAlarmDuration["Cairo East"]) {
+            this.cairoEastHieghestPowerAlarmDur = Object.values(
+              this.alarms.zonesHighiestPowerAlarmDuration["Cairo East"]
+            );
+          }
+          if (this.alarms.zonesHighiestPowerAlarmDuration["Cairo South"]) {
+            this.cairoSouthHieghestPowerAlarmDur = Object.values(
+              this.alarms.zonesHighiestPowerAlarmDuration["Cairo South"]
+            );
+          }
+          if (this.alarms.zonesHighiestPowerAlarmDuration["Cairo North"]) {
+            this.cairoNorthHieghestPowerAlarmDur = Object.values(
+              this.alarms.zonesHighiestPowerAlarmDuration["Cairo North"]
+            );
+          }
+          if (this.alarms.zonesHighiestPowerAlarmDuration["Giza"]) {
+            this.gizaHieghestPowerAlarmDur = Object.values(
+              this.alarms.zonesHighiestPowerAlarmDuration["Giza"]
+            );
+          }
 
           /////////No of Power alarms per site/////////////
+          if (this.alarms.zonesSitesPowerAlarmsMoreThan2Times["Cairo East"]) {
+            this.cairoEastSitesPowerAlarmMoreThan2Times = Object.values(
+              this.alarms.zonesSitesPowerAlarmsMoreThan2Times["Cairo East"]
+            );
+          }
+          if (this.alarms.zonesSitesPowerAlarmsMoreThan2Times["Cairo North"]) {
+            this.cairoNorthSitesPowerAlarmMoreThan2Times = Object.values(
+              this.alarms.zonesSitesPowerAlarmsMoreThan2Times["Cairo North"]
+            );
+          }
+          if (this.alarms.zonesSitesPowerAlarmsMoreThan2Times["Cairo South"]) {
+            this.cairoSouthSitesPowerAlarmMoreThan2Times = Object.values(
+              this.alarms.zonesSitesPowerAlarmsMoreThan2Times["Cairo South"]
+            );
+          }
+          if (this.alarms.zonesSitesPowerAlarmsMoreThan2Times["Giza"]) {
+            this.gizaSitesPowerAlarmMoreThan2Times = Object.values(
+              this.alarms.zonesSitesPowerAlarmsMoreThan2Times["Giza"]
+            );
+          }
 
-          this.cairoEastSitesPowerAlarmMoreThan2Times = Object.values(
-            this.alarms.zonesSitesPowerAlarmsMoreThan2Times["Cairo East"]
-          );
-          this.cairoNorthSitesPowerAlarmMoreThan2Times = Object.values(
-            this.alarms.zonesSitesPowerAlarmsMoreThan2Times["Cairo North"]
-          );
-          this.cairoSouthSitesPowerAlarmMoreThan2Times = Object.values(
-            this.alarms.zonesSitesPowerAlarmsMoreThan2Times["Cairo South"]
-          );
-          this.gizaSitesPowerAlarmMoreThan2Times = Object.values(
-            this.alarms.zonesSitesPowerAlarmsMoreThan2Times["Giza"]
-          );
           ////////////Zones Sites reported HT Alarms Details///////////
 
-          this.cairoNorthSitesReportedHTAlarmsDetails = Object.values(
-            this.alarms.zonesSitesReportedHTAlarmsDetails["Cairo North"]
-          );
+          if (this.alarms.zonesSitesReportedHTAlarmsDetails["Cairo North"]) {
+            this.cairoNorthSitesReportedHTAlarmsDetails = Object.values(
+              this.alarms.zonesSitesReportedHTAlarmsDetails["Cairo North"]
+            );
+          }
+          if (this.alarms.zonesSitesReportedHTAlarmsDetails["Cairo East"]) {
+            this.cairoEastSitesReportedHTAlarmsDetails = Object.values(
+              this.alarms.zonesSitesReportedHTAlarmsDetails["Cairo East"]
+            );
+          }
 
-          this.cairoEastSitesReportedHTAlarmsDetails = Object.values(
-            this.alarms.zonesSitesReportedHTAlarmsDetails["Cairo East"]
-          );
-
-          this.cairoSouthSitesReportedHTAlarmsDetails = Object.values(
-            this.alarms.zonesSitesReportedHTAlarmsDetails["Cairo South"]
-          );
-
-          this.gizaSitesReportedHTAlarmsDetails = Object.values(
-            this.alarms.zonesSitesReportedHTAlarmsDetails["Giza"]
-          );
+          if (this.alarms.zonesSitesReportedHTAlarmsDetails["Cairo South"]) {
+            this.cairoSouthSitesReportedHTAlarmsDetails = Object.values(
+              this.alarms.zonesSitesReportedHTAlarmsDetails["Cairo South"]
+            );
+          }
+          if (this.alarms.zonesSitesReportedHTAlarmsDetails["Giza"]) {
+            this.gizaSitesReportedHTAlarmsDetails = Object.values(
+              this.alarms.zonesSitesReportedHTAlarmsDetails["Giza"]
+            );
+          }
 
           ////////////Zones Sites reported Gen Alarms Details///////////
+          if (this.alarms.zonesSitesReportedGenAlarmsDetails["Cairo North"]) {
+            this.cairoNorthSitesReportedGenAlarmsDetails = Object.values(
+              this.alarms.zonesSitesReportedGenAlarmsDetails["Cairo North"]
+            );
+          }
 
-          this.cairoNorthSitesReportedGenAlarmsDetails = Object.values(
-            this.alarms.zonesSitesReportedGenAlarmsDetails["Cairo North"]
-          );
+          if (this.alarms.zonesSitesReportedGenAlarmsDetails["Cairo East"]) {
+            this.cairoEastSitesReportedGenAlarmsDetails = Object.values(
+              this.alarms.zonesSitesReportedGenAlarmsDetails["Cairo East"]
+            );
+          }
 
-          this.cairoEastSitesReportedGenAlarmsDetails = Object.values(
-            this.alarms.zonesSitesReportedGenAlarmsDetails["Cairo East"]
-          );
-
-          this.cairoSouthSitesReportedGenAlarmsDetails = Object.values(
-            this.alarms.zonesSitesReportedGenAlarmsDetails["Cairo South"]
-          );
-
-          this.gizaSitesReportedGenAlarmsDetails = Object.values(
-            this.alarms.zonesSitesReportedGenAlarmsDetails["Giza"]
-          );
+          if (this.alarms.zonesSitesReportedGenAlarmsDetails["Cairo South"]) {
+            this.cairoSouthSitesReportedGenAlarmsDetails = Object.values(
+              this.alarms.zonesSitesReportedGenAlarmsDetails["Cairo South"]
+            );
+          }
+          if (this.alarms.zonesSitesReportedGenAlarmsDetails["Giza"]) {
+            this.gizaSitesReportedGenAlarmsDetails = Object.values(
+              this.alarms.zonesSitesReportedGenAlarmsDetails["Giza"]
+            );
+          }
 
           /////////////Cairo zones Power Alarms Count//////////
 
@@ -366,6 +398,7 @@ export default {
           };
         })
         .catch((error) => {
+          this.isAlarmsAvailable = false;
           if (error.response.status == 404) {
             this.notFoundErrors = error.response.data.errors;
           }
@@ -392,16 +425,16 @@ export default {
     color: red;
     text-align: center;
   }
-   display: flex;
+  display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
 }
 
 .fade-enter-active {
-  animation:woble 1s ease;
+  animation: woble 1s ease;
 }
-@keyframes woble{
+@keyframes woble {
   0% {
     opacity: 0;
     transform: translateY(-300px);

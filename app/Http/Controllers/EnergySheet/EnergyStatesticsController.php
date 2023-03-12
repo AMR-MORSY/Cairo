@@ -37,7 +37,7 @@ class EnergyStatesticsController extends Controller
         else{
             $validated=$validator->validated();
          
-                $weeklyAlarms=$this->getWeeklyAlarms($validated['week_month'],$validated['year']);
+                $weeklyAlarms=$this->getWeeklyAlarms($validated['week'],$validated['year']);
                 if($weeklyAlarms['error'])
                 {
                     return response()->json([

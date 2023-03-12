@@ -1,4 +1,33 @@
 <template>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4">
+        <Chart
+          type="doughnut"
+          :data="ticketsType"
+          :options="lightOptions"
+          :plugins="plugins"
+        />
+      </div>
+      <div class="col-md-4">
+        <Chart
+          type="doughnut"
+          :data="accessStatus"
+          :options="lightOptions"
+          :plugins="plugins"
+        />
+      </div>
+      <div class="col-md-4">
+        <Chart
+          type="doughnut"
+          :data="TxType"
+          :options="lightOptions"
+          :plugins="plugins"
+        />
+      </div>
+    </div>
+  </div>
+
   <div class="table-container">
     <h3>Sites</h3>
     <DataTable
@@ -21,23 +50,44 @@
       <Column field="NUR_C" header="NUR-C" sortable></Column>
       <Column field="oz" header="oz" sortable></Column>
     </DataTable>
+
+    <button class="btn btn-danger" @click="downloadTXTickets">Download</button>
   </div>
 </template>
 
 <script>
-import NURTicketsVue from "./NURTickets.vue";
+import NURTickets from "./NURTickets.vue";
+import ChartDataLabels from "chartjs-plugin-datalabels";
+
+import exportFromJSON from "export-from-json";
 export default {
   data() {
     return {
       sites: [],
       tickets: [],
+      ticketsType: null,
+      accessStatus: null,
+      TxType: null,
       selectedSite: null,
+      lightOptions: {
+        plugins: {
+          legend: {
+            labels: {
+              color: "red",
+            },
+          },
+          datalabels: {
+            anchor: "center",
+            color: "red",
+          },
+        },
+      },
+      plugins: [ChartDataLabels],
     };
   },
   name: "CairoTx",
-  components:{
-    NURTicketsVue,
-
+  components: {
+    NURTickets,
   },
   inject: ["dialogRef"],
   mounted() {
@@ -49,21 +99,119 @@ export default {
 
       this.sites = this.dialogRef.data.sites;
       this.tickets = this.dialogRef.data.tickets;
+      this.mountTicketsTypeChartData();
+      this.mountAccessStatusChartData();
+      this.mountTxTypeChartData();
+    },
+    mountTicketsTypeChartData() {
+      let ticketsType = {
+        voluntary: this.dialogRef.data.statestics.NUR_voluntary_c,
+        involantary: this.dialogRef.data.statestics.NUR_involuntary_c,
+      };
+      this.ticketsType = {
+        labels: Object.keys(ticketsType),
+        datasets: [
+          {
+            data: Object.values(ticketsType),
+
+            backgroundColor: [
+              "#7F00FF",
+              "#C3B1E1",
+              "#E0B0FF",
+              "#5D3FD3",
+              "#CF9FFF",
+              "#BF40BF",
+              "#CCCCFF",
+              "#BDB5D5",
+              "#E6E6FA",
+              "#AA98A9",
+              "#953553",
+              "#800080",
+            ],
+          },
+        ],
+      };
+    },
+    mountAccessStatusChartData() {
+      let accessStatus = {
+        Access: this.dialogRef.data.statestics.NUR_access_c,
+        "Without Access": this.dialogRef.data.statestics.NUR_without_access_c,
+      };
+      this.accessStatus = {
+        labels: Object.keys(accessStatus),
+        datasets: [
+          {
+            data: Object.values(accessStatus),
+
+            backgroundColor: [
+              "#7F00FF",
+              "#C3B1E1",
+              "#E0B0FF",
+              "#5D3FD3",
+              "#CF9FFF",
+              "#BF40BF",
+              "#CCCCFF",
+              "#BDB5D5",
+              "#E6E6FA",
+              "#AA98A9",
+              "#953553",
+              "#800080",
+            ],
+          },
+        ],
+      };
+    },
+    mountTxTypeChartData() {
+      let TxType = {
+        HDSL: this.dialogRef.data.statestics.NUR_HDSL_c,
+        MW:
+          this.dialogRef.data.statestics.NUR_combined -
+          this.dialogRef.data.statestics.NUR_HDSL_c,
+      };
+      this.TxType = {
+        labels: Object.keys(TxType),
+        datasets: [
+          {
+            data: Object.values(TxType),
+
+            backgroundColor: [
+              "#7F00FF",
+              "#C3B1E1",
+              "#E0B0FF",
+              "#5D3FD3",
+              "#CF9FFF",
+              "#BF40BF",
+              "#CCCCFF",
+              "#BDB5D5",
+              "#E6E6FA",
+              "#AA98A9",
+              "#953553",
+              "#800080",
+            ],
+          },
+        ],
+      };
     },
     onRowSelect() {
-        let siteCode=this.selectedSite.site_code;
+      let siteCode = this.selectedSite.site_code;
       console.log(this.selectedSite.site_code);
-      let tickets_2G=this.tickets.filter((ticket)=>{
-        return ticket.problem_site_code==siteCode && ticket.technology=="2G"
+      let tickets_2G = this.tickets.filter((ticket) => {
+        return (
+          ticket.problem_site_code == siteCode && ticket.technology == "2G"
+        );
       });
-      let tickets_3G=this.tickets.filter((ticket)=>{
-        return ticket.problem_site_code==siteCode && ticket.technology=="3G"
+      let tickets_3G = this.tickets.filter((ticket) => {
+        return (
+          ticket.problem_site_code == siteCode && ticket.technology == "3G"
+        );
       });
-      let tickets_4G=this.tickets.filter((ticket)=>{
-        return ticket.problem_site_code==siteCode && ticket.technology=="4G"
+      let tickets_4G = this.tickets.filter((ticket) => {
+        return (
+          ticket.problem_site_code == siteCode && ticket.technology == "4G"
+        );
       });
-      
-      this.$dialog.open(VIPsORNodalsNURTicketsVue, {
+
+      this.$dialog.open(NURTickets, {
         props: {
           style: {
             width: "75vw",
@@ -81,6 +229,15 @@ export default {
           NUR_4G_tickets: tickets_4G,
         },
       });
+    },
+    downloadTXTickets() {
+     
+
+      const data = this.tickets;
+      const fileName = "TxTickets";
+      const exportType = exportFromJSON.types.xls;
+
+      if (data) exportFromJSON({ data, fileName, exportType });
     },
   },
 };

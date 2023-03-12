@@ -51,7 +51,7 @@ Route::prefix("energysheet")->middleware(['auth:sanctum'])->group(function(){
 
     Route::post("/alarms",[EnergyStatesticsController::class,"siteAlarms"]);
  
-    Route::get('/statestics/{week}/{year}',[EnergyStatesticsController::class,"statestics"])->name("energy_statestics");
+    Route::get('/statestics/{week}/{year}',[EnergyStatesticsController::class,"statestics"]);
     Route::post("/sitePowerAlarms",[EnergySiteStatesticsController::class,"sitePowerAlarms"]);
     Route::post("/siteHighTempAlarms",[EnergySiteStatesticsController::class,"siteHighTempAlarms"]);
     Route::post("/siteGenAlarms",[EnergySiteStatesticsController::class,"siteGenAlarms"]);
@@ -109,6 +109,7 @@ Route::prefix('Nur')->middleware(['auth:sanctum',"role:admin|super-admin"])->gro
     Route::get('/vip/week/{zone}/{week}/{year}',[ShowNURController::class,"vipSitesWeeklyNUR"]);
     Route::get('/nodal/week/{zone}/{week}/{year}',[ShowNURController::class,"nodalSitesWeeklyNUR"]);
     Route::get('/cairo/weekly/MWNUR/{week}/{year}',[ShowNURController::class,"cairoMWweeklyNUR"]);
+    Route::get('/cairo/yearly/NUR_C/{year}',[ShowNURController::class,"cairoYearlyNUR_C"]);
 
 });
 

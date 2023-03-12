@@ -70,6 +70,19 @@
             <p style="font-size: 16px; pading: 0; text-align: center">
               Combined NUR
             </p>
+            <div class="row">
+              <div class="col"></div>
+              <div
+                class="col-10 "
+              >
+                <div style="display:flex; align-items:center; justify-content:center;">
+                  <div class="w-50" style="display:flex; align-items:center; justify-content:center;">
+                    <img src="../../logos/week-icon.svg" @click="getCairoNUR_CYearlyAnalysis"  style="cursor:pointer" alt="" class="w-25"  v-tooltip.right="'Weekly Analysis'" />
+                  </div>
+                </div>
+              </div>
+              <div class="col"></div>
+            </div>
           </template>
           <template #content>
             <Chart
@@ -116,7 +129,9 @@
         </Card>
       </div>
       <div class="col-12">
-        <button class="btn btn-danger" @click="getCairoMWWeeklyNUR">MW NUR</button>
+        <button class="btn btn-danger" @click="getCairoMWWeeklyNUR">
+          TX NUR
+        </button>
       </div>
     </div>
 
@@ -392,19 +407,19 @@ export default {
           this.cairoCombinedNUR = NUR.combined.cairo;
 
           let zoneExceed = [
-            NUR.NUR3G.zonesResponseWithAccess["CAIRO SOUTH"].exceedSLA,
-            NUR.NUR3G.zonesResponseWithAccess["CAIRO EAST"].exceedSLA,
-            NUR.NUR3G.zonesResponseWithAccess["CAIRO NORTH"].exceedSLA,
-            NUR.NUR3G.zonesResponseWithAccess["GIZA"].exceedSLA,
+            NUR.zonesResponseWithAccess["CAIRO SOUTH"].exceedSLA,
+            NUR.zonesResponseWithAccess["CAIRO EAST"].exceedSLA,
+            NUR.zonesResponseWithAccess["CAIRO NORTH"].exceedSLA,
+            NUR.zonesResponseWithAccess["GIZA"].exceedSLA,
           ];
           let zoneWith = [
-            NUR.NUR3G.zonesResponseWithAccess["CAIRO SOUTH"].withinSLA,
+            NUR.zonesResponseWithAccess["CAIRO SOUTH"].withinSLA,
 
-            NUR.NUR3G.zonesResponseWithAccess["CAIRO EAST"].withinSLA,
+            NUR.zonesResponseWithAccess["CAIRO EAST"].withinSLA,
 
-            NUR.NUR3G.zonesResponseWithAccess["CAIRO NORTH"].withinSLA,
+            NUR.zonesResponseWithAccess["CAIRO NORTH"].withinSLA,
 
-            NUR.NUR3G.zonesResponseWithAccess["GIZA"].withinSLA,
+            NUR.zonesResponseWithAccess["GIZA"].withinSLA,
           ];
           let resp = this.Responses(zoneExceed, zoneWith);
 
@@ -425,19 +440,19 @@ export default {
           };
 
           zoneExceed = [
-            NUR.NUR3G.zonesResponseWithoutAccess["CAIRO SOUTH"].exceedSLA,
-            NUR.NUR3G.zonesResponseWithoutAccess["CAIRO EAST"].exceedSLA,
-            NUR.NUR3G.zonesResponseWithoutAccess["CAIRO NORTH"].exceedSLA,
-            NUR.NUR3G.zonesResponseWithoutAccess["GIZA"].exceedSLA,
+            NUR.zonesResponseWithoutAccess["CAIRO SOUTH"].exceedSLA,
+            NUR.zonesResponseWithoutAccess["CAIRO EAST"].exceedSLA,
+            NUR.zonesResponseWithoutAccess["CAIRO NORTH"].exceedSLA,
+            NUR.zonesResponseWithoutAccess["GIZA"].exceedSLA,
           ];
           zoneWith = [
-            NUR.NUR3G.zonesResponseWithoutAccess["CAIRO SOUTH"].withinSLA,
+            NUR.zonesResponseWithoutAccess["CAIRO SOUTH"].withinSLA,
 
-            NUR.NUR3G.zonesResponseWithoutAccess["CAIRO EAST"].withinSLA,
+            NUR.zonesResponseWithoutAccess["CAIRO EAST"].withinSLA,
 
-            NUR.NUR3G.zonesResponseWithoutAccess["CAIRO NORTH"].withinSLA,
+            NUR.zonesResponseWithoutAccess["CAIRO NORTH"].withinSLA,
 
-            NUR.NUR3G.zonesResponseWithoutAccess["GIZA"].withinSLA,
+            NUR.zonesResponseWithoutAccess["GIZA"].withinSLA,
           ];
           resp = this.Responses(zoneExceed, zoneWith);
 
@@ -457,18 +472,15 @@ export default {
             ],
           };
 
-          this.cairoSouthSubsystem =
-            NUR.NUR3G.zonesNUR3GSubsystemNUR["CAIRO SOUTH"];
-          this.cairoEastSubsystem =
-            NUR.NUR3G.zonesNUR3GSubsystemNUR["CAIRO EAST"];
-          this.cairoNorthSubsystem =
-            NUR.NUR3G.zonesNUR3GSubsystemNUR["CAIRO NORTH"];
-          this.gizaSubsystem = NUR.NUR3G.zonesNUR3GSubsystemNUR["GIZA"];
+          this.cairoSouthSubsystem = NUR.zonesSubsystem["CAIRO SOUTH"];
+          this.cairoEastSubsystem = NUR.zonesSubsystem["CAIRO EAST"];
+          this.cairoNorthSubsystem = NUR.zonesSubsystem["CAIRO NORTH"];
+          this.gizaSubsystem = NUR.zonesSubsystem["GIZA"];
 
-          this.cairoSouthGen = NUR.NUR3G.zonesNUR3GGenStatestics["CAIRO SOUTH"];
-          this.cairoEastGen = NUR.NUR3G.zonesNUR3GGenStatestics["CAIRO EAST"];
-          this.cairoNorthGen = NUR.NUR3G.zonesNUR3GGenStatestics["CAIRO NORTH"];
-          this.gizaGen = NUR.NUR3G.zonesNUR3GGenStatestics["GIZA"];
+          this.cairoSouthGen = NUR.zonesGeneratorStatestics["CAIRO SOUTH"];
+          this.cairoEastGen = NUR.zonesGeneratorStatestics["CAIRO EAST"];
+          this.cairoNorthGen = NUR.zonesGeneratorStatestics["CAIRO NORTH"];
+          this.gizaGen = NUR.zonesGeneratorStatestics["GIZA"];
 
           this.cairoSouthTopNUR = Object.values(NUR.topNUR["CAIRO SOUTH"]);
           this.cairoEastTopNUR = Object.values(NUR.topNUR["CAIRO EAST"]);
@@ -486,30 +498,30 @@ export default {
           );
           this.gizaRepeatedSites = Object.values(NUR.topRepeated["GIZA"]);
 
-          this.cairoSouthAccessStatesitcs = {
-            totalTickets: NUR.NUR3G.zonesTotalNumTickets["CAIRO SOUTH"],
-            accessTickets:
-              NUR.NUR3G.zonesNUR3GAccessCountTickets["CAIRO SOUTH"].access,
-            NUR: NUR.NUR3G.zonesNUR3GAccessNUR["CAIRO SOUTH"].access,
-          };
-          this.cairoNorthAccessStatesitcs = {
-            totalTickets: NUR.NUR3G.zonesTotalNumTickets["CAIRO NORTH"],
-            accessTickets:
-              NUR.NUR3G.zonesNUR3GAccessCountTickets["CAIRO NORTH"].access,
-            NUR: NUR.NUR3G.zonesNUR3GAccessNUR["CAIRO NORTH"].access,
-          };
-          this.cairoEastAccessStatesitcs = {
-            totalTickets: NUR.NUR3G.zonesTotalNumTickets["CAIRO EAST"],
-            accessTickets:
-              NUR.NUR3G.zonesNUR3GAccessCountTickets["CAIRO EAST"].access,
-            NUR: NUR.NUR3G.zonesNUR3GAccessNUR["CAIRO EAST"].access,
-          };
-          this.gizaAccessStatesitcs = {
-            totalTickets: NUR.NUR3G.zonesTotalNumTickets["GIZA"],
-            accessTickets:
-              NUR.NUR3G.zonesNUR3GAccessCountTickets["GIZA"].access,
-            NUR: NUR.NUR3G.zonesNUR3GAccessNUR["GIZA"].access,
-          };
+          // this.cairoSouthAccessStatesitcs = {
+          //   totalTickets: NUR.NUR3G.zonesTotalNumTickets["CAIRO SOUTH"],
+          //   accessTickets:
+          //     NUR.NUR3G.zonesNUR3GAccessCountTickets["CAIRO SOUTH"].access,
+          //   NUR: NUR.NUR3G.zonesNUR3GAccessNUR["CAIRO SOUTH"].access,
+          // };
+          // this.cairoNorthAccessStatesitcs = {
+          //   totalTickets: NUR.NUR3G.zonesTotalNumTickets["CAIRO NORTH"],
+          //   accessTickets:
+          //     NUR.NUR3G.zonesNUR3GAccessCountTickets["CAIRO NORTH"].access,
+          //   NUR: NUR.NUR3G.zonesNUR3GAccessNUR["CAIRO NORTH"].access,
+          // };
+          // this.cairoEastAccessStatesitcs = {
+          //   totalTickets: NUR.NUR3G.zonesTotalNumTickets["CAIRO EAST"],
+          //   accessTickets:
+          //     NUR.NUR3G.zonesNUR3GAccessCountTickets["CAIRO EAST"].access,
+          //   NUR: NUR.NUR3G.zonesNUR3GAccessNUR["CAIRO EAST"].access,
+          // };
+          // this.gizaAccessStatesitcs = {
+          //   totalTickets: NUR.NUR3G.zonesTotalNumTickets["GIZA"],
+          //   accessTickets:
+          //     NUR.NUR3G.zonesNUR3GAccessCountTickets["GIZA"].access,
+          //   NUR: NUR.NUR3G.zonesNUR3GAccessNUR["GIZA"].access,
+          // };
         })
         .catch((error) => {
           console.log(error);
@@ -547,37 +559,50 @@ export default {
       NUR.getCairoMWWeeklyNUR(this.week, this.year)
         .then((response) => {
           console.log(response);
-         let siteData=[];
-         let sites=response.data.sites;
-         sites.forEach((site)=>{
-          siteData.push(site.site_data);
-         });
+          let siteData = [];
+          let sites = response.data.sites;
+          sites.forEach((site) => {
+            siteData.push(site.site_data);
+          });
           this.$dialog.open(CairoTX, {
-        props: {
-          style: {
-            width: "75vw",
-          },
-          breakpoints: {
-            "960px": "75vw",
-            "640px": "90vw",
-          },
-          modal: true,
-        },
+            props: {
+              style: {
+                width: "75vw",
+              },
+              breakpoints: {
+                "960px": "75vw",
+                "640px": "90vw",
+              },
+              modal: true,
+            },
 
-        data: {
-         sites:siteData,
-         tickets:response.data.tickets,
-         statestics:response.data.statestics,
-        },
-      });
-
-         
+            data: {
+              sites: siteData,
+              tickets: response.data.tickets,
+              statestics: response.data.statestics,
+            },
+          });
         })
         .catch((error) => {})
         .finally(() => {
           this.$store.dispatch("displaySpinnerPage", true);
         });
     },
+
+    getCairoNUR_CYearlyAnalysis()
+    {
+       this.$store.dispatch("displaySpinnerPage", false);
+       NUR.cairoNUR_CYearlyAnalysis(this.year).then((response)=>{
+        console.log(response)
+       }).catch((error)=>{
+        console.log(error)
+       }).finally(()=>{
+        this.$store.dispatch("displaySpinnerPage", true);
+
+       })
+
+
+    }
   },
 };
 </script>
