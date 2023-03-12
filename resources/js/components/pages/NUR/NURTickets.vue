@@ -1,5 +1,5 @@
 <template>
-  <div v-if="allTickets.length">
+  <div >
     <div class="table-container" v-if="NUR_2G_tickets.length">
       <h3>2G Tickets</h3>
       <DataTable

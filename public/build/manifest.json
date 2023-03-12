@@ -1,15 +1,15 @@
 {
-  "node_modules/primevue/resources/images/color.png": {
-    "file": "assets/color.473bc8ca.png",
-    "src": "node_modules/primevue/resources/images/color.png"
+  "node_modules/primevue/resources/images/hue.png": {
+    "file": "assets/hue.024cc884.png",
+    "src": "node_modules/primevue/resources/images/hue.png"
   },
   "node_modules/primeicons/fonts/primeicons.eot": {
     "file": "assets/primeicons.ce852338.eot",
     "src": "node_modules/primeicons/fonts/primeicons.eot"
   },
-  "node_modules/primevue/resources/images/hue.png": {
-    "file": "assets/hue.024cc884.png",
-    "src": "node_modules/primevue/resources/images/hue.png"
+  "node_modules/primevue/resources/images/color.png": {
+    "file": "assets/color.473bc8ca.png",
+    "src": "node_modules/primevue/resources/images/color.png"
   },
   "node_modules/primeicons/fonts/primeicons.woff2": {
     "file": "assets/primeicons.3824be50.woff2",
@@ -48,7 +48,7 @@
     "src": "resources/js/components/logos/rent-sign-svgrepo-com.svg"
   },
   "resources/js/app.js": {
-    "file": "assets/app.064211cc.js",
+    "file": "assets/app.0177c82d.js",
     "src": "resources/js/app.js",
     "isEntry": true,
     "css": [
