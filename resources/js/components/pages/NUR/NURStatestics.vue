@@ -258,11 +258,12 @@ export default {
         plugins: {
           legend: {
             labels: {
-              color: "#495057",
+              color: "red",
             },
           },
           datalabels: {
             anchor: "end",
+            color:"red"
           },
         },
       },
@@ -407,15 +408,17 @@ export default {
           this.cairoCombinedNUR = NUR.combined.cairo;
 
           let zoneExceed = [
-            NUR.zonesResponseWithAccess["CAIRO SOUTH"].exceedSLA,
+         
             NUR.zonesResponseWithAccess["CAIRO EAST"].exceedSLA,
+               NUR.zonesResponseWithAccess["CAIRO SOUTH"].exceedSLA,
             NUR.zonesResponseWithAccess["CAIRO NORTH"].exceedSLA,
             NUR.zonesResponseWithAccess["GIZA"].exceedSLA,
           ];
           let zoneWith = [
-            NUR.zonesResponseWithAccess["CAIRO SOUTH"].withinSLA,
+            
 
             NUR.zonesResponseWithAccess["CAIRO EAST"].withinSLA,
+            NUR.zonesResponseWithAccess["CAIRO SOUTH"].withinSLA,
 
             NUR.zonesResponseWithAccess["CAIRO NORTH"].withinSLA,
 
@@ -424,7 +427,7 @@ export default {
           let resp = this.Responses(zoneExceed, zoneWith);
 
           this.zonesResponseWithAccess = {
-            labels: Object.keys(NUR.NUR4G.zonesNUR4G),
+            labels: Object.keys(NUR.zonesResponseWithoutAccess),
             datasets: [
               {
                 data: resp.exceed,
@@ -440,15 +443,17 @@ export default {
           };
 
           zoneExceed = [
-            NUR.zonesResponseWithoutAccess["CAIRO SOUTH"].exceedSLA,
+          
             NUR.zonesResponseWithoutAccess["CAIRO EAST"].exceedSLA,
+              NUR.zonesResponseWithoutAccess["CAIRO SOUTH"].exceedSLA,
             NUR.zonesResponseWithoutAccess["CAIRO NORTH"].exceedSLA,
             NUR.zonesResponseWithoutAccess["GIZA"].exceedSLA,
           ];
           zoneWith = [
-            NUR.zonesResponseWithoutAccess["CAIRO SOUTH"].withinSLA,
-
+         
             NUR.zonesResponseWithoutAccess["CAIRO EAST"].withinSLA,
+               NUR.zonesResponseWithoutAccess["CAIRO SOUTH"].withinSLA,
+
 
             NUR.zonesResponseWithoutAccess["CAIRO NORTH"].withinSLA,
 
@@ -457,7 +462,7 @@ export default {
           resp = this.Responses(zoneExceed, zoneWith);
 
           this.zonesResponseWithoutAccess = {
-            labels: Object.keys(NUR.NUR4G.zonesNUR4G),
+            labels: Object.keys(NUR.zonesResponseWithAccess),
             datasets: [
               {
                 data: resp.exceed,
