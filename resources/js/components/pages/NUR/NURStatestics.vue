@@ -231,6 +231,8 @@ import CairoEast from "./CairoEast.vue";
 import CairoNorth from "./CairoNorth.vue";
 import Giza from "./Giza.vue";
 import CairoTX from "./CairoTX.vue";
+import CairoYearlyAnalysis from "./CairoYearlyAnalysis.vue";
+
 export default {
   data() {
     return {
@@ -305,6 +307,7 @@ export default {
     CairoNorth,
     Giza,
     CairoTX,
+    CairoYearlyAnalysis
   },
 
   methods: {
@@ -598,6 +601,26 @@ export default {
     {
        this.$store.dispatch("displaySpinnerPage", false);
        NUR.cairoNUR_CYearlyAnalysis(this.year).then((response)=>{
+        let cairo=response.data.NUR_C_yearly.cairo;
+        let zones=response.data.NUR_C_yearly.zones;
+         this.$dialog.open(CairoYearlyAnalysis, {
+        props: {
+          style: {
+            width: "75vw",
+          },
+          breakpoints: {
+            "960px": "75vw",
+            "640px": "90vw",
+          },
+          modal: true,
+        },
+
+        data: {
+          cairo: cairo,
+          zones: zones,
+          
+        },
+      });
         console.log(response)
        }).catch((error)=>{
         console.log(error)
