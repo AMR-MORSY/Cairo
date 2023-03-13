@@ -3,13 +3,13 @@
     "file": "assets/hue.024cc884.png",
     "src": "node_modules/primevue/resources/images/hue.png"
   },
-  "node_modules/primeicons/fonts/primeicons.eot": {
-    "file": "assets/primeicons.ce852338.eot",
-    "src": "node_modules/primeicons/fonts/primeicons.eot"
-  },
   "node_modules/primevue/resources/images/color.png": {
     "file": "assets/color.473bc8ca.png",
     "src": "node_modules/primevue/resources/images/color.png"
+  },
+  "node_modules/primeicons/fonts/primeicons.eot": {
+    "file": "assets/primeicons.ce852338.eot",
+    "src": "node_modules/primeicons/fonts/primeicons.eot"
   },
   "node_modules/primeicons/fonts/primeicons.woff2": {
     "file": "assets/primeicons.3824be50.woff2",
@@ -23,13 +23,13 @@
     "file": "assets/primeicons.131bc3bf.ttf",
     "src": "node_modules/primeicons/fonts/primeicons.ttf"
   },
-  "node_modules/primeicons/fonts/primeicons.svg": {
-    "file": "assets/primeicons.5e10f102.svg",
-    "src": "node_modules/primeicons/fonts/primeicons.svg"
-  },
   "resources/js/components/logos/week-icon.svg": {
     "file": "assets/week-icon.aba4072e.svg",
     "src": "resources/js/components/logos/week-icon.svg"
+  },
+  "node_modules/primeicons/fonts/primeicons.svg": {
+    "file": "assets/primeicons.5e10f102.svg",
+    "src": "node_modules/primeicons/fonts/primeicons.svg"
   },
   "resources/js/components/logos/Orange_logo.svg": {
     "file": "assets/Orange_logo.c835dde7.svg",
@@ -39,20 +39,20 @@
     "file": "assets/Etisalat_eand_Logo_AR.87c31cc7.svg",
     "src": "resources/js/components/logos/Etisalat_eand_Logo_AR.svg"
   },
-  "resources/js/components/logos/Vodafone_2017_logo.svg": {
-    "file": "assets/Vodafone_2017_logo.db9e2928.svg",
-    "src": "resources/js/components/logos/Vodafone_2017_logo.svg"
-  },
   "resources/js/components/logos/rent-sign-svgrepo-com.svg": {
     "file": "assets/rent-sign-svgrepo-com.198f3dc3.svg",
     "src": "resources/js/components/logos/rent-sign-svgrepo-com.svg"
   },
+  "resources/js/components/logos/Vodafone_2017_logo.svg": {
+    "file": "assets/Vodafone_2017_logo.db9e2928.svg",
+    "src": "resources/js/components/logos/Vodafone_2017_logo.svg"
+  },
   "resources/js/app.js": {
-    "file": "assets/app.0177c82d.js",
+    "file": "assets/app.f1d11526.js",
     "src": "resources/js/app.js",
     "isEntry": true,
     "css": [
-      "assets/app.b5a51657.css"
+      "assets/app.6884f9c2.css"
     ],
     "assets": [
       "assets/Orange_logo.c835dde7.svg",
@@ -70,7 +70,7 @@
     ]
   },
   "resources/js/app.css": {
-    "file": "assets/app.b5a51657.css",
+    "file": "assets/app.6884f9c2.css",
     "src": "resources/js/app.css"
   },
   "resources/sass/app.scss": {
