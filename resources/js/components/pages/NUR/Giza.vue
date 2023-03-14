@@ -96,16 +96,28 @@
             <Card>
               <template #title>
                 <p style="font-size: 16px; pading: 0; text-align: center">
-                  Access Statestics
+                 Nodals & VIP 
                 </p>
               </template>
               <template #content>
-                <Chart
-                  type="bar"
-                  :data="accessStatesitcs"
-                  :options="lightOptions"
-                  :plugins="plugins"
-                />
+                <div class="row">
+                  <div class="col-4">
+                    <div class="w-100">
+                         <img src="../../logos/kisspng-radio-vip-fm-romania-service-sales-vip-fm-98-spons-超市vip-5af1f24b2cd0c2.8140047415258056431836.png"  @click="getVipSitesNUR" class="w-100" style="cursor:pointer;" alt="">
+
+                    </div>
+
+                  </div>
+                  <div class="col"></div>
+                  <div class="col-4">
+                      <div class="w-100 nodal " @click="getNodalSitesNUR">
+                         <img src="../../logos/c67d66dd354d921a8c6652ebaf82d8bc.svg"  class="w-75"  alt="">
+
+                    </div>
+
+                  </div>
+                </div>
+              
               </template>
             </Card>
           </div>
@@ -130,12 +142,7 @@
             </TopSites>
           </div>
         </div>
-        <Button class="vip" @click="getVipSitesNUR">
-          <span>Vip Sites NUR</span>
-        </Button>
-        <Button class="vip" @click="getNodalSitesNUR">
-          <span>Nodal Sites NUR</span>
-        </Button>
+      
       </template>
     </Card>
   </div>
@@ -469,4 +476,20 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.nodal{
+  position: relative;
+  margin-top: 10px;
+  cursor: pointer;
+}
+.nodal::after{
+  content: "Nodals";
+  position: absolute;
+  right: 0;
+  bottom: -5px;
+  color: black;
+  margin-right: 20px;
+ 
+  font-weight: 600;
+
+}
 </style>

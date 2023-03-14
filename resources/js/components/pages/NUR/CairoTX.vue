@@ -28,8 +28,33 @@
     </div>
   </div>
 
-  <div class="table-container">
+  <div class="d-flex justify-content-between align-items-center">
     <h3>Sites</h3>
+    <div
+      style="
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 70%;
+      "
+    >
+      <div
+        class="w-25"
+        style="display: flex; align-items: center; justify-content: center"
+      >
+        <img
+          src="../../logos/week-icon.svg"
+          @click="getCairoMWYearlyNUR"
+          style="cursor: pointer"
+          alt=""
+          class="w-25"
+          v-tooltip.right="'Weekly Analysis'"
+        />
+      </div>
+    </div>
+  </div>
+
+  <div>
     <DataTable
       :value="sites"
       responsiveLayout="scroll"
@@ -58,8 +83,10 @@
 <script>
 import NURTickets from "./NURTickets.vue";
 import ChartDataLabels from "chartjs-plugin-datalabels";
-
+import NUR from "../../../apis/NUR";
 import exportFromJSON from "export-from-json";
+
+import CairoTxYearlyAnalysis from "./CairoTxYearlyAnalysis.vue";
 export default {
   data() {
     return {
@@ -88,6 +115,7 @@ export default {
   name: "CairoTx",
   components: {
     NURTickets,
+    CairoTxYearlyAnalysis,
   },
   inject: ["dialogRef"],
   mounted() {
@@ -95,8 +123,6 @@ export default {
   },
   methods: {
     mountData() {
-      this.$store.dispatch("displaySpinnerPage", true);
-
       this.sites = this.dialogRef.data.sites;
       this.tickets = this.dialogRef.data.tickets;
       this.mountTicketsTypeChartData();
@@ -231,13 +257,41 @@ export default {
       });
     },
     downloadTXTickets() {
-     
-
       const data = this.tickets;
       const fileName = "TxTickets";
       const exportType = exportFromJSON.types.xls;
 
       if (data) exportFromJSON({ data, fileName, exportType });
+    },
+    getCairoMWYearlyNUR() {
+      NUR.cairoTXYearlyAnalysis(this.tickets[0].year)
+        .then((response) => {
+          console.log(response);
+          let labels = Object.keys(response.data.NUR_C_yearly.cairo);
+          let cairo=response.data.NUR_C_yearly.cairo;
+          let zones = response.data.NUR_C_yearly.zones;
+          this.$dialog.open(CairoTxYearlyAnalysis, {
+            props: {
+              style: {
+                width: "75vw",
+              },
+              breakpoints: {
+                "960px": "75vw",
+                "640px": "90vw",
+              },
+              modal: true,
+            },
+
+            data: {
+              labels: labels,
+              cairo:cairo,
+              zones: zones,
+            },
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
   },
 };

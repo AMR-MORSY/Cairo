@@ -28,13 +28,13 @@ export default {
           },
           datalabels: {
             anchor: "center",
-            color: "red",
+            
             labels: {
-              title: {
-                color: "green",
-              },
+              // title: {
+              //   color: "green",
+              // },
               value: {
-                color: "green",
+                color: "black",
               },
             },
           },
@@ -61,42 +61,29 @@ export default {
           labels: Object.keys(this.dialogRef.data.cairo),
           datasets: [
             {
-              data: this.dialogRef.data.cairo,
+              data: Object.values(this.dialogRef.data.cairo),
               label: "Cairo",
               borderColor: "green",
-              // datalabels: {
-              //   color: "red",
-              // },
+          
             },
             {
-              data: this.dialogRef.data.zones["CAIRO EAST"],
+              data:Object.values(this.dialogRef.data.zones["CAIRO EAST"]),
               label: "Cairo East",
               borderColor: "#C3B1E1",
-              datalabels: {
-                // anchor: "center",
-                // color: "red",
-                labels: {
-                  title: {
-                    color: "black",
-                  },
-                  value: {
-                    color: "green",
-                  },
-                },
-              },
+            
             },
             {
-              data: this.dialogRef.data.zones["GIZA"],
+              data: Object.values(this.dialogRef.data.zones["GIZA"]) ,
               label: "Giza",
               borderColor: "yellow",
             },
             {
-              data: this.dialogRef.data.zones["CAIRO SOUTH"],
+              data: Object.values( this.dialogRef.data.zones["CAIRO SOUTH"]),
               label: "Cairo South",
               borderColor: "red",
             },
             {
-              data: this.dialogRef.data.zones["CAIRO NORTH"],
+              data: Object.values( this.dialogRef.data.zones["CAIRO NORTH"]),
               label: "Cairo North",
               borderColor: "blue",
             },

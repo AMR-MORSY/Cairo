@@ -109,7 +109,10 @@ Route::prefix('Nur')->middleware(['auth:sanctum',"role:admin|super-admin"])->gro
     Route::get('/vip/week/{zone}/{week}/{year}',[ShowNURController::class,"vipSitesWeeklyNUR"]);
     Route::get('/nodal/week/{zone}/{week}/{year}',[ShowNURController::class,"nodalSitesWeeklyNUR"]);
     Route::get('/cairo/weekly/MWNUR/{week}/{year}',[ShowNURController::class,"cairoMWweeklyNUR"]);
+    Route::get('/cairo/weekly/GenNUR/{week}/{year}',[ShowNURController::class,"cairoGenweeklyNUR"]);
     Route::get('/cairo/yearly/NUR_C/{year}',[ShowNURController::class,"cairoYearlyNUR_C"]);
+    Route::get('/cairo/yearly/GenNUR/{year}',[ShowNURController::class,"cairoGenYearlyNUR"]);
+    Route::get('/cairo/yearly/TXNUR/{year}',[ShowNURController::class,"cairoMWYearlyNUR"]);
 
 });
 

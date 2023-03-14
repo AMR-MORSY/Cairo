@@ -53,10 +53,23 @@ export default {
     {
         return allInstances.Api.get(`/Nur/cairo/weekly/MWNUR/${week}/${year}`);
     },
+    getCairoGenWeeklyNUR(week,year)
+    {
+        return allInstances.Api.get(`/Nur/cairo/weekly/GenNUR/${week}/${year}`);
+    },
     cairoNUR_CYearlyAnalysis(year)
     {
         return allInstances.Api.get(`/Nur/cairo/yearly/NUR_C/${year}`);
     },
+    cairoGenYearlyAnalysis(year)
+    {
+        return allInstances.Api.get(`/Nur/cairo/yearly/GenNUR/${year}`);
+    },
+    cairoTXYearlyAnalysis(year)
+    {
+        return allInstances.Api.get(`/Nur/cairo/yearly/TXNUR/${year}`);
+    },
+
 
     
 };

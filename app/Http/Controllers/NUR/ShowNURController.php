@@ -94,6 +94,72 @@ class ShowNURController extends Controller
            
         }
     }
+    public function cairoMWYearlyNUR($year)
+    {
+        $total_year_tickets_2G = NUR2G::where('year', $year)->where("system","transmission")->get();
+        $total_year_tickets_3G = NUR3G::where('year', $year)->where("system","transmission")->get();
+        $total_year_tickets_4G = NUR4G::where('year', $year)->where("system","transmission")->get();
+        $errors = [];
+        if (count($total_year_tickets_2G) <= 0) {
+            array_push($errors, "2G NUR does not exist");
+        }
+        if (count($total_year_tickets_3G) <= 0) {
+            array_push($errors, "3G NUR does not exist");
+        }
+        if (count($total_year_tickets_4G) <= 0) {
+            array_push($errors, "4G NUR does not exist");
+        }
+        if (count($errors) > 0) {
+            return response()->json([
+                "errors"=>$errors
+            ],404);
+           
+          
+        } else {
+           
+            $statestics = new YearlyStatestics($total_year_tickets_2G, $total_year_tickets_3G, $total_year_tickets_4G,$year);
+            $NUR_Gen_yearly=$statestics->cairoTxNUR();
+            return response()->json([
+                "NUR_C_yearly"=>$NUR_Gen_yearly
+            ],200);
+          
+           
+        }
+
+    }
+    public function cairoGenYearlyNUR($year)
+    {
+        $total_year_tickets_2G = NUR2G::where('year', $year)->where("sub_system","GENERATOR")->get();
+        $total_year_tickets_3G = NUR3G::where('year', $year)->where("sub_system","GENERATOR")->get();
+        $total_year_tickets_4G = NUR4G::where('year', $year)->where("sub_system","GENERATOR")->get();
+        $errors = [];
+        if (count($total_year_tickets_2G) <= 0) {
+            array_push($errors, "2G NUR does not exist");
+        }
+        if (count($total_year_tickets_3G) <= 0) {
+            array_push($errors, "3G NUR does not exist");
+        }
+        if (count($total_year_tickets_4G) <= 0) {
+            array_push($errors, "4G NUR does not exist");
+        }
+        if (count($errors) > 0) {
+            return response()->json([
+                "errors"=>$errors
+            ],404);
+           
+          
+        } else {
+           
+            $statestics = new YearlyStatestics($total_year_tickets_2G, $total_year_tickets_3G, $total_year_tickets_4G,$year);
+            $NUR_Gen_yearly=$statestics->cairoGenNUR();
+            return response()->json([
+                "NUR_C_yearly"=>$NUR_Gen_yearly
+            ],200);
+          
+           
+        }
+
+    }
     private function getWeeklyNUR($week, $year)
     {
         $total_week_tickets_2G = NUR2G::where('year', $year)->where('week', $week)->get();
@@ -279,6 +345,121 @@ class ShowNURController extends Controller
             ], 200);
         }
     }
+    public function cairoGenweeklyNUR($week, $year)
+    {
+        $data = [
+
+            "week" => $week,
+            "year" => $year
+        ];
+        $validator = Validator::make($data, ["week" => ["required", 'integer', "between:1,52"], "year" => ['required', 'regex:/^2[0-9]{3}$/']]);
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->getMessageBag()->toArray()
+            ], 422);
+        } else {
+            $validated = $validator->validated();
+
+            $NUR2G_tickets = NUR2G::where("week", $validated["week"])->where("year", $validated['year'])->where("sub_system", "GENERATOR")->get();
+            $NUR3G_tickets = NUR3G::where("week", $validated["week"])->where("year", $validated['year'])->where("sub_system", "GENERATOR")->get();
+            $NUR4G_tickets = NUR4G::where("week", $validated["week"])->where("year", $validated['year'])->where("sub_system", "GENERATOR")->get();
+            $network_2g_cells = $NUR2G_tickets->whereStrict("technology", "2G")->first()->network_cells;
+            $network_3g_cells = $NUR3G_tickets->whereStrict("technology", "3G")->first()->network_cells;
+            $network_4g_cells = $NUR4G_tickets->whereStrict("technology", "4G")->first()->network_cells;
+            $statestics = $this->cairoGenWeeklyStatestics($NUR2G_tickets, $NUR3G_tickets, $NUR4G_tickets, $network_2g_cells,  $network_3g_cells,  $network_4g_cells);
+            $tickets=$this->formArrayOfTickets($NUR2G_tickets,$NUR3G_tickets,$NUR4G_tickets);
+            $sites=$this->getImpactedSites($tickets,$network_2g_cells,$network_3g_cells,$network_4g_cells);
+            return response()->json([
+                "statestics"=>$statestics,
+                "tickets"=>$tickets,
+                "sites"=>$sites
+            ],200);
+        }
+
+    }
+    private function getVFandETGenTickets($NUR_tickets)
+    {
+        $NUR_VF_tickets=[];
+        $NUR_ET_tickets=[];
+        foreach($NUR_tickets as $ticket)
+        {
+            $ticketArray = explode(" ", $ticket['solution']);
+
+            foreach ($ticketArray as $filt) {
+                if ($filt == "Vf") {
+
+                    array_push($NUR_VF_tickets, $ticket);
+                    break;
+                }
+                if ($filt == "Et") {
+                    array_push(   $NUR_ET_tickets, $ticket);
+                    break;
+                }
+            }
+
+
+        }
+
+        return [
+            "VF"=>$NUR_VF_tickets,
+            "ET"=>$NUR_ET_tickets
+        ];
+
+    }
+    private function cairoGenWeeklyStatestics($NUR2G_tickets, $NUR3G_tickets, $NUR4G_tickets, $network_2g_cells,  $network_3g_cells,  $network_4g_cells)
+    {
+        $statestics = [];
+        $NUR_2G_sum = $NUR2G_tickets->sum("nur");
+        $NUR_3G_sum = $NUR3G_tickets->sum("nur");
+        $NUR_4G_sum = $NUR4G_tickets->sum("nur");
+        $combined = (($NUR_2G_sum * $network_2g_cells) + ($NUR_3G_sum * $network_3g_cells) + ($NUR_4G_sum * $network_4g_cells)) / ($network_4g_cells + $network_3g_cells + $network_2g_cells);
+        $NUR_combined = number_format($combined, 2, '.', ',');
+
+        $NUR_2G_Org = $NUR2G_tickets->where("gen_owner", "orange")->sum("nur");
+        $NUR_3G_Org = $NUR3G_tickets->where("gen_owner", "orange")->sum("nur");
+        $NUR_4G_Org = $NUR4G_tickets->where("gen_owner", "orange")->sum("nur");
+        $combined = (($NUR_2G_Org * $network_2g_cells) + ($NUR_3G_Org * $network_3g_cells) +($NUR_4G_Org * $network_4g_cells)) / ($network_4g_cells + $network_3g_cells + $network_2g_cells);
+        $NUR_Org_combined = number_format($combined, 2, '.', ',');
+
+        $NUR_2G_Rented = $NUR2G_tickets->where("gen_owner", "rented")->sum("nur");
+        $NUR_3G_Rented = $NUR3G_tickets->where("gen_owner", "rented")->sum("nur");
+        $NUR_4G_Rented = $NUR4G_tickets->where("gen_owner", "rented")->sum("nur");
+        $combined = (($NUR_2G_Rented * $network_2g_cells) + ($NUR_3G_Rented * $network_3g_cells) +($NUR_4G_Rented * $network_4g_cells)) / ($network_4g_cells + $network_3g_cells + $network_2g_cells);
+        $NUR_Rented_combined = number_format($combined, 2, '.', ',');
+
+        $NUR_2G_ET_tickets=$this->getVFandETGenTickets($NUR2G_tickets)["ET"];
+        $NUR_3G_ET_tickets=$this->getVFandETGenTickets($NUR3G_tickets)["ET"];
+        $NUR_4G_ET_tickets=$this->getVFandETGenTickets($NUR4G_tickets)["ET"];
+        $NUR_2G_VF_tickets=$this->getVFandETGenTickets($NUR2G_tickets)["VF"];
+        $NUR_3G_VF_tickets=$this->getVFandETGenTickets($NUR3G_tickets)["VF"];;
+        $NUR_4G_VF_tickets=$this->getVFandETGenTickets($NUR4G_tickets)["VF"];;
+      
+      
+
+        $NUR_2G_ET_NUR = collect( $NUR_2G_ET_tickets)->sum("nur");
+        $NUR_3G_ET_NUR =  collect( $NUR_3G_ET_tickets)->sum("nur");
+        $NUR_4G_ET_NUR =  collect( $NUR_4G_ET_tickets)->sum("nur");
+        $combined = (($NUR_2G_ET_NUR * $network_2g_cells) + ($NUR_3G_ET_NUR * $network_3g_cells) +($NUR_4G_ET_NUR * $network_4g_cells)) / ($network_4g_cells + $network_3g_cells + $network_2g_cells);
+        $NUR_ET_combined = number_format($combined, 2, '.', ',');
+
+
+
+        $NUR_2G_VF_NUR = collect( $NUR_2G_VF_tickets)->sum("nur");
+        $NUR_3G_VF_NUR =  collect( $NUR_3G_VF_tickets)->sum("nur");
+        $NUR_4G_VF_NUR =  collect( $NUR_4G_VF_tickets)->sum("nur");
+        $combined = (($NUR_2G_VF_NUR * $network_2g_cells) + ($NUR_3G_VF_NUR * $network_3g_cells) +($NUR_4G_VF_NUR * $network_4g_cells)) / ($network_4g_cells + $network_3g_cells + $network_2g_cells);
+        $NUR_VF_combined = number_format($combined, 2, '.', ',');
+
+
+        $statestics["NUR_combined"] = $NUR_combined;
+        $statestics["NUR_Org_combined"] = $NUR_Org_combined;
+        $statestics["NUR_Rented_combined"] = $NUR_Rented_combined;
+        $statestics["NUR_ET_combined"] = $NUR_ET_combined;
+        $statestics["NUR_VF_combined"] = $NUR_VF_combined;
+
+        return $statestics;
+
+    }
     private function cairoMWWeeklyStatestics($NUR2G_tickets, $NUR3G_tickets, $NUR4G_tickets, $network_2g_cells,  $network_3g_cells,  $network_4g_cells)
     {
         $statestics = [];
@@ -380,10 +561,7 @@ class ShowNURController extends Controller
             $site_information->site_name=$site_name;
             $site_information->site_code=$key;
             $site_information->oz=$site_zone;
-            // $site["tickets_2G"] = $NUR_2G;
-            // $site["tickets_3G"] = $NUR_3G;
-            // $site["tickets_4G"] = $NUR_4G;
-           
+          
             $combined = (($NUR_2G_sum * $network_2g_cells) + ($NUR_3G_sum * $network_3g_cells) + ($NUR_4G_sum * $network_4g_cells)) / ($network_4g_cells + $network_3g_cells + $network_2g_cells);
           
             $site_information->NUR_C=number_format($combined, 2, '.', ',');
