@@ -310,6 +310,62 @@ class ShowNURController extends Controller
         return $sites;
     }
 
+    public function cairoPowerWeeklyNUR($week,$year)
+    {
+        $data = [
+
+            "week" => $week,
+            "year" => $year
+        ];
+        $validator = Validator::make($data, ["week" => ["required", 'integer', "between:1,52"], "year" => ['required', 'regex:/^2[0-9]{3}$/']]);
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->getMessageBag()->toArray()
+            ], 422);
+        } else {
+            $validated = $validator->validated();
+
+            $NUR2G_tickets = NUR2G::where("week", $validated["week"])->where("year", $validated['year'])->where("sub_system", "main power")->get();
+            $NUR3G_tickets = NUR3G::where("week", $validated["week"])->where("year", $validated['year'])->where("sub_system", "main power")->get();
+            $NUR4G_tickets = NUR4G::where("week", $validated["week"])->where("year", $validated['year'])->where("sub_system", "main power")->get();
+
+            $network_2g_cells = $NUR2G_tickets->whereStrict("technology", "2G")->first()->network_cells;
+            $network_3g_cells = $NUR3G_tickets->whereStrict("technology", "3G")->first()->network_cells;
+            $network_4g_cells = $NUR4G_tickets->whereStrict("technology", "4G")->first()->network_cells;
+
+        }
+    }
+
+    private function cairoMainPowerWeeklyStatestics($NUR2G_tickets, $NUR3G_tickets, $NUR4G_tickets, $network_2g_cells,  $network_3g_cells,  $network_4g_cells)
+    {
+        $statestics = [];
+        $NUR_2G_sum = $NUR2G_tickets->sum("nur");
+        $NUR_3G_sum = $NUR3G_tickets->sum("nur");
+        $NUR_4G_sum = $NUR4G_tickets->sum("nur");
+        $combined = (($NUR_2G_sum * $network_2g_cells) + ($NUR_3G_sum * $network_3g_cells) + ($NUR_4G_sum * $network_4g_cells)) / ($network_4g_cells + $network_3g_cells + $network_2g_cells);
+        $NUR_combined = number_format($combined, 2, '.', ',');
+
+        $NUR_2G_access = $NUR2G_tickets->where("access", 1)->sum("nur");
+        $NUR_3G_access = $NUR3G_tickets->where("access", 1)->sum("nur");
+        $NUR_4G_access = $NUR4G_tickets->where("access", 1)->sum("nur");
+        $combined = (($NUR_2G_access * $network_2g_cells) + ($NUR_3G_access * $network_3g_cells) +($NUR_4G_access * $network_4g_cells)) / ($network_4g_cells + $network_3g_cells + $network_2g_cells);
+        $NUR_access_combined = number_format($combined, 2, '.', ',');
+
+        $NUR_2G_without_access = $NUR2G_tickets->where("access", 0)->sum("nur");
+        $NUR_3G_without_access = $NUR3G_tickets->where("access", 0)->sum("nur");
+        $NUR_4G_without_access = $NUR4G_tickets->where("access", 0)->sum("nur");
+        $combined = ($NUR_2G_without_access * $network_2g_cells + $NUR_3G_without_access * $network_3g_cells + $NUR_4G_without_access * $network_4g_cells) / ($network_4g_cells + $network_3g_cells + $network_2g_cells);
+        $NUR_without_access_combined = number_format($combined, 2, '.', ',');
+
+        $statestics["NUR_access_c"] = $NUR_access_combined;
+        $statestics["NUR_without_access_c"] = $NUR_without_access_combined;
+        $statestics["NUR_combined"] = $NUR_combined;
+
+        return $statestics;
+
+
+    }
+
     public function cairoMWweeklyNUR($week, $year)
     {
         $data = [
