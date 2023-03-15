@@ -57,6 +57,10 @@ export default {
     {
         return allInstances.Api.get(`/Nur/cairo/weekly/GenNUR/${week}/${year}`);
     },
+    getCairoPowerWeeklyNUR(week,year)
+    {
+        return allInstances.Api.get(`/Nur/cairo/weekly/PowerNUR/${week}/${year}`);
+    },
     cairoNUR_CYearlyAnalysis(year)
     {
         return allInstances.Api.get(`/Nur/cairo/yearly/NUR_C/${year}`);

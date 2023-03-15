@@ -201,7 +201,7 @@
                     <div
                       class="power w-100"
                       style="cursor: pointer"
-                      @click="getCairoMWWeeklyNUR"
+                      @click="getCairoPowerWeeklyNUR"
                     >
                       <img
                         src="../../logos/power-plant-icon.svg"
@@ -329,6 +329,8 @@ import CairoTX from "./CairoTX.vue";
 import CairoYearlyAnalysis from "./CairoYearlyAnalysis.vue";
 import CairoGen from "../NUR/CairoGen.vue";
 
+import CairoMainPower from './CairoMainPower.vue';
+
 export default {
   data() {
     return {
@@ -405,6 +407,7 @@ export default {
     CairoTX,
     CairoYearlyAnalysis,
     CairoGen,
+    CairoMainPower,
   },
 
   methods: {
@@ -756,6 +759,41 @@ export default {
         .finally(() => {
           this.$store.dispatch("displaySpinnerPage", true);
         });
+    },
+    getCairoPowerWeeklyNUR()
+    { this.$store.dispatch("displaySpinnerPage", false);
+    NUR.getCairoPowerWeeklyNUR(this.week,this.year).then((response)=>{
+      console.log(response)
+       let siteData = [];
+          let sites = response.data.sites;
+          sites.forEach((site) => {
+            siteData.push(site.site_data);
+          });
+          this.$dialog.open( CairoMainPower, {
+            props: {
+              style: {
+                width: "75vw",
+              },
+              breakpoints: {
+                "960px": "75vw",
+                "640px": "90vw",
+              },
+              modal: true,
+            },
+
+            data: {
+              sites: siteData,
+              tickets: response.data.tickets,
+              statestics: response.data.statestics,
+            },
+          });
+    }).catch((error)=>{
+
+    }).finally(()=>{
+      this.$store.dispatch("displaySpinnerPage", true);
+
+    })
+
     },
   },
 };

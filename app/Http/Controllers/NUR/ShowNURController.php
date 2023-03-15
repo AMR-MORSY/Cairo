@@ -163,11 +163,11 @@ class ShowNURController extends Controller
     private function getWeeklyNUR($week, $year)
     {
         $total_week_tickets_2G = NUR2G::where('year', $year)->where('week', $week)->get();
-        $network_2G_cells=NUR2G::where('year', $year)->where('week', $week)->first()->network_cells;
+       
         $total_week_tickets_3G = NUR3G::where('year', $year)->where('week', $week)->get();
-        $network_3G_cells=NUR3G::where('year', $year)->where('week', $week)->first()->network_cells;
+      
         $total_week_tickets_4G = NUR4G::where('year', $year)->where('week', $week)->get();
-        $network_4G_cells=NUR4G::where('year', $year)->where('week', $week)->first()->network_cells;
+        
         $errors = [];
         if (count($total_week_tickets_2G) <= 0) {
             array_push($errors, "2G NUR does not exist");
@@ -183,6 +183,9 @@ class ShowNURController extends Controller
             $notFound["errors"] = $errors;
             return $notFound;
         } else {
+            $network_2G_cells= $total_week_tickets_2G->first()->network_cells;
+            $network_3G_cells= $total_week_tickets_3G ->first()->network_cells;
+            $network_4G_cells=$total_week_tickets_4G ->first()->network_cells;
             $statestics = new WeeklyStatestics($total_week_tickets_2G, $total_week_tickets_3G, $total_week_tickets_4G,$network_2G_cells,$network_3G_cells,$network_4G_cells);
             $NUR['NUR2G'] = $statestics->NUR2GStatestics();
             $NUR['NUR3G'] = $statestics->NUR3GStatestics();
@@ -332,6 +335,15 @@ class ShowNURController extends Controller
             $network_2g_cells = $NUR2G_tickets->whereStrict("technology", "2G")->first()->network_cells;
             $network_3g_cells = $NUR3G_tickets->whereStrict("technology", "3G")->first()->network_cells;
             $network_4g_cells = $NUR4G_tickets->whereStrict("technology", "4G")->first()->network_cells;
+
+            $statestics=$this->cairoMainPowerWeeklyStatestics($NUR2G_tickets,$NUR3G_tickets,$NUR4G_tickets,$network_2g_cells,$network_3g_cells,$network_4g_cells);
+              $tickets = $this->formArrayOfTickets($NUR2G_tickets, $NUR3G_tickets, $NUR4G_tickets);
+            $sites = $this->getImpactedSites($tickets, $network_2g_cells,  $network_3g_cells,  $network_4g_cells);
+            return response()->json([
+                "statestics"=>$statestics,
+                "tickets"=>$tickets,
+                "sites"=>$sites
+            ],200);
 
         }
     }
